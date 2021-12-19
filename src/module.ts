@@ -1,39 +1,61 @@
-const MODULE_NAME = "fast-flip";
-const MIRROR_HORIZONTAL_HOT_KEY = `${MODULE_NAME}.mirror-horizontal-hotkey`;
-const MIRROR_VERTICAL_HOT_KEY = `${MODULE_NAME}.mirror-vertical-hotkey`;
-
-const enum TileMirror {
-    HORIZONTAL = "tileMirrorHorizontal",
-    VERTICAL = "tileMirrorVertical"
-}
-
-interface TileFlags {
-    [TileMirror.VERTICAL]?: boolean;
-    [TileMirror.HORIZONTAL]?: boolean;
-}
+import { MODULE_NAME, MIRROR_HORIZONTAL_HOT_KEY, MIRROR_VERTICAL_HOT_KEY, TOGGLE_AFK_HOT_KEY } from "./constants";
+import { TokenManager, TokenMirror } from "./managers/TokenManager";
+import { TileManager, TileMirror } from "./managers/TileManager";
 
 Hooks.once("init", () => {
     if (game instanceof Game) {
-        (game as any).keybindings.register(MODULE_NAME, "horizontalFlip", {
+        new FastFlipModule(game);
+    }
+});
+
+class FastFlipModule {
+    readonly #tokenManager: TokenManager;
+    readonly #tileManager: TileManager;
+
+    constructor(game: Game) {
+        this.#tokenManager = new TokenManager(game);
+        this.#tileManager = new TileManager(game);
+
+        this.#registerKeybindings(game.keybindings);
+    }
+
+    #registerKeybindings(keybindings: ClientKeybindings) {
+        keybindings.register(MODULE_NAME, "horizontalFlip", {
             name: MIRROR_HORIZONTAL_HOT_KEY,
             hint: "Horizontally mirrors the selected tile or token",
             editable: [
                 { key: "KeyF" },
             ],
-            onDown: handleHorizontalMirror,
+            onDown: this.#onHorizontalMirror.bind(this),
+            // TODO: Fix this once V9 bindings are out.
             precedence: (CONST as any).KEYBINDING_PRECEDENCE.NORMAL,
             restrictied: false,
             reservedModifiers: [],
             repeat: false,
         });
 
-        (game as any).keybindings.register(MODULE_NAME, "verticalFlip", {
+        keybindings.register(MODULE_NAME, "verticalFlip", {
             name: MIRROR_VERTICAL_HOT_KEY,
             hint: "Vertically mirrors the selected tile or token",
             editable: [
-                { key: "KeyF", modifiers: ["Shift"] },
+                { key: "KeyF", modifiers: ["SHIFT"] },
             ],
-            onDown: handleVerticalMirror,
+            onDown: this.#onVerticalMirror.bind(this),
+            // TODO: Fix this once V9 bindings are out.
+            precedence: (CONST as any).KEYBINDING_PRECEDENCE.NORMAL,
+            restrictied: false,
+            reservedModifiers: [],
+            repeat: false,
+        });
+
+        keybindings.register(MODULE_NAME, TOGGLE_AFK_HOT_KEY, {
+            name: MIRROR_VERTICAL_HOT_KEY,
+            hint: "Marks the selected tokens as AFK",
+            editable: [
+                { key: "KeyK", modifiers: ["SHIFT"] },
+            ],
+            onDown: this.#onToggleAFK.bind(this),
+            // TODO: Fix this once V9 bindings are out.
             precedence: (CONST as any).KEYBINDING_PRECEDENCE.NORMAL,
             restrictied: false,
             reservedModifiers: [],
@@ -41,78 +63,17 @@ Hooks.once("init", () => {
         });
     }
 
-});
-
-Hooks.on("updateTile", (_: unknown, update: foundry.data.TileData) => {
-    if (game instanceof Game && game.canvas?.ready && update._id) {
-        const tile = game.canvas.background?.get(update._id)
-            ?? game.canvas.foreground?.get(update._id);
-
-        if (tile) {
-            updateTileOrientation(tile);
-        }
+    async #onToggleAFK() {
+        await this.#tokenManager.toggleAFK();
     }
-});
 
-Hooks.on("canvasReady", () => {
-    if (game instanceof Game && game.canvas?.ready) {
-        const tiles = [
-            ...game.canvas.background?.tiles ?? [],
-            ...game.canvas.foreground?.tiles ?? []
-        ];
+    async #onHorizontalMirror() {
+        await this.#tokenManager.mirrorSelected(TokenMirror.HORIZONTAL);
+        await this.#tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL);
+    };
 
-        for (const tile of tiles) {
-            updateTileOrientation(tile);
-        }
-    }
-});
-
-async function handleHorizontalMirror() {
-    if (game instanceof Game && game.canvas?.ready) {
-        const controlledTokens = game.canvas.tokens?.controlled ?? [];
-        for (const token of controlledTokens) {
-            await token.document.update({ "mirrorX": !token.data.mirrorX });
-        }
-
-        const controlledTiles = [
-            ...game.canvas.background?.controlled ?? [],
-            ...game.canvas.foreground?.controlled ?? []
-        ];
-        for (const tile of controlledTiles) {
-            const previousState = tile.document.getFlag(MODULE_NAME, TileMirror.HORIZONTAL);
-            await tile.document.setFlag(MODULE_NAME, TileMirror.HORIZONTAL, !previousState);
-        }
-    }
-}
-
-async function handleVerticalMirror() {
-    if (game instanceof Game && game.canvas?.ready) {
-        const controlledTokens = game.canvas.tokens?.controlled ?? [];
-        for (const token of controlledTokens) {
-            await token.document.update({ "mirrorY": !token.data.mirrorY });
-        }
-
-        const controlledTiles = [
-            ...game.canvas.background?.controlled ?? [],
-            ...game.canvas.foreground?.controlled ?? []
-        ];
-        for (const tile of controlledTiles) {
-            const previousState = tile.document.getFlag(MODULE_NAME, TileMirror.VERTICAL);
-            await tile.document.setFlag(MODULE_NAME, TileMirror.VERTICAL, !previousState);
-        }
-    }
-}
-
-function updateTileOrientation(tile: Tile) {
-    if (tile.texture != null) {
-        const flipHorizontal = tile.document.getFlag(MODULE_NAME, TileMirror.HORIZONTAL);
-        const flipVerical = tile.document.getFlag(MODULE_NAME, TileMirror.VERTICAL);
-
-        const mirrorHorizontal = flipHorizontal ? PIXI.groupD8.MIRROR_HORIZONTAL : 0;
-        const mirrorVertical = flipVerical ? PIXI.groupD8.MIRROR_VERTICAL : 0;
-        const rotate = PIXI.groupD8.add(mirrorHorizontal, mirrorVertical);
-
-        tile.texture.rotate = rotate;
-        tile.refresh();
-    }
+    async #onVerticalMirror() {
+        await this.#tokenManager.mirrorSelected(TokenMirror.VERTICAL);
+        await this.#tileManager.mirrorSelectedTiles(TileMirror.VERTICAL);
+    };
 }

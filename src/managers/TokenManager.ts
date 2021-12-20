@@ -1,3 +1,4 @@
+import { getIcon } from "../helpers";
 import { MODULE_NAME } from "../constants";
 
 export const enum TokenMirror {
@@ -5,7 +6,7 @@ export const enum TokenMirror {
     VERTICAL = "mirrorY"
 }
 
-const AFK_ICON_PATH = `modules/${MODULE_NAME}/icons/afk.svg`;
+const AFK_ICON_PATH = getIcon("afk");
 const AFK_STATE_KEY = "afk-state";
 const PREVIOUS_OVERLAY_STATE_FFECT_KEY = "previous-overlay-effect";
 

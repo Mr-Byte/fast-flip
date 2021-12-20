@@ -17,9 +17,3 @@ export namespace LOCALIZATION {
     export const AFK_OVERLAY_ICON_PATH = `${MODULE_NAME}.afk-overlay-icon-path`;
     export const AFK_OVERLAY_ICON_PATH_HINT = `${MODULE_NAME}.afk-overlay-icon-path-hint`;
 };
-
-export namespace SETTING {
-    export const SHOW_MIRROR_BUTTONS = "show-mirror-buttons-hud";
-    export const SHOW_TOGGLE_AFK_HUD = "show-toggle-afk-hud";
-    export const AFK_OVERLAY_ICON_PATH = "afk-overlay-icon-path";
-}

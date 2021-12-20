@@ -39,10 +39,9 @@ export class TileManager {
     };
 
     #updateTileOrientation(tile: Tile) {
-        if (tile.texture != null) {
+        if (tile.texture) {
             const flipHorizontal = tile.document.getFlag(MODULE_NAME, TileMirror.HORIZONTAL);
             const flipVerical = tile.document.getFlag(MODULE_NAME, TileMirror.VERTICAL);
-
             const mirrorHorizontal = flipHorizontal ? PIXI.groupD8.MIRROR_HORIZONTAL : 0;
             const mirrorVertical = flipVerical ? PIXI.groupD8.MIRROR_VERTICAL : 0;
             const rotate = PIXI.groupD8.add(mirrorHorizontal, mirrorVertical);

@@ -1,5 +1,5 @@
-import { getIcon } from "../helpers";
-import { SETTING, MODULE_NAME } from "../constants";
+import { MODULE_NAME } from "../constants";
+import { Settings } from "../Settings";
 
 export const enum TokenMirror {
     HORIZONTAL = "mirrorX",
@@ -11,9 +11,11 @@ const PREVIOUS_OVERLAY_STATE_FFECT_KEY = "previous-overlay-effect";
 
 export class TokenManager {
     readonly #game: Game;
+    readonly #settings: Settings;
 
-    constructor(game: Game) {
+    constructor(game: Game, settings: Settings) {
         this.#game = game;
+        this.#settings = settings;
     }
 
     async mirrorSelected(tokenMirrorDirection: TokenMirror) {
@@ -27,7 +29,7 @@ export class TokenManager {
     async toggleAFK() {
         for (const token of this.#controlledTokens) {
             const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
-            const afkIconPath = this.#game.settings.get(MODULE_NAME, SETTING.AFK_OVERLAY_ICON_PATH) as string;
+            const afkIconPath = this.#settings.afkOverlayIconPath;
 
             if (isAFK) {
                 const previousOverlayEffect = token.document.getFlag(MODULE_NAME, PREVIOUS_OVERLAY_STATE_FFECT_KEY) as string | null | undefined;

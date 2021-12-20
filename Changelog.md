@@ -1,5 +1,5 @@
 # v2.1.0
-* Added a Shift+K (default binding) shortcut to mark a token as AFK
+* Added a `Shift+K` (default binding) shortcut to mark a token as AFK
 * Restructured the mod internals to allow for more token related features to be added
 
 # v2.0.0

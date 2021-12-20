@@ -1,7 +1,7 @@
 import * as constants from "./constants";
 import { TokenManager, TokenMirror } from "./managers/TokenManager";
 import { TileManager, TileMirror } from "./managers/TileManager";
-import { TokenHUDManager } from "managers/TokenHUDManager";
+import { TileHUDManager, TokenHUDManager } from "./managers/HUDManager";
 
 Hooks.once("init", () => {
     if (game instanceof Game) {
@@ -11,6 +11,7 @@ Hooks.once("init", () => {
 
 class FastFlipModule {
     readonly #tokenHUDManager: TokenHUDManager;
+    readonly #tileHUDManager: TileHUDManager;
     readonly #tokenManager: TokenManager;
     readonly #tileManager: TileManager;
     readonly #game: Game;
@@ -18,6 +19,7 @@ class FastFlipModule {
     constructor(game: Game) {
         this.#game = game;
         this.#tokenHUDManager = new TokenHUDManager(game);
+        this.#tileHUDManager = new TileHUDManager(game);
         this.#tokenManager = new TokenManager(game);
         this.#tileManager = new TileManager(game);
 
@@ -113,6 +115,20 @@ class FastFlipModule {
             icon: "toggle-afk",
             onClick: this.#onToggleAFK.bind(this),
             shouldShow: () => this.#game.settings.get(constants.MODULE_NAME, constants.SHOW_TOGGLE_AFK_HUD_SETTING) as boolean,
+        });
+
+        this.#tileHUDManager.registerButton(`${constants.MODULE_NAME}.mirror-horizontal`, {
+            side: "left",
+            title: constants.MIRROR_HORIZONTAL_BUTTON,
+            icon: "mirror-horizontal",
+            onClick: this.#onHorizontalMirror.bind(this),
+        });
+
+        this.#tileHUDManager.registerButton(`${constants.MODULE_NAME}.mirror-vertical`, {
+            side: "left",
+            title: constants.MIRROR_VERTICAL_BUTTON,
+            icon: "mirror-vertical",
+            onClick: this.#onVerticalMirror.bind(this),
         });
     }
 

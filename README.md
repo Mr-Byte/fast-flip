@@ -9,3 +9,6 @@ GMs can also use the same set of shortcuts to mirror tiles.
 * Pressing `F` will mirror the selected tokens and tiles horizontally
 * Pressing `Shift+F` will mirror the selected tokens and tiles vertically
 * Pressing `Shift+K` will toggle the AFK status of any selected tokens
+
+# License
+All code is licensed under the [MIT License](LICENSE). All other assets are licensed under the terms of the [CC-BY-4.0](CC-BY-4.0) license.

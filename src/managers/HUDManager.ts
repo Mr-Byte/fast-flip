@@ -8,7 +8,7 @@ export interface ButtonProps {
     shouldShow?: () => boolean;
 }
 
-function hudManager(event: "renderTokenHUD" | "renderTileHUD") {
+function HUDManager(event: "renderTokenHUD" | "renderTileHUD") {
     return class {
         readonly #game: Game;
         readonly #buttons: Map<string, ButtonProps>;
@@ -48,5 +48,5 @@ function hudManager(event: "renderTokenHUD" | "renderTileHUD") {
     }
 }
 
-export class TokenHUDManager extends hudManager("renderTokenHUD") { }
-export class TileHUDManager extends hudManager("renderTileHUD") { }
+export class TokenHUDManager extends HUDManager("renderTokenHUD") { }
+export class TileHUDManager extends HUDManager("renderTileHUD") { }

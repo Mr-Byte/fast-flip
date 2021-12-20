@@ -1,7 +1,8 @@
-import * as constants from "./constants";
+import { SETTING, LOCALIZATION, MODULE_NAME } from "./constants";
 import { TokenManager, TokenMirror } from "./managers/TokenManager";
 import { TileManager, TileMirror } from "./managers/TileManager";
 import { TileHUDManager, TokenHUDManager } from "./managers/HUDManager";
+import { getIcon } from "./helpers";
 
 Hooks.once("init", () => {
     if (game instanceof Game) {
@@ -29,33 +30,45 @@ class FastFlipModule {
     }
 
     #registerSettings() {
-        this.#game.settings.register(constants.MODULE_NAME, constants.SHOW_MIRROR_BUTTONS_SETTING, {
-            name: this.#game.i18n.localize(constants.SHOW_MIRROR_BUTTONS),
-            hint: this.#game.i18n.localize(constants.SHOW_MIRROR_BUTTONS_HINT),
-            scope: "client",
+        this.#game.settings.register(MODULE_NAME, SETTING.AFK_OVERLAY_ICON_PATH, {
+            name: this.#game.i18n.localize(LOCALIZATION.AFK_OVERLAY_ICON_PATH),
+            hint: this.#game.i18n.localize(LOCALIZATION.AFK_OVERLAY_ICON_PATH_HINT),
+            scope: "world",
             config: true,
-            type: Boolean,
-            default: true,
+            default: getIcon("afk"),
+            filePicker: "imagevideo",
         });
 
-        this.#game.settings.register(constants.MODULE_NAME, constants.SHOW_TOGGLE_AFK_HUD_SETTING, {
-            name: this.#game.i18n.localize(constants.SHOW_TOGGLE_AFK_BUTTON),
-            hint: this.#game.i18n.localize(constants.SHOW_TOGGLE_AFK_HINT),
+        this.#game.settings.register(MODULE_NAME, SETTING.SHOW_MIRROR_BUTTONS, {
+            name: this.#game.i18n.localize(LOCALIZATION.SHOW_MIRROR_BUTTONS),
+            hint: this.#game.i18n.localize(LOCALIZATION.SHOW_MIRROR_BUTTONS_HINT),
             scope: "client",
             config: true,
-            type: Boolean,
             default: true,
+            type: Boolean,
+        });
+
+        this.#game.settings.register(MODULE_NAME, SETTING.SHOW_TOGGLE_AFK_HUD, {
+            name: this.#game.i18n.localize(LOCALIZATION.SHOW_TOGGLE_AFK_BUTTON),
+            hint: this.#game.i18n.localize(LOCALIZATION.SHOW_TOGGLE_AFK_HINT),
+            scope: "client",
+            config: true,
+            default: true,
+            type: Boolean,
         });
     }
 
     #registerKeybindings() {
-        this.#game.keybindings.register(constants.MODULE_NAME, "horizontalFlip", {
-            name: constants.MIRROR_HORIZONTAL_HOTKEY,
-            hint: this.#game.i18n.localize(constants.MIRROR_HORIZONTAL_HINT),
+        this.#game.keybindings.register(MODULE_NAME, "horizontalFlip", {
+            name: LOCALIZATION.MIRROR_HORIZONTAL_HOTKEY,
+            hint: this.#game.i18n.localize(LOCALIZATION.MIRROR_HORIZONTAL_HINT),
             editable: [
                 { key: "KeyF" },
             ],
-            onDown: this.#onHorizontalMirror.bind(this),
+            onDown: async () => {
+                await this.#tokenManager.mirrorSelected(TokenMirror.HORIZONTAL);
+                await this.#tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL);
+            },
             // TODO: Fix this once V9 bindings are out.
             precedence: (CONST as any).KEYBINDING_PRECEDENCE.NORMAL,
             restrictied: false,
@@ -63,13 +76,16 @@ class FastFlipModule {
             repeat: false,
         });
 
-        this.#game.keybindings.register(constants.MODULE_NAME, "verticalFlip", {
-            name: constants.MIRROR_VERTICAL_HOTKEY,
-            hint: this.#game.i18n.localize(constants.MIRROR_VERTICAL_HINT),
+        this.#game.keybindings.register(MODULE_NAME, "verticalFlip", {
+            name: LOCALIZATION.MIRROR_VERTICAL_HOTKEY,
+            hint: this.#game.i18n.localize(LOCALIZATION.MIRROR_VERTICAL_HINT),
             editable: [
                 { key: "KeyF", modifiers: ["SHIFT"] },
             ],
-            onDown: this.#onVerticalMirror.bind(this),
+            onDown: async () => {
+                await this.#tokenManager.mirrorSelected(TokenMirror.VERTICAL);
+                await this.#tileManager.mirrorSelectedTiles(TileMirror.VERTICAL);
+            },
             // TODO: Fix this once V9 bindings are out.
             precedence: (CONST as any).KEYBINDING_PRECEDENCE.NORMAL,
             restrictied: false,
@@ -77,13 +93,13 @@ class FastFlipModule {
             repeat: false,
         });
 
-        this.#game.keybindings.register(constants.MODULE_NAME, constants.TOGGLE_AFK_HOTKEY, {
-            name: constants.TOGGLE_AFK_HOTKEY,
-            hint: this.#game.i18n.localize(constants.TOGGLE_AFK_HINT),
+        this.#game.keybindings.register(MODULE_NAME, LOCALIZATION.TOGGLE_AFK_HOTKEY, {
+            name: LOCALIZATION.TOGGLE_AFK_HOTKEY,
+            hint: this.#game.i18n.localize(LOCALIZATION.TOGGLE_AFK_HINT),
             editable: [
                 { key: "KeyK", modifiers: ["SHIFT"] },
             ],
-            onDown: this.#onToggleAFK.bind(this),
+            onDown: async () => await this.#tokenManager.toggleAFK(),
             // TODO: Fix this once V9 bindings are out.
             precedence: (CONST as any).KEYBINDING_PRECEDENCE.NORMAL,
             restrictied: false,
@@ -93,56 +109,42 @@ class FastFlipModule {
     }
 
     #registerHUDButtons() {
-        this.#tokenHUDManager.registerButton(`${constants.MODULE_NAME}.mirror-horizontal`, {
+        this.#tokenHUDManager.registerButton(`${MODULE_NAME}.mirror-horizontal`, {
             side: "left",
-            title: constants.MIRROR_HORIZONTAL_BUTTON,
+            title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
             icon: "mirror-horizontal",
-            onClick: this.#onHorizontalMirror.bind(this),
-            shouldShow: () => this.#game.settings.get(constants.MODULE_NAME, constants.SHOW_MIRROR_BUTTONS_SETTING) as boolean,
+            onClick: async () => await this.#tokenManager.mirrorSelected(TokenMirror.HORIZONTAL),
+            shouldShow: () => this.#game.settings.get(MODULE_NAME, SETTING.SHOW_MIRROR_BUTTONS) as boolean,
         });
 
-        this.#tokenHUDManager.registerButton(`${constants.MODULE_NAME}.mirror-vertical`, {
+        this.#tokenHUDManager.registerButton(`${MODULE_NAME}.mirror-vertical`, {
             side: "left",
-            title: constants.MIRROR_VERTICAL_BUTTON,
+            title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
             icon: "mirror-vertical",
-            onClick: this.#onVerticalMirror.bind(this),
-            shouldShow: () => this.#game.settings.get(constants.MODULE_NAME, constants.SHOW_MIRROR_BUTTONS_SETTING) as boolean,
+            onClick: async () => await this.#tokenManager.mirrorSelected(TokenMirror.VERTICAL),
+            shouldShow: () => this.#game.settings.get(MODULE_NAME, SETTING.SHOW_MIRROR_BUTTONS) as boolean,
         });
 
-        this.#tokenHUDManager.registerButton(`${constants.MODULE_NAME}.toggle-afk`, {
+        this.#tokenHUDManager.registerButton(`${MODULE_NAME}.toggle-afk`, {
             side: "right",
-            title: constants.TOGGLE_AFK_BUTTON,
+            title: LOCALIZATION.TOGGLE_AFK_BUTTON,
             icon: "toggle-afk",
-            onClick: this.#onToggleAFK.bind(this),
-            shouldShow: () => this.#game.settings.get(constants.MODULE_NAME, constants.SHOW_TOGGLE_AFK_HUD_SETTING) as boolean,
+            onClick: async () => await this.#tokenManager.toggleAFK(),
+            shouldShow: () => this.#game.settings.get(MODULE_NAME, SETTING.SHOW_TOGGLE_AFK_HUD) as boolean,
         });
 
-        this.#tileHUDManager.registerButton(`${constants.MODULE_NAME}.mirror-horizontal`, {
+        this.#tileHUDManager.registerButton(`${MODULE_NAME}.mirror-horizontal`, {
             side: "left",
-            title: constants.MIRROR_HORIZONTAL_BUTTON,
+            title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
             icon: "mirror-horizontal",
-            onClick: this.#onHorizontalMirror.bind(this),
+            onClick: async () => await this.#tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL),
         });
 
-        this.#tileHUDManager.registerButton(`${constants.MODULE_NAME}.mirror-vertical`, {
+        this.#tileHUDManager.registerButton(`${MODULE_NAME}.mirror-vertical`, {
             side: "left",
-            title: constants.MIRROR_VERTICAL_BUTTON,
+            title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
             icon: "mirror-vertical",
-            onClick: this.#onVerticalMirror.bind(this),
+            onClick: async () => await this.#tileManager.mirrorSelectedTiles(TileMirror.VERTICAL),
         });
     }
-
-    async #onToggleAFK() {
-        await this.#tokenManager.toggleAFK();
-    }
-
-    async #onHorizontalMirror() {
-        await this.#tokenManager.mirrorSelected(TokenMirror.HORIZONTAL);
-        await this.#tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL);
-    };
-
-    async #onVerticalMirror() {
-        await this.#tokenManager.mirrorSelected(TokenMirror.VERTICAL);
-        await this.#tileManager.mirrorSelectedTiles(TileMirror.VERTICAL);
-    };
 }

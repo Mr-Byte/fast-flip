@@ -11,5 +11,7 @@
     "fast-flip.show-mirror-buttons": "Show Mirror Buttons",
     "fast-flip.show-mirror-buttons-hint": "Show or hide the mirror buttons on the token HUD",
     "fast-flip.show-toggle-afk-button": "Show AFK Toggle",
-    "fast-flip.show-toggle-afk-hint": "Show or hide the AFK toggle button on the token HUD"
+    "fast-flip.show-toggle-afk-hint": "Show or hide the AFK toggle button on the token HUD",
+    "fast-flip.afk-overlay-icon-path": "AFK Icon Path",
+    "fast-flip.afk-overlay-icon-path-hint": "Path to the image to use for the AFK status indicator on tokens"
 }

@@ -36,10 +36,11 @@ function HUDManager(event: "renderTokenHUD" | "renderTileHUD") {
         }
 
         #createButton(props: ButtonProps): JQuery {
+            const title = this.#game.i18n.localize(props.title);
             const element = document.createElement("div");
             element.classList.add("control-icon");
-            element.innerHTML = `<img src="${getIcon(props.icon)}" width="36" height="36" title="${props.title}" />`;
-            element.title = this.#game.i18n.localize(props.title);
+            element.innerHTML = `<img src="${getIcon(props.icon)}" width="36" height="36" title="${title}" />`;
+            element.title = title;
 
             const button = $(element).on("click", () => props.onClick());
 

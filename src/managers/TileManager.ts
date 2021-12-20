@@ -29,7 +29,7 @@ export class TileManager {
     };
 
     #onUpdateTile(_: unknown, update: foundry.data.TileData) {
-        if (update._id) {
+        if (update._id && update.flags?.[MODULE_NAME]) {
             const tile = this.#findTile(update._id);
 
             if (tile) {

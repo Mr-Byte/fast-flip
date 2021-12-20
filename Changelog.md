@@ -1,3 +1,7 @@
+# v2.1.0
+* Added a Shift+K (default binding) shortcut to mark a token as AFK
+* Restructured the mod internals to allow for more token related features to be added
+
 # v2.0.0
 * Support for Foundry V9
 * Migrate to the new V9 Keybindings API (this is a breaking change that requires V9 minimum)
@@ -14,4 +18,4 @@ Tiles!
 # v1.0.1
 Initial public release of Fast Flip!
 
-* Create a keybind that can be used to horizontally mirror all selected tokens. Works for both the GM and players.
+* Create a keybind that can be used to horizontally mirror all selected tokens. Works for both the GM and players

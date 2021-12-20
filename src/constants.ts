@@ -8,4 +8,10 @@ export const MIRROR_VERTICAL_BUTTON = `${MODULE_NAME}.mirror-vertical-button`;
 export const TOGGLE_AFK_HOTKEY = `${MODULE_NAME}.toggle-afk-hotkey`;
 export const TOGGLE_AFK_HINT = `${MODULE_NAME}.toggle-afk-hint`;
 export const TOGGLE_AFK_BUTTON = `${MODULE_NAME}.toggle-afk-button`;
+export const SHOW_MIRROR_BUTTONS = `${MODULE_NAME}.show-mirror-buttons`;
+export const SHOW_MIRROR_BUTTONS_HINT = `${MODULE_NAME}.show-mirror-buttons-hint`
+export const SHOW_TOGGLE_AFK_BUTTON = `${MODULE_NAME}.show-toggle-afk-button`;
+export const SHOW_TOGGLE_AFK_HINT = `${MODULE_NAME}.show-toggle-afk-hint`
 
+export const SHOW_MIRROR_BUTTONS_SETTING = "show-mirror-buttons-hud";
+export const SHOW_TOGGLE_AFK_HUD_SETTING = "show-toggle-afk-hud";

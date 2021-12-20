@@ -5,6 +5,7 @@ export interface ButtonProps {
     title: string;
     icon: string;
     onClick: () => void | Promise<void>;
+    shouldShow?: () => boolean;
 }
 
 export class TokenHUDManager {
@@ -23,10 +24,13 @@ export class TokenHUDManager {
     }
 
     #renderTokenHUD(_: unknown, html: JQuery) {
-        for (const [id, props] of this.#buttons) {
-            const button = this.#createButton(props);
+        for (const [_, props] of this.#buttons) {
+            const shouldShow = props.shouldShow?.() ?? true;
 
-            html.find(`div.${props.side}`).append(button);
+            if (shouldShow) {
+                const button = this.#createButton(props);
+                html.find(`div.${props.side}`).append(button);
+            }
         }
     }
 

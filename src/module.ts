@@ -21,8 +21,29 @@ class FastFlipModule {
         this.#tokenManager = new TokenManager(game);
         this.#tileManager = new TileManager(game);
 
+        this.#registerSettings();
         this.#registerKeybindings();
         this.#registerHUDButtons();
+    }
+
+    #registerSettings() {
+        this.#game.settings.register(constants.MODULE_NAME, constants.SHOW_MIRROR_BUTTONS_SETTING, {
+            name: this.#game.i18n.localize(constants.SHOW_MIRROR_BUTTONS),
+            hint: this.#game.i18n.localize(constants.SHOW_MIRROR_BUTTONS_HINT),
+            scope: "client",
+            config: true,
+            type: Boolean,
+            default: true,
+        });
+
+        this.#game.settings.register(constants.MODULE_NAME, constants.SHOW_TOGGLE_AFK_HUD_SETTING, {
+            name: this.#game.i18n.localize(constants.SHOW_TOGGLE_AFK_BUTTON),
+            hint: this.#game.i18n.localize(constants.SHOW_TOGGLE_AFK_HINT),
+            scope: "client",
+            config: true,
+            type: Boolean,
+            default: true,
+        });
     }
 
     #registerKeybindings() {
@@ -74,21 +95,24 @@ class FastFlipModule {
             side: "left",
             title: constants.MIRROR_HORIZONTAL_BUTTON,
             icon: "mirror-horizontal",
-            onClick: this.#onHorizontalMirror.bind(this)
+            onClick: this.#onHorizontalMirror.bind(this),
+            shouldShow: () => this.#game.settings.get(constants.MODULE_NAME, constants.SHOW_MIRROR_BUTTONS_SETTING) as boolean,
         });
 
         this.#tokenHUDManager.registerButton(`${constants.MODULE_NAME}.mirror-vertical`, {
             side: "left",
             title: constants.MIRROR_VERTICAL_BUTTON,
             icon: "mirror-vertical",
-            onClick: this.#onVerticalMirror.bind(this)
+            onClick: this.#onVerticalMirror.bind(this),
+            shouldShow: () => this.#game.settings.get(constants.MODULE_NAME, constants.SHOW_MIRROR_BUTTONS_SETTING) as boolean,
         });
 
         this.#tokenHUDManager.registerButton(`${constants.MODULE_NAME}.toggle-afk`, {
             side: "right",
             title: constants.TOGGLE_AFK_BUTTON,
             icon: "toggle-afk",
-            onClick: this.#onToggleAFK.bind(this)
+            onClick: this.#onToggleAFK.bind(this),
+            shouldShow: () => this.#game.settings.get(constants.MODULE_NAME, constants.SHOW_TOGGLE_AFK_HUD_SETTING) as boolean,
         });
     }
 

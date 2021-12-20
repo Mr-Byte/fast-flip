@@ -1,6 +1,7 @@
 # v2.1.0
 * Added a `Shift+K` (default binding) shortcut to mark a token as AFK
 * Added token HUD buttons for mirroring tokens and marking tokens as AFK
+* Added settings to allow players to show/hide the mirror and AFK toggle buttons on their token HUD
 * Restructured the mod internals to allow for more token related features to be added
 
 # v2.0.0

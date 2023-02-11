@@ -2,8 +2,12 @@
     "id": "fast-flip",
     "title": "Fast Flip!",
     "description": "Adds several useful token and tile utilities. Flip tokens & tiles, toggle tokens as AFK, show which token is speaking.",
-    "author": "MrByte",
-    "version": "3.1.0",
+    "authors": [
+        {
+            "name": "MrByte"
+        }
+    ],
+    "version": "3.2.2",
     "socket": true,
     "compatibility": {
         "minimum": 10,
@@ -50,7 +54,7 @@
         "mod.js"
     ],
     "url": "https://github.com/Mr-Byte/fast-flip",
-    "download": "https://github.com/Mr-Byte/fast-flip/releases/download/v3.1.0/fast-flip.zip",
+    "download": "https://github.com/Mr-Byte/fast-flip/releases/download/v3.2.2/fast-flip.zip",
     "manifest": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/V10/module.json",
     "bugs": "https://github.com/Mr-Byte/fast-flip/issues",
     "allowBugReporter": true,

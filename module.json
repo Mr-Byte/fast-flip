@@ -1,62 +1,31 @@
 {
     "id": "fast-flip",
-    "title": "Fast Flip!",
+    "title": "Fast Flip! Token Tools",
     "description": "Adds several useful token and tile utilities. Flip tokens & tiles, toggle tokens as AFK, show which token is speaking.",
     "authors": [
         {
-            "name": "MrByte"
+            "name": "MrByte",
+            "url": "https://github.com/Mr-Byte/fast-flip/"
         }
     ],
-    "version": "3.2.2",
+    "version": "4.0.0",
     "socket": true,
     "compatibility": {
-        "minimum": 10,
-        "verified": 10
+        "minimum": 13,
+        "verified": 13
     },
     "languages": [
         {
             "lang": "en",
             "name": "English",
             "path": "lang/en.json"
-        },
-        {
-            "lang": "de",
-            "name": "Deutsch",
-            "path": "lang/de.json"
-        },
-        {
-            "lang": "es",
-            "name": "Español",
-            "path": "lang/es.json"
-        },
-        {
-            "lang": "ja",
-            "name": "日本語",
-            "path": "lang/ja.json"
-        },
-        {
-            "lang": "pt-BR",
-            "name": "Português",
-            "path": "lang/pt.json"
-        },
-        {
-            "lang": "zh-Hans",
-            "name": "中文（简体）",
-            "path": "lang/zh_Hans.json"
-        },
-        {
-            "lang": "es-419",
-            "name": "Español (Latinoamérica)",
-            "path": "lang/es_419.json"
         }
     ],
-    "scripts": [
-        "mod.js"
-    ],
+    "scripts": ["mod.js"],
     "url": "https://github.com/Mr-Byte/fast-flip",
-    "download": "https://github.com/Mr-Byte/fast-flip/releases/download/v3.2.2/fast-flip.zip",
-    "manifest": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/V10/module.json",
     "bugs": "https://github.com/Mr-Byte/fast-flip/issues",
-    "allowBugReporter": true,
+    "download": "https://github.com/Mr-Byte/fast-flip/releases/download/v4.0.0/fast-flip.zip",
+    "manifest": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/V13/module.json",
+    "changelog": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/V13/Changelog.md",
     "license": "MIT"
 }

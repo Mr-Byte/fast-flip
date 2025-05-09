@@ -10,23 +10,19 @@
             "ES2018",
             "ES2020"
         ],
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "allowJs": true,
         "outDir": "dist/",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
-        "typeRoots": [
-            "node_modules/@types",
-            "src/types"
-        ],
         "types": [
-            "@league-of-foundry-developers/foundry-vtt-types",
+            "fvtt-types",
         ],
         "newLine": "lf",
         "skipLibCheck": true,
         "esModuleInterop": true,
-        "baseUrl": "./src",
+        "baseUrl": "./src"
     },
     "exclude": [
         "dist/**/*.js",

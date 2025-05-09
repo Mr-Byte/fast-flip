@@ -35,7 +35,7 @@ export class SpeechManager {
             return;
         }
 
-        const sceneID = this.#game.canvas.scene?.id;
+        const sceneID = this.#game.canvas?.scene?.id;
         const tokenID = token?.id;
 
         if (tokenID && sceneID) {
@@ -47,7 +47,7 @@ export class SpeechManager {
 
             this.#keyClearInterval = setInterval(() => {
                 const [bindings] =
-                    this.#game.keybindings.bindings?.get(
+                    this.#game.keybindings?.bindings?.get(
                         `${MODULE_NAME}.${LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY}`,
                     ) ?? [];
                 const keys = bindings
@@ -71,7 +71,7 @@ export class SpeechManager {
 
     // NOTE: Allow this no matter what, in the event the setting is changed while speech bubbles are active.
     hideSpeechBubble() {
-        const sceneID = this.#game.canvas.scene?.id;
+        const sceneID = this.#game.canvas?.scene?.id;
         const token = this.#game.canvas?.tokens?.controlled?.[0];
 
         if (!token?.isOwner) {

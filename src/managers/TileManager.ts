@@ -1,9 +1,6 @@
 import { MODULE_NAME } from "../constants";
-
-export const enum TileMirror {
-    HORIZONTAL = "tileMirrorHorizontal",
-    VERTICAL = "tileMirrorVertical",
-}
+import { TileMirror } from "../configuration";
+export { TileMirror } from "../configuration";
 
 export class TileManager {
     readonly #game: Game;
@@ -35,7 +32,7 @@ export class TileManager {
         }
     }
 
-    #onUpdateTile(_: unknown, update: foundry.data.TileData) {
+    #onUpdateTile(_: unknown, update: foundry.documents.BaseTile) {
         if (update._id && update.flags?.[MODULE_NAME]) {
             const tile = this.#findTile(update._id);
 
@@ -69,14 +66,14 @@ export class TileManager {
     }
 
     get #allTiles(): Tile[] {
-        return (this.#game.canvas as any).tiles.tiles ?? [];
+        return this.#game.canvas?.tiles?.tiles ?? [];
     }
 
     get #controlledTiles(): Tile[] {
-        return (this.#game.canvas as any).tiles.controlled ?? [];
+        return this.#game.canvas?.tiles?.controlled ?? [];
     }
 
     #findTile(id: string): Tile | undefined {
-        return (this.#game.canvas as any).tiles.get(id);
+        return this.#game.canvas?.tiles?.get(id);
     }
 }

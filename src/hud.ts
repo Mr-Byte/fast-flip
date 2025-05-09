@@ -17,11 +17,11 @@ export const enum Name {
 }
 
 type Brand<T> = T extends Tile
-    ? typeof Name["TileHUD"]
+    ? (typeof Name)["TileHUD"]
     : T extends Token
-    ? typeof Name["TokenHUD"]
+    ? (typeof Name)["TokenHUD"]
     : T extends Drawing
-    ? typeof Name["DrawingHUD"]
+    ? (typeof Name)["DrawingHUD"]
     : never;
 
 export class HUD<T extends PlaceableObject> {
@@ -42,7 +42,9 @@ export class HUD<T extends PlaceableObject> {
 
     #render(hud: BasePlaceableHUD, html: JQuery) {
         for (const groupProps of this.#buttonsGroups) {
-            const shouldShow = groupProps.buttons.some(button => button.shouldShow?.(hud.object as T) ?? true);
+            const shouldShow = groupProps.buttons.some(
+                (button) => button.shouldShow?.(hud.object as T) ?? true,
+            );
 
             if (shouldShow) {
                 const group = document.createElement("div");
@@ -55,11 +57,11 @@ export class HUD<T extends PlaceableObject> {
                 }
 
                 for (const props of groupProps.buttons) {
-                    const title = this.#game.i18n.localize(props.title);
+                    const title = this.#game.i18n?.localize(props.title);
                     const button = document.createElement("div");
                     button.classList.add("control-icon");
                     button.onclick = () => props.onClick(hud.object as T);
-                    button.title = title;
+                    button.title = title ?? "";
 
                     if (groupProps.side === "left") {
                         button.style.marginRight = "8px";
@@ -69,8 +71,8 @@ export class HUD<T extends PlaceableObject> {
                     button.style.height = "40px";
 
                     const img = document.createElement("img");
-                    img.title = title;
-                    img.alt = title;
+                    img.title = title ?? "";
+                    img.alt = title ?? "";
                     img.src = props.icon;
                     img.width = 36;
                     img.height = 36;
@@ -84,4 +86,3 @@ export class HUD<T extends PlaceableObject> {
         }
     }
 }
-

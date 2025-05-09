@@ -1,13 +1,9 @@
-import { AFKOverlay } from "pixi/AFKOverlay";
+import { AFKOverlay } from "../pixi/AFKOverlay";
+import { findChild } from "../pixi";
 import { LOCALIZATION, MODULE_NAME } from "../constants";
 import { Settings } from "../Settings";
-
-export const enum TokenMirror {
-    HORIZONTAL = "scaleX",
-    VERTICAL = "scaleY",
-}
-
-const AFK_STATE_KEY = "afk-state";
+import { AFK_STATE_KEY, TokenMirror } from "../configuration";
+export { TokenMirror } from "../configuration";
 
 export class TokenManager {
     readonly #game: Game;
@@ -28,11 +24,17 @@ export class TokenManager {
             }
 
             (async () => {
-                // NOTE: Guard token flipping with an await on any currently running animations.
-                //@ts-ignore
-                await token._animation;
+                const key = `Token.${token.id}.animate`;
+                console.log(key);
+                const animationContext = token.animationContexts.get(key);
 
-                const flipMirror = -((token.document as any).texture[tokenMirrorDirection]);
+                if (animationContext?.promise) {
+                    await animationContext.promise;
+                }
+
+                const flipMirror = -(
+                    token.document?.texture[tokenMirrorDirection] ?? 0
+                );
                 const animationDuration = this.#settings.animationDuration;
 
                 await token.document.update(
@@ -40,13 +42,11 @@ export class TokenManager {
                         [`texture.${tokenMirrorDirection}`]: flipMirror,
                     },
                     {
-                        //@ts-ignore
                         animate: animationDuration !== 0,
-                        //@ts-ignore
                         animation: {
-                            duration: animationDuration
-                        }
-                    }
+                            duration: animationDuration,
+                        },
+                    },
                 );
             })();
         }
@@ -64,9 +64,7 @@ export class TokenManager {
 
             const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
 
-            await isAFK
-                ? this.#unsetAFK(token)
-                : this.#setAFK(token);
+            (await isAFK) ? this.#unsetAFK(token) : this.#setAFK(token);
         }
     }
 
@@ -75,13 +73,13 @@ export class TokenManager {
 
         this.#settings.showAFKStatusInChat &&
             ChatMessage.create({
-                type: CONST.CHAT_MESSAGE_TYPES.OOC,
+                style: CONST.CHAT_MESSAGE_STYLES.OOC,
                 speaker: { token: token.id },
-                content: this.#game.i18n.format(
+                content: this.#game.i18n?.format(
                     LOCALIZATION.CHAT_AFK_MESSAGE,
                     {
                         name: token.name,
-                    }
+                    },
                 ),
             });
     }
@@ -91,13 +89,13 @@ export class TokenManager {
 
         this.#settings.showAFKStatusInChat &&
             ChatMessage.create({
-                type: CONST.CHAT_MESSAGE_TYPES.OOC,
+                style: CONST.CHAT_MESSAGE_STYLES.OOC,
                 speaker: { token: token.id },
-                content: this.#game.i18n.format(
+                content: this.#game.i18n?.format(
                     LOCALIZATION.CHAT_RETURNED_MESSAGE,
                     {
                         name: token.name,
-                    }
+                    },
                 ),
             });
 
@@ -105,7 +103,7 @@ export class TokenManager {
     }
 
     get #controlledTokens(): Token[] {
-        return this.#game.canvas.tokens?.controlled ?? [];
+        return this.#game.canvas?.tokens?.controlled ?? [];
     }
 
     async #onDrawToken(token: Token) {
@@ -120,22 +118,30 @@ export class TokenManager {
         await this.#updateTokenAFKOverlay(token);
     }
 
-    async #onUpdateToken(_: unknown, data: foundry.data.TokenData) {
-        if (!data._id || (data.flags?.[MODULE_NAME] as Record<string, unknown>)?.[AFK_STATE_KEY] == undefined) {
+    async #onUpdateToken(_: unknown, document: foundry.documents.BaseToken) {
+        if (!document._id) {
             return;
         }
 
-        const token = (this.#game.canvas.tokens as any).get(data._id);
+        const token = this.#game.canvas?.tokens?.get(document._id);
+
         if (!token) {
             return;
         }
 
-        await this.#updateTokenAFKOverlay(token);
+        const moduleFlags = document.flags?.[MODULE_NAME] as
+            | Record<string, unknown>
+            | undefined;
+
+        if (moduleFlags?.[AFK_STATE_KEY]) {
+            await this.#updateTokenAFKOverlay(token);
+        }
     }
 
     async #updateTokenAFKOverlay(token: Token) {
-        let overlay = token.getChildByName(AFKOverlay.NAME, true) as AFKOverlay | undefined
-            ?? new AFKOverlay(this.#settings, token);
+        const overlay =
+            findChild(token, AFKOverlay) ??
+            new AFKOverlay(this.#settings, token);
 
         const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
         if (!isAFK) {
@@ -143,6 +149,6 @@ export class TokenManager {
             return;
         }
 
-        await overlay.draw();
+        await overlay.show();
     }
 }

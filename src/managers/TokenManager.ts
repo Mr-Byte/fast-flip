@@ -64,7 +64,7 @@ export class TokenManager {
 
             const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
 
-            (await isAFK) ? this.#unsetAFK(token) : this.#setAFK(token);
+            isAFK ? this.#unsetAFK(token) : this.#setAFK(token);
         }
     }
 
@@ -129,13 +129,7 @@ export class TokenManager {
             return;
         }
 
-        const moduleFlags = document.flags?.[MODULE_NAME] as
-            | Record<string, unknown>
-            | undefined;
-
-        if (moduleFlags?.[AFK_STATE_KEY]) {
-            await this.#updateTokenAFKOverlay(token);
-        }
+        await this.#updateTokenAFKOverlay(token);
     }
 
     async #updateTokenAFKOverlay(token: Token) {
@@ -144,6 +138,7 @@ export class TokenManager {
             new AFKOverlay(this.#settings, token);
 
         const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
+
         if (!isAFK) {
             overlay.hide();
             return;

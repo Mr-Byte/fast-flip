@@ -40,7 +40,7 @@ export class HUD<T extends PlaceableObject> {
         this.#buttonsGroups.push(props);
     }
 
-    #render(hud: BasePlaceableHUD, html: JQuery) {
+    #render(hud: BasePlaceableHUD, html: HTMLElement) {
         for (const groupProps of this.#buttonsGroups) {
             const shouldShow = groupProps.buttons.some(
                 (button) => button.shouldShow?.(hud.object as T) ?? true,
@@ -52,23 +52,15 @@ export class HUD<T extends PlaceableObject> {
                 if (groupProps.buttons.length > 1) {
                     group.style.display = "flex";
                     group.style.flexDirection = "horizontal";
-                    group.style.marginRight = "40px";
-                    group.style.paddingRight = "2px";
+                    group.style.gap = "8px";
                 }
 
                 for (const props of groupProps.buttons) {
                     const title = this.#game.i18n?.localize(props.title);
-                    const button = document.createElement("div");
+                    const button = document.createElement("button");
                     button.classList.add("control-icon");
                     button.onclick = () => props.onClick(hud.object as T);
                     button.title = title ?? "";
-
-                    if (groupProps.side === "left") {
-                        button.style.marginRight = "8px";
-                    }
-
-                    button.style.marginTop = "8px";
-                    button.style.height = "40px";
 
                     const img = document.createElement("img");
                     img.title = title ?? "";
@@ -81,7 +73,7 @@ export class HUD<T extends PlaceableObject> {
                     group.append(button);
                 }
 
-                html.find(`div.${groupProps.side}`).append(group);
+                html.querySelector(`div.${groupProps.side}`)?.append(group);
             }
         }
     }

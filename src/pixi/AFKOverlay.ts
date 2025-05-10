@@ -45,8 +45,6 @@ export class AFKOverlay extends PIXI.Container implements TokenContainer {
     }
 
     hide() {
-        console.log("Hidden?");
-
         this.renderable = false;
         if (this.#sprite) {
             this.#sprite.destroy({ children: true });

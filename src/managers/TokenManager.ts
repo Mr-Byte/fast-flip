@@ -25,7 +25,6 @@ export class TokenManager {
 
             (async () => {
                 const key = `Token.${token.id}.animate`;
-                console.log(key);
                 const animationContext = token.animationContexts.get(key);
 
                 if (animationContext?.promise) {

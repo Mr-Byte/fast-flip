@@ -40,10 +40,10 @@ export class HUD<T extends PlaceableObject> {
         this.#buttonsGroups.push(props);
     }
 
-    #render(hud: BasePlaceableHUD, html: HTMLElement) {
+    #render(hud: BasePlaceableHUD<T>, html: HTMLElement) {
         for (const groupProps of this.#buttonsGroups) {
-            const shouldShow = groupProps.buttons.some(
-                (button) => button.shouldShow?.(hud.object as T) ?? true,
+            const shouldShow = groupProps.buttons.some((button) =>
+                hud.object ? button.shouldShow?.(hud.object) ?? true : false,
             );
 
             if (shouldShow) {
@@ -56,15 +56,21 @@ export class HUD<T extends PlaceableObject> {
                 }
 
                 for (const props of groupProps.buttons) {
-                    const title = this.#game.i18n?.localize(props.title);
+                    const title = this.#game.i18n?.localize(props.title) ?? "";
                     const button = document.createElement("button");
                     button.classList.add("control-icon");
-                    button.onclick = () => props.onClick(hud.object as T);
-                    button.title = title ?? "";
+                    button.onclick = () => {
+                        if (!hud.object) {
+                            return;
+                        }
+
+                        props.onClick(hud.object);
+                    };
+                    button.title = title;
 
                     const img = document.createElement("img");
-                    img.title = title ?? "";
-                    img.alt = title ?? "";
+                    img.title = title;
+                    img.alt = title;
                     img.src = props.icon;
                     img.width = 36;
                     img.height = 36;

@@ -1,10 +1,15 @@
-import { LOCALIZATION, MODULE_NAME } from "../constants";
-import { Settings } from "../Settings";
+import { Settings } from "../settings";
 
 export enum SpeechBubbleShowType {
     Keybind,
     Socket,
 }
+
+type MessageDimensions = {
+    width: number;
+    height: number;
+    unconstrained: number | undefined;
+};
 
 export class SpeechBubbles {
     readonly #template: string;
@@ -15,11 +20,11 @@ export class SpeechBubbles {
         this.#template = "templates/hud/chat-bubble.html";
     }
 
-    get container() {
+    get container(): JQuery<HTMLElement> {
         return $("#chat-bubbles");
     }
 
-    async show(token: Token) {
+    async show(token: Token): Promise<void> {
         const html = $(await this.#renderHTML({ token, message: token.name }));
         const dimensions = this.#getMessageDimensions(token.name);
 
@@ -33,7 +38,7 @@ export class SpeechBubbles {
         );
     }
 
-    hide(token: Token) {
+    hide(token: Token): Promise<void> | undefined {
         const existing = $(`.chat-bubble[data-token-id="${token.id}"]`);
         if (!existing.length) {
             return;
@@ -47,11 +52,14 @@ export class SpeechBubbles {
         });
     }
 
-    async #renderHTML(data: { token: Token; message: string }) {
+    async #renderHTML(data: {
+        token: Token;
+        message: string;
+    }): Promise<string> {
         return renderTemplate(this.#template, data);
     }
 
-    #getMessageDimensions(message: string) {
+    #getMessageDimensions(message: string): MessageDimensions {
         const div = $(
             `<div class="chat-bubble" style="visibility:hidden; font-size: ${
                 this.#settings.speechBubbleFontSize
@@ -75,7 +83,7 @@ export class SpeechBubbles {
         token: Token,
         html: JQuery,
         dimensions: { width: number; height: number },
-    ) {
+    ): void {
         html.addClass("right");
         html.css("font-size", `${this.#settings.speechBubbleFontSize}px`);
         const position = {

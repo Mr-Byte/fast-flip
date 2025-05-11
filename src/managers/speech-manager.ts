@@ -1,6 +1,6 @@
 import { SocketMessage, SocketMessageType } from "../socket/messages";
-import { Settings } from "../Settings";
-import { SpeechBubbles } from "../hud/SpeechBubbles";
+import { Settings } from "../settings";
+import { SpeechBubbles } from "../hud/speech-bubble";
 import { MODULE_NAME } from "../constants";
 import { LOCALIZATION } from "../constants";
 import { normalizeKeys } from "../helpers";
@@ -24,7 +24,7 @@ export class SpeechManager {
         );
     }
 
-    async showSpeechBubble() {
+    async showSpeechBubble(): Promise<void> {
         if (!this.#settings.allowSpeechBubbles) {
             return;
         }
@@ -70,7 +70,7 @@ export class SpeechManager {
     }
 
     // NOTE: Allow this no matter what, in the event the setting is changed while speech bubbles are active.
-    hideSpeechBubble() {
+    hideSpeechBubble(): void {
         const sceneID = this.#game.canvas?.scene?.id;
         const token = this.#game.canvas?.tokens?.controlled?.[0];
 
@@ -88,11 +88,11 @@ export class SpeechManager {
         }
     }
 
-    #onCanvasReady() {
+    #onCanvasReady(): void {
         this.#speechBubbles = new SpeechBubbles(this.#settings);
     }
 
-    async #onSocketMessage(data: SocketMessage) {
+    async #onSocketMessage(data: SocketMessage): Promise<void> {
         if (!this.#game.canvas) {
             return;
         }

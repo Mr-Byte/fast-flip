@@ -1,5 +1,5 @@
-import { TokenContainer } from "./";
-import { Settings } from "../Settings";
+import { TokenContainer } from ".";
+import { Settings } from "../settings";
 
 export class AFKOverlay extends PIXI.Container implements TokenContainer {
     public static readonly NAME: string = "afk-overlay";
@@ -18,7 +18,7 @@ export class AFKOverlay extends PIXI.Container implements TokenContainer {
         this.#token.addChild(this);
     }
 
-    async show() {
+    async show(): Promise<void> {
         const token = this.#token;
         const texture = await loadTexture(this.#settings.afkOverlayIconPath);
 
@@ -44,7 +44,7 @@ export class AFKOverlay extends PIXI.Container implements TokenContainer {
         this.renderable = true;
     }
 
-    hide() {
+    hide(): void {
         this.renderable = false;
         if (this.#sprite) {
             this.#sprite.destroy({ children: true });

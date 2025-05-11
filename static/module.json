@@ -8,7 +8,7 @@
             "url": "https://github.com/Mr-Byte/fast-flip/"
         }
     ],
-    "version": "4.0.0",
+    "version": "4.0.1",
     "socket": true,
     "compatibility": {
         "minimum": 13,
@@ -21,11 +21,11 @@
             "path": "lang/en.json"
         }
     ],
-    "scripts": ["mod.js"],
+    "scripts": ["module.js"],
     "url": "https://github.com/Mr-Byte/fast-flip",
     "bugs": "https://github.com/Mr-Byte/fast-flip/issues",
-    "download": "https://github.com/Mr-Byte/fast-flip/releases/download/v4.0.0/fast-flip.zip",
-    "manifest": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/V13/module.json",
+    "download": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/fast-flip.zip",
+    "manifest": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/module.json",
     "changelog": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/V13/Changelog.md",
     "license": "MIT"
 }

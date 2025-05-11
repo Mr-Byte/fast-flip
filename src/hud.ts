@@ -19,10 +19,10 @@ export const enum Name {
 type Brand<T> = T extends Tile
     ? (typeof Name)["TileHUD"]
     : T extends Token
-    ? (typeof Name)["TokenHUD"]
-    : T extends Drawing
-    ? (typeof Name)["DrawingHUD"]
-    : never;
+      ? (typeof Name)["TokenHUD"]
+      : T extends Drawing
+        ? (typeof Name)["DrawingHUD"]
+        : never;
 
 export class HUD<T extends PlaceableObject> {
     readonly __brand!: Brand<T>;
@@ -36,14 +36,14 @@ export class HUD<T extends PlaceableObject> {
         Hooks.on(`render${name}`, this.#render.bind(this));
     }
 
-    registerButtonGroup(props: ButtonGroupProps<T>) {
+    registerButtonGroup(props: ButtonGroupProps<T>): void {
         this.#buttonsGroups.push(props);
     }
 
-    #render(hud: BasePlaceableHUD<T>, html: HTMLElement) {
+    #render(hud: BasePlaceableHUD<T>, html: HTMLElement): void {
         for (const groupProps of this.#buttonsGroups) {
             const shouldShow = groupProps.buttons.some((button) =>
-                hud.object ? button.shouldShow?.(hud.object) ?? true : false,
+                hud.object ? (button.shouldShow?.(hud.object) ?? true) : false,
             );
 
             if (shouldShow) {

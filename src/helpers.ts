@@ -4,9 +4,9 @@ export function getIcon(icon: string): string {
     return `modules/${MODULE_NAME}/icons/${icon}.svg`;
 }
 
-type AltKeys = typeof KeyboardManager.MODIFIER_CODES.Alt[number];
-type CtrlKeys = typeof KeyboardManager.MODIFIER_CODES.Control[number];
-type ShiftKeys = typeof KeyboardManager.MODIFIER_CODES.Shift[number];
+type AltKeys = (typeof KeyboardManager.MODIFIER_CODES.Alt)[number];
+type CtrlKeys = (typeof KeyboardManager.MODIFIER_CODES.Control)[number];
+type ShiftKeys = (typeof KeyboardManager.MODIFIER_CODES.Shift)[number];
 
 export function normalizeKeys(keys: Set<string>): Set<string> {
     const normalizedKeys = new Set<string>();

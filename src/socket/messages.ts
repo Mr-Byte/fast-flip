@@ -1,6 +1,6 @@
 export const enum SocketMessageType {
     ShowSpeechBubble,
-    HideSpeechBubble
+    HideSpeechBubble,
 }
 
 export interface ShowSpeechBubbleMessage {

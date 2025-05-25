@@ -1,5 +1,5 @@
 import { MODULE_NAME } from "../constants";
-import { TileMirror } from "../configuration";
+import { TileMirror } from "model";
 export { TileMirror } from "../configuration";
 
 export class TileManager {

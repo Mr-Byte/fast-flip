@@ -4,5 +4,4 @@ module.exports = {
     tabWidth: 4,
     semi: true,
     pluginSearchDirs: ["."],
-    svelteSortOrder: "options-styles-scripts-markup",
 };

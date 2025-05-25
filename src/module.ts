@@ -1,10 +1,14 @@
-import { LOCALIZATION, MODULE_NAME } from "./constants";
-import { TokenManager, TokenMirror } from "./managers/token-manager";
-import { TileManager, TileMirror } from "./managers/tile-manager";
-import { Settings } from "./settings";
-import { getIcon } from "./helpers";
+import "./api";
+
 import * as hud from "./hud";
+
+import { LOCALIZATION, MODULE_NAME } from "./constants";
+import { TileManager, TileMirror } from "./managers/tile-manager";
+import { TokenManager, TokenMirror } from "./managers/token-manager";
+
+import { Settings } from "./settings";
 import { SpeechManager } from "./managers/speech-manager";
+import { getIcon } from "./helpers";
 
 Hooks.once("init", () => {
     if (game instanceof Game) {

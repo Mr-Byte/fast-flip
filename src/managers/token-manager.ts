@@ -1,9 +1,11 @@
-import { AFKOverlay } from "../pixi/afk-overlay";
-import { findChild } from "../pixi";
-import { LOCALIZATION, MODULE_NAME } from "../constants";
-import { Settings } from "../settings";
 import { AFK_STATE_KEY, TokenMirror } from "model";
-export { TokenMirror } from "../configuration";
+import { LOCALIZATION, MODULE_NAME } from "../constants";
+
+import { AFKOverlay } from "../pixi/afk-overlay";
+import { Settings } from "../settings";
+import { findChild } from "../pixi";
+
+export { TokenMirror } from "../model";
 
 export class TokenManager {
     readonly #game: Game;

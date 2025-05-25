@@ -1,8 +1,9 @@
 import { SocketMessage, SocketMessageType } from "../socket/messages";
+
+import { LOCALIZATION } from "../constants";
+import { MODULE_NAME } from "../constants";
 import { Settings } from "../settings";
 import { SpeechBubbles } from "../hud/speech-bubble";
-import { MODULE_NAME } from "../constants";
-import { LOCALIZATION } from "../constants";
 import { normalizeKeys } from "../helpers";
 
 export class SpeechManager {

@@ -1,7 +1,8 @@
-import { getIcon } from "./helpers";
 import { LOCALIZATION, MODULE_NAME } from "./constants";
-import { SettingEntries } from "./configuration";
+
 import { SETTING } from "model";
+import { SettingEntries } from "./configuration";
+import { getIcon } from "./helpers";
 
 export class Settings {
     readonly #game: Game;

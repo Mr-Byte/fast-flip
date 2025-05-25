@@ -24,6 +24,7 @@ export default tseslint.config(
             "no-unused-expressions": ["error", { allowShortCircuit: true }],
             "no-var": "error",
             "spaced-comment": ["error", "always", { markers: ["/"] }],
+            "sort-imports": "error",
             "@typescript-eslint/array-type": ["error", { default: "array" }],
             "@typescript-eslint/await-thenable": "error",
             "@typescript-eslint/ban-ts-comment": "error",

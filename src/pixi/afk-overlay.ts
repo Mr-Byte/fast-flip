@@ -1,5 +1,5 @@
-import { TokenContainer } from ".";
 import { Settings } from "../settings";
+import { TokenContainer } from ".";
 
 export class AFKOverlay extends PIXI.Container implements TokenContainer {
     public static readonly NAME: string = "afk-overlay";

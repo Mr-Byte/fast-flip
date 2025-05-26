@@ -1,7 +1,6 @@
 import { LOCALIZATION, MODULE_NAME } from "./constants";
+import { SETTING, SettingEntries } from "./configuration";
 
-import { SETTING } from "./model";
-import { SettingEntries } from "./configuration";
 import { getIcon } from "./helpers";
 
 export class Settings {
@@ -17,7 +16,7 @@ export class Settings {
             [SETTING.ANIMATION_DURATION]: {
                 name: this.#game.i18n?.localize(LOCALIZATION.ANIMATION_DURATION),
                 hint: this.#game.i18n?.localize(LOCALIZATION.ANIMATION_DURATION_HINT),
-                scope: "world" as const,
+                scope: "world",
                 config: true,
                 default: 0.0,
                 type: Number,
@@ -30,7 +29,7 @@ export class Settings {
             [SETTING.ALLOW_SPEECH_BUBBLES]: {
                 name: this.#game.i18n?.localize(LOCALIZATION.ALLOW_SPEECH_BUBBLES),
                 hint: this.#game.i18n?.localize(LOCALIZATION.ALLOW_SPEECH_BUBBLES_HINT),
-                scope: "world" as const,
+                scope: "world",
                 config: true,
                 default: true,
                 type: Boolean,
@@ -38,7 +37,7 @@ export class Settings {
             [SETTING.SPEECH_BUBBLE_FONT_SIZE]: {
                 name: this.#game.i18n?.localize(LOCALIZATION.SPEECH_BUBBLE_FONT_SIZE),
                 hint: this.#game.i18n?.localize(LOCALIZATION.SPEECH_BUBBLE_FONT_SIZE_HINT),
-                scope: "client" as const,
+                scope: "client",
                 config: true,
                 default: 14,
                 type: Number,
@@ -51,7 +50,7 @@ export class Settings {
             [SETTING.AFK_OVERLAY_ICON_PATH]: {
                 name: this.#game.i18n?.localize(LOCALIZATION.AFK_OVERLAY_ICON_PATH),
                 hint: this.#game.i18n?.localize(LOCALIZATION.AFK_OVERLAY_ICON_PATH_HINT),
-                scope: "world" as const,
+                scope: "world",
                 config: true,
                 default: getIcon("afk"),
                 filePicker: "imagevideo",
@@ -59,7 +58,7 @@ export class Settings {
             [SETTING.ALLOW_AFK_TOGGLE]: {
                 name: this.#game.i18n?.localize(LOCALIZATION.ALLOW_AFK_TOGGLE),
                 hint: this.#game.i18n?.localize(LOCALIZATION.ALLOW_AFK_TOGGLE_HINT),
-                scope: "world" as const,
+                scope: "world",
                 config: true,
                 default: true,
                 type: Boolean,
@@ -67,7 +66,7 @@ export class Settings {
             [SETTING.SHOW_AFK_STATUS_IN_CHAT]: {
                 name: this.#game.i18n?.localize(LOCALIZATION.SHOW_AFK_STATUS_IN_CHAT),
                 hint: this.#game.i18n?.localize(LOCALIZATION.SHOW_AFK_STATUS_IN_CHAT_HINT),
-                scope: "world" as const,
+                scope: "world",
                 config: true,
                 default: true,
                 type: Boolean,
@@ -75,7 +74,7 @@ export class Settings {
             [SETTING.SHOW_MIRROR_BUTTONS_HUD]: {
                 name: this.#game.i18n?.localize(LOCALIZATION.SHOW_MIRROR_BUTTONS),
                 hint: this.#game.i18n?.localize(LOCALIZATION.SHOW_MIRROR_BUTTONS_HINT),
-                scope: "client" as const,
+                scope: "client",
                 config: true,
                 default: true,
                 type: Boolean,
@@ -83,12 +82,12 @@ export class Settings {
             [SETTING.SHOW_TOGGLE_AFK_HUD]: {
                 name: this.#game.i18n?.localize(LOCALIZATION.SHOW_TOGGLE_AFK_BUTTON),
                 hint: this.#game.i18n?.localize(LOCALIZATION.SHOW_TOGGLE_AFK_HINT),
-                scope: "client" as const,
+                scope: "client",
                 config: true,
                 default: true,
                 type: Boolean,
             },
-        } as const;
+        };
 
         const entries = Object.entries(settings) as SettingEntries;
         for (const [name, value] of entries) {

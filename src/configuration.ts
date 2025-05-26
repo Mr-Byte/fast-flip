@@ -1,4 +1,5 @@
-import { AFK_STATE_KEY, Resource, TileMirror, TokenMirror } from "model";
+import { AFK_STATE_KEY, Resource, TileMirror, TokenMirror } from "./model";
+
 import { MODULE_NAME } from "./constants";
 
 export {};
@@ -57,4 +58,15 @@ export type Settings = {
     [K in keyof SettingConfig as K extends `fast-flip.${infer P}`
         ? KebabToShoutingSnake<P>
         : never]: K extends `fast-flip.${infer P}` ? P : never;
+};
+
+export const SETTING: Settings = {
+    ANIMATION_DURATION: "animation-duration",
+    ALLOW_AFK_TOGGLE: "allow-afk-toggle",
+    SHOW_AFK_STATUS_IN_CHAT: "show-afk-status-in-chat",
+    SHOW_MIRROR_BUTTONS_HUD: "show-mirror-buttons-hud",
+    SHOW_TOGGLE_AFK_HUD: "show-toggle-afk-hud",
+    AFK_OVERLAY_ICON_PATH: "afk-overlay-icon-path",
+    ALLOW_SPEECH_BUBBLES: "allow-speech-bubbles",
+    SPEECH_BUBBLE_FONT_SIZE: "speech-bubble-font-size",
 };

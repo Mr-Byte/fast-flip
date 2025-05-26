@@ -1,25 +1,31 @@
 import { Settings } from "configuration";
-import { z } from "zod/v4";
+import { z } from "zod/v4-mini";
 
-export const ResourceSchema = z.object({
-    name: z.string(),
-    id: z.string(), // TODO: Refine this xdd
-    icon: z.string().optional(),
-    range: z
-        .object({
-            min: z.number().optional(),
-            max: z.number().optional(),
-        })
-        .optional(),
-    trigger: z
-        .object({
-            type: z.unknown(),
-            resetValue: z.number(),
-        })
-        .optional(),
+export const Resource = z.object({
+    name: z.coerce.string(),
+    id: z.coerce.string(),
+    icon: z.optional(z.coerce.string()),
+    currentValue: z.coerce.number(),
+    range: z.optional(
+        z.object({
+            min: z.optional(z.coerce.number()),
+            max: z.optional(z.coerce.number()),
+        }),
+    ),
+    trigger: z.optional(
+        z.object({
+            triggerId: z.coerce.string(),
+            update: z.discriminatedUnion("type", [
+                z.object({ type: z.literal("reset"), resetValue: z.coerce.number() }),
+                z.object({ type: z.literal("delta"), deltaValue: z.coerce.number() }),
+            ]),
+        }),
+    ),
 });
 
-export type Resource = z.infer<typeof ResourceSchema>;
+export type Resource = z.infer<typeof Resource>;
+
+// export type Resource = Record<string, unknown>;
 
 export const enum TileMirror {
     HORIZONTAL = "tileMirrorHorizontal",

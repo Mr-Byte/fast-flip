@@ -8,6 +8,7 @@
             "ESNext"
         ],
         "moduleResolution": "bundler",
+        "esModuleInterop": true,
         "allowJs": true,
         "outDir": "dist/",
         "strict": true,
@@ -23,7 +24,6 @@
         ],
         "newLine": "lf",
         "skipLibCheck": true,
-        "esModuleInterop": true,
         "baseUrl": "./src"
     },
     "exclude": [

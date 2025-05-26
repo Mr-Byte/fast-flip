@@ -11,9 +11,6 @@ interface ObjectType {
 }
 
 /// Convenience function for finding children of a container with a specific type.
-export function findChild<C extends ObjectType>(
-    parent: PIXI.Container,
-    containerType: C,
-): InstanceType<C> | null {
+export function findChild<C extends ObjectType>(parent: PIXI.Container, containerType: C): InstanceType<C> | null {
     return parent.getChildByName(containerType.NAME, true);
 }

@@ -39,24 +39,19 @@ declare global {
     }
 }
 
-type RegisterOptions = ClientSettings.RegisterOptions<
-    string | number | boolean
->;
+type RegisterOptions = ClientSettings.RegisterOptions<string | number | boolean>;
 
 type SettingEntryMapping = {
-    [K in keyof SettingConfig as K extends `fast-flip.${infer P}`
-        ? P
-        : never]: K extends `fast-flip.${infer P}`
+    [K in keyof SettingConfig as K extends `fast-flip.${infer P}` ? P : never]: K extends `fast-flip.${infer P}`
         ? [P, RegisterOptions]
         : never;
 };
 
 export type SettingEntries = SettingEntryMapping[keyof SettingEntryMapping][];
 
-type KebabToShoutingSnake<S extends string> =
-    S extends `${infer Head}-${infer Tail}`
-        ? `${Uppercase<Head>}_${KebabToShoutingSnake<Tail>}`
-        : Uppercase<S>;
+type KebabToShoutingSnake<S extends string> = S extends `${infer Head}-${infer Tail}`
+    ? `${Uppercase<Head>}_${KebabToShoutingSnake<Tail>}`
+    : Uppercase<S>;
 
 export type Settings = {
     [K in keyof SettingConfig as K extends `fast-flip.${infer P}`

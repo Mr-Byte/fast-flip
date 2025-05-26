@@ -17,16 +17,12 @@ export function normalizeKeys(keys: Set<string>): Set<string> {
             continue;
         }
 
-        if (
-            KeyboardManager.MODIFIER_CODES.Control.indexOf(key as CtrlKeys) >= 0
-        ) {
+        if (KeyboardManager.MODIFIER_CODES.Control.indexOf(key as CtrlKeys) >= 0) {
             normalizedKeys.add(KeyboardManager.MODIFIER_KEYS.CONTROL);
             continue;
         }
 
-        if (
-            KeyboardManager.MODIFIER_CODES.Shift.indexOf(key as ShiftKeys) >= 0
-        ) {
+        if (KeyboardManager.MODIFIER_CODES.Shift.indexOf(key as ShiftKeys) >= 0) {
             normalizedKeys.add(KeyboardManager.MODIFIER_KEYS.SHIFT);
             continue;
         }

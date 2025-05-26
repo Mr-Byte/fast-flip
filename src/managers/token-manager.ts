@@ -1,11 +1,9 @@
-import { AFK_STATE_KEY, TokenMirror } from "model";
+import { AFK_STATE_KEY, TokenMirror } from "../model";
 import { LOCALIZATION, MODULE_NAME } from "../constants";
 
 import { AFKOverlay } from "../pixi/afk-overlay";
 import { Settings } from "../settings";
 import { findChild } from "../pixi";
-
-export { TokenMirror } from "../model";
 
 export class TokenManager {
     readonly #game: Game;
@@ -33,9 +31,7 @@ export class TokenManager {
                     await animationContext.promise;
                 }
 
-                const flipMirror = -(
-                    token.document?.texture[tokenMirrorDirection] ?? 0
-                );
+                const flipMirror = -(token.document?.texture[tokenMirrorDirection] ?? 0);
                 const animationDuration = this.#settings.animationDuration;
 
                 await token.document.update(
@@ -80,7 +76,7 @@ export class TokenManager {
             return;
         }
 
-        ChatMessage.create({
+        await ChatMessage.create({
             style: CONST.CHAT_MESSAGE_STYLES.OOC,
             speaker: { token: token.id },
             content: this.#game.i18n?.format(LOCALIZATION.CHAT_AFK_MESSAGE, {
@@ -96,15 +92,12 @@ export class TokenManager {
             return;
         }
 
-        ChatMessage.create({
+        await ChatMessage.create({
             style: CONST.CHAT_MESSAGE_STYLES.OOC,
             speaker: { token: token.id },
-            content: this.#game.i18n?.format(
-                LOCALIZATION.CHAT_RETURNED_MESSAGE,
-                {
-                    name: token.name,
-                },
-            ),
+            content: this.#game.i18n?.format(LOCALIZATION.CHAT_RETURNED_MESSAGE, {
+                name: token.name,
+            }),
         });
     }
 
@@ -124,10 +117,7 @@ export class TokenManager {
         await this.#updateTokenAFKOverlay(token);
     }
 
-    async #onUpdateToken(
-        _: unknown,
-        document: foundry.documents.BaseToken,
-    ): Promise<void> {
+    async #onUpdateToken(_: unknown, document: foundry.documents.BaseToken): Promise<void> {
         if (!document._id) {
             return;
         }
@@ -142,9 +132,7 @@ export class TokenManager {
     }
 
     async #updateTokenAFKOverlay(token: Token): Promise<void> {
-        const overlay =
-            findChild(token, AFKOverlay) ??
-            new AFKOverlay(this.#settings, token);
+        const overlay = findChild(token, AFKOverlay) ?? new AFKOverlay(this.#settings, token);
 
         const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
 

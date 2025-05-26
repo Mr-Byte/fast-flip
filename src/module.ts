@@ -3,11 +3,12 @@ import "./api";
 import * as hud from "./hud";
 
 import { LOCALIZATION, MODULE_NAME } from "./constants";
-import { TileManager, TileMirror } from "./managers/tile-manager";
-import { TokenManager, TokenMirror } from "./managers/token-manager";
+import { TileMirror, TokenMirror } from "./model";
 
 import { Settings } from "./settings";
 import { SpeechManager } from "./managers/speech-manager";
+import { TileManager } from "./managers/tile-manager";
+import { TokenManager } from "./managers/token-manager";
 import { getIcon } from "./helpers";
 
 Hooks.once("init", () => {
@@ -21,13 +22,7 @@ Hooks.once("init", () => {
         const speechManager = new SpeechManager(game, settings);
 
         registerKeybindings(game, tokenManager, tileManager, speechManager);
-        registerHUDButtons(
-            settings,
-            tokenHUD,
-            tileHUD,
-            tokenManager,
-            tileManager,
-        );
+        registerHUDButtons(settings, tokenHUD, tileHUD, tokenManager, tileManager);
     }
 });
 
@@ -86,21 +81,17 @@ function registerKeybindings(
     const onStopSpeaking = () => {
         speechManager.hideSpeechBubble();
     };
-    game.keybindings?.register(
-        MODULE_NAME,
-        LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY,
-        {
-            name: LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY,
-            hint: game.i18n?.localize(LOCALIZATION.SHOW_SPEECH_BUBBLE_HINT),
-            editable: [{ key: "KeyS", modifiers: ["ALT"] }],
-            onDown: onStartSpeaking,
-            onUp: onStopSpeaking,
-            precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-            restricted: false,
-            reservedModifiers: [],
-            repeat: false,
-        },
-    );
+    game.keybindings?.register(MODULE_NAME, LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY, {
+        name: LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY,
+        hint: game.i18n?.localize(LOCALIZATION.SHOW_SPEECH_BUBBLE_HINT),
+        editable: [{ key: "KeyS", modifiers: ["ALT"] }],
+        onDown: onStartSpeaking,
+        onUp: onStopSpeaking,
+        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+        restricted: false,
+        reservedModifiers: [],
+        repeat: false,
+    });
 }
 
 function registerHUDButtons(
@@ -120,18 +111,14 @@ function registerHUDButtons(
             {
                 title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
                 icon: mirrorHorizontalIcon,
-                onClick: () =>
-                    void tokenManager.mirrorSelected(TokenMirror.HORIZONTAL),
-                shouldShow: (token) =>
-                    settings.showMirrorButtons && token.isOwner,
+                onClick: () => void tokenManager.mirrorSelected(TokenMirror.HORIZONTAL),
+                shouldShow: (token) => settings.showMirrorButtons && token.isOwner,
             },
             {
                 title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
                 icon: mirrorVerticalIcon,
-                onClick: () =>
-                    void tokenManager.mirrorSelected(TokenMirror.VERTICAL),
-                shouldShow: (token) =>
-                    settings.showMirrorButtons && token.isOwner,
+                onClick: () => void tokenManager.mirrorSelected(TokenMirror.VERTICAL),
+                shouldShow: (token) => settings.showMirrorButtons && token.isOwner,
             },
         ],
     });
@@ -158,14 +145,12 @@ function registerHUDButtons(
             {
                 title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
                 icon: mirrorHorizontalIcon,
-                onClick: () =>
-                    void tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL),
+                onClick: () => void tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL),
             },
             {
                 title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
                 icon: mirrorVerticalIcon,
-                onClick: () =>
-                    void tileManager.mirrorSelectedTiles(TileMirror.VERTICAL),
+                onClick: () => void tileManager.mirrorSelectedTiles(TileMirror.VERTICAL),
             },
         ],
     });

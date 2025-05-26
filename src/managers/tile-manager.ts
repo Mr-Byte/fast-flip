@@ -1,6 +1,5 @@
 import { MODULE_NAME } from "../constants";
-import { TileMirror } from "model";
-export { TileMirror } from "../configuration";
+import { TileMirror } from "../model";
 
 export class TileManager {
     readonly #game: Game;
@@ -14,15 +13,8 @@ export class TileManager {
 
     async mirrorSelectedTiles(tileMirrorDirection: TileMirror): Promise<void> {
         for (const tile of this.#controlledTiles) {
-            const previousState = tile.document.getFlag(
-                MODULE_NAME,
-                tileMirrorDirection,
-            );
-            await tile.document.setFlag(
-                MODULE_NAME,
-                tileMirrorDirection,
-                !previousState,
-            );
+            const previousState = tile.document.getFlag(MODULE_NAME, tileMirrorDirection);
+            await tile.document.setFlag(MODULE_NAME, tileMirrorDirection, !previousState);
         }
     }
 
@@ -44,20 +36,10 @@ export class TileManager {
 
     #updateTileOrientation(tile: Tile): void {
         if (tile.texture) {
-            const flipHorizontal = tile.document.getFlag(
-                MODULE_NAME,
-                TileMirror.HORIZONTAL,
-            );
-            const flipVerical = tile.document.getFlag(
-                MODULE_NAME,
-                TileMirror.VERTICAL,
-            );
-            const mirrorHorizontal = flipHorizontal
-                ? PIXI.groupD8.MIRROR_HORIZONTAL
-                : 0;
-            const mirrorVertical = flipVerical
-                ? PIXI.groupD8.MIRROR_VERTICAL
-                : 0;
+            const flipHorizontal = tile.document.getFlag(MODULE_NAME, TileMirror.HORIZONTAL);
+            const flipVerical = tile.document.getFlag(MODULE_NAME, TileMirror.VERTICAL);
+            const mirrorHorizontal = flipHorizontal ? PIXI.groupD8.MIRROR_HORIZONTAL : 0;
+            const mirrorVertical = flipVerical ? PIXI.groupD8.MIRROR_VERTICAL : 0;
             const rotate = PIXI.groupD8.add(mirrorHorizontal, mirrorVertical);
 
             tile.texture.rotate = rotate;

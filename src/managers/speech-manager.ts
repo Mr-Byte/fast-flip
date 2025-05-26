@@ -19,10 +19,7 @@ export class SpeechManager {
         this.#settings = settings;
 
         Hooks.on("canvasReady", this.#onCanvasReady.bind(this));
-        this.#game.socket?.on(
-            "module.fast-flip",
-            this.#onSocketMessage.bind(this),
-        );
+        this.#game.socket?.on("module.fast-flip", this.#onSocketMessage.bind(this));
     }
 
     async showSpeechBubble(): Promise<void> {
@@ -48,12 +45,9 @@ export class SpeechManager {
 
             this.#keyClearInterval = setInterval(() => {
                 const [bindings] =
-                    this.#game.keybindings?.bindings?.get(
-                        `${MODULE_NAME}.${LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY}`,
-                    ) ?? [];
-                const keys = bindings
-                    ? [bindings.key, ...(bindings.modifiers ?? [])]
-                    : [];
+                    this.#game.keybindings?.bindings?.get(`${MODULE_NAME}.${LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY}`) ??
+                    [];
+                const keys = bindings ? [bindings.key, ...(bindings.modifiers ?? [])] : [];
                 const keySet = new Set(keys);
                 const downKeys = normalizeKeys(this.#game.keyboard!.downKeys);
 

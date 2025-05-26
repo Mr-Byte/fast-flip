@@ -38,37 +38,27 @@ export class SpeechBubbles {
         this.#setPosition(token, bubble, dimensions);
         this.container?.appendChild(bubble);
 
-        return new Promise<void>((resolve) => {
-            bubble.style.display = "none";
-            requestAnimationFrame(() => {
-                bubble.style.display = "block";
-                bubble.style.opacity = "0";
-                bubble.animate([{ opacity: 0 }, { opacity: 1 }], {
-                    duration: 250,
-                    fill: "forwards",
-                }).onfinish = () => resolve();
-            });
-        });
+        bubble.style.display = "block";
+        bubble.style.opacity = "0";
+        await bubble.animate([{ opacity: 0 }, { opacity: 1 }], {
+            duration: 250,
+            fill: "forwards",
+        }).finished;
     }
 
-    hide(token: Token): Promise<void> | undefined {
-        const existing = document.querySelector(
-            `.chat-bubble[data-token-id="${token.id}"]`,
-        ) as HTMLElement;
+    async hide(token: Token): Promise<void> {
+        const existing = document.querySelector(`.chat-bubble[data-token-id="${token.id}"]`) as HTMLElement;
 
         if (!existing) {
             return;
         }
 
-        return new Promise<void>((resolve) => {
-            existing.animate([{ opacity: 1 }, { opacity: 0 }], {
-                duration: 100,
-                fill: "forwards",
-            }).onfinish = () => {
-                existing.remove();
-                resolve();
-            };
-        });
+        await existing.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 100,
+            fill: "forwards",
+        }).finished;
+
+        existing.remove();
     }
 
     async #renderHTML(data: TemplateData): Promise<string> {
@@ -96,11 +86,7 @@ export class SpeechBubbles {
         return dims;
     }
 
-    #setPosition(
-        token: Token,
-        element: HTMLElement,
-        dimensions: { width: number; height: number },
-    ): void {
+    #setPosition(token: Token, element: HTMLElement, dimensions: { width: number; height: number }): void {
         element.classList.add("right");
         element.style.fontSize = `${this.#settings.speechBubbleFontSize}px`;
 

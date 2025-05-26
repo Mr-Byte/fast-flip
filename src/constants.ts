@@ -32,8 +32,6 @@ export const LOCALIZATION = {
     ANIMATION_DURATION_HINT: moduleKey("animation-duration-hint"),
 } as const;
 
-export function moduleKey<K extends string>(
-    key: K,
-): `${typeof MODULE_NAME}.${K}` {
+export function moduleKey<K extends string>(key: K): `${typeof MODULE_NAME}.${K}` {
     return `${MODULE_NAME}.${key}`;
 }

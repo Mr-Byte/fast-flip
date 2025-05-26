@@ -15,9 +15,9 @@ Hooks.once("init", () => {
     if (game instanceof Game) {
         const settings = new Settings(game);
 
-        const tokenHUD = new hud.HUD<Token>(game, hud.Name.TokenHUD);
+        const tokenHUD = new hud.HUD<Token>(game, "TokenHUD");
         const tokenManager = new TokenManager(game, settings);
-        const tileHUD = new hud.HUD<Tile>(game, hud.Name.TileHUD);
+        const tileHUD = new hud.HUD<Tile>(game, "TileHUD");
         const tileManager = new TileManager(game);
         const speechManager = new SpeechManager(game, settings);
 

@@ -10,28 +10,30 @@ export interface ButtonProps<T extends PlaceableObject> {
     shouldShow?: (object: T) => boolean;
 }
 
-export const enum Name {
-    DrawingHUD = "DrawingHUD",
-    TokenHUD = "TokenHUD",
-    TileHUD = "TileHUD",
+interface HUDRegistry {
+    Token: Token;
+    Tile: Tile;
 }
 
-type Brand<T> = T extends Tile
-    ? (typeof Name)["TileHUD"]
-    : T extends Token
-      ? (typeof Name)["TokenHUD"]
-      : T extends Drawing
-        ? (typeof Name)["DrawingHUD"]
-        : never;
+type HUDType = HUDRegistry[keyof HUDRegistry];
 
-export class HUD<T extends PlaceableObject> {
-    readonly __brand!: Brand<T>;
+type HUDTypeName<T> = T extends HUDType
+    ? {
+          [K in keyof HUDRegistry]: HUDRegistry[K] extends T ? K : never;
+      }[keyof HUDRegistry]
+    : never;
+
+type Brand<T extends HUDType> = `${HUDTypeName<T>}HUD`;
+
+export class HUD<T extends HUDType> {
+    readonly __brand: Brand<T>;
     readonly #game: Game;
     readonly #buttonsGroups: ButtonGroupProps<T>[];
 
-    constructor(game: Game, name: Name) {
+    constructor(game: Game, name: Brand<T>) {
         this.#game = game;
         this.#buttonsGroups = [];
+        this.__brand = name;
 
         Hooks.on(`render${name}`, this.#render.bind(this));
     }

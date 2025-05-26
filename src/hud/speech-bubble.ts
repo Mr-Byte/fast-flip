@@ -40,6 +40,7 @@ export class SpeechBubbles {
 
         bubble.style.display = "block";
         bubble.style.opacity = "0";
+
         await bubble.animate([{ opacity: 0 }, { opacity: 1 }], {
             duration: 250,
             fill: "forwards",

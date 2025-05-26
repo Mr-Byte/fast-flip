@@ -46,41 +46,53 @@ export class HUD<T extends PlaceableObject> {
                 hud.object ? (button.shouldShow?.(hud.object) ?? true) : false,
             );
 
-            if (shouldShow) {
-                const group = document.createElement("div");
-
-                if (groupProps.buttons.length > 1) {
-                    group.style.display = "flex";
-                    group.style.flexDirection = "horizontal";
-                    group.style.gap = "8px";
-                }
-
-                for (const props of groupProps.buttons) {
-                    const title = this.#game.i18n?.localize(props.title) ?? "";
-                    const button = document.createElement("button");
-                    button.classList.add("control-icon");
-                    button.onclick = () => {
-                        if (!hud.object) {
-                            return;
-                        }
-
-                        props.onClick(hud.object);
-                    };
-                    button.title = title;
-
-                    const img = document.createElement("img");
-                    img.title = title;
-                    img.alt = title;
-                    img.src = props.icon;
-                    img.width = 36;
-                    img.height = 36;
-
-                    button.appendChild(img);
-                    group.append(button);
-                }
-
-                html.querySelector(`div.${groupProps.side}`)?.append(group);
+            if (!shouldShow || groupProps.buttons.length === 0) {
+                continue;
             }
+
+            if (groupProps.buttons.length === 1) {
+                const element = this.#createHudButton(groupProps.buttons[0], hud);
+                html.querySelector(`div.${groupProps.side}`)?.append(element);
+
+                continue;
+            }
+
+            const group = document.createElement("div");
+            const buttons = groupProps.buttons.map((props) => this.#createHudButton(props, hud));
+            group.append(...buttons);
+
+            Object.assign(group.style, {
+                display: "flex",
+                flexDirection: "horizontal",
+                gap: "8px",
+            });
+
+            html.querySelector(`div.${groupProps.side}`)?.append(group);
         }
+    }
+
+    #createHudButton(props: ButtonProps<T>, hud: BasePlaceableHUD<T, Application.Options>) {
+        const title = this.#game.i18n?.localize(props.title) ?? "";
+        const button = document.createElement("button");
+        button.classList.add("control-icon");
+        button.onclick = () => {
+            if (!hud.object) {
+                return;
+            }
+
+            props.onClick(hud.object);
+        };
+        button.title = title;
+
+        const img = Object.assign(document.createElement("img"), {
+            title,
+            alt: title,
+            src: props.icon,
+            width: 36,
+            height: 36,
+        });
+
+        button.appendChild(img);
+        return button;
     }
 }

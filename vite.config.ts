@@ -8,7 +8,7 @@ export default defineConfig({
             input: "src/module.ts",
             output: {
                 entryFileNames: "module.js",
-                format: "es",
+                format: "iife",
             },
         },
     },

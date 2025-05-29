@@ -1,3 +1,7 @@
+# v4.0.2
+
+- Fix the way rollup bundles the module and switch to esmodules to prevent global namespace pollution.
+
 # v4.0.1
 
 - Minor bug fixes and clean up tasks

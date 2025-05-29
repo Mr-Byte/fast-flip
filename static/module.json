@@ -8,7 +8,7 @@
             "url": "https://github.com/Mr-Byte/fast-flip/"
         }
     ],
-    "version": "4.0.1",
+    "version": "4.0.2",
     "socket": true,
     "compatibility": {
         "minimum": 13,
@@ -21,7 +21,7 @@
             "path": "lang/en.json"
         }
     ],
-    "scripts": ["module.js"],
+    "esmodules": ["module.mjs"],
     "url": "https://github.com/Mr-Byte/fast-flip",
     "bugs": "https://github.com/Mr-Byte/fast-flip/issues",
     "download": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/fast-flip.zip",

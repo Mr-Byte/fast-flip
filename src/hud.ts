@@ -44,9 +44,12 @@ export class HUD<T extends HUDType> {
 
     #render(hud: BasePlaceableHUD<T>, html: HTMLElement): void {
         for (const groupProps of this.#buttonsGroups) {
-            const shouldShow = groupProps.buttons.some((button) =>
-                hud.object ? (button.shouldShow?.(hud.object) ?? true) : false,
-            );
+            if (!hud.object) {
+                continue;
+            }
+
+            const hudObject = hud.object;
+            const shouldShow = groupProps.buttons.some((button) => button.shouldShow?.(hudObject) ?? true);
 
             if (!shouldShow || groupProps.buttons.length === 0) {
                 continue;

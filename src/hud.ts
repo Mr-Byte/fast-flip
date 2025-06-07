@@ -55,7 +55,7 @@ export class HUD<T extends HUDType> {
                 continue;
             }
 
-            if (groupProps.buttons.length === 1) {
+            if (groupProps.buttons.length === 1 && groupProps.buttons[0]) {
                 const element = this.#createHudButton(groupProps.buttons[0], hud);
                 html.querySelector(`div.${groupProps.side}`)?.append(element);
 

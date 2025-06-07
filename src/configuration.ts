@@ -1,4 +1,4 @@
-import { AFK_STATE_KEY, Resource, TileMirror, TokenMirror } from "./model";
+import { AFK_STATE_KEY, type Resource, TileMirror, TokenMirror } from "./model";
 
 import { MODULE_NAME } from "./constants";
 

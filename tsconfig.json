@@ -1,15 +1,14 @@
 {
     "compilerOptions": {
-
         "target": "ESNext",
         "module": "esnext",
-        "lib": [
-            "DOM",
-            "ESNext"
-        ],
+        "lib": ["DOM", "ESNext"],
         "moduleResolution": "bundler",
         "esModuleInterop": true,
-        "allowJs": true,
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true,
+        "noUncheckedSideEffectImports": true,
+        "moduleDetection": "force",
         "outDir": "dist/",
         "strict": true,
         "noImplicitAny": true,
@@ -18,19 +17,15 @@
         "noImplicitOverride": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
+        "noUncheckedIndexedAccess": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "exactOptionalPropertyTypes": true,
         "noEmit": true,
-        "types": [
-            "fvtt-types",
-        ],
+        "types": ["fvtt-types"],
         "newLine": "lf",
         "skipLibCheck": true,
         "baseUrl": "./src"
     },
-    "exclude": [
-        "dist/**/*.js",
-        "node_modules/**"
-    ],
-    "include": [
-        "src/**/*.ts"
-    ]
+    "exclude": ["dist/**/*.js", "node_modules/**"],
+    "include": ["src/**/*.ts"]
 }

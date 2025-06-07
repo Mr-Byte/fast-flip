@@ -1,5 +1,5 @@
 import { LOCALIZATION, MODULE_NAME } from "./constants";
-import { SETTING, SettingEntries } from "./configuration";
+import { SETTING, type SettingEntries } from "./configuration";
 
 import { getIcon } from "./helpers";
 

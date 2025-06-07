@@ -1,4 +1,4 @@
-import { SocketMessage, SocketMessageType } from "../socket/messages";
+import { type SocketMessage, SocketMessageType } from "../socket/messages";
 
 import { LOCALIZATION } from "../constants";
 import { MODULE_NAME } from "../constants";

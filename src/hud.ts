@@ -1,101 +1,101 @@
-export interface ButtonGroupProps<T extends foundry.canvas.placeables.PlaceableObject.Any> {
+export interface ButtonGroupProps<T extends foundry.canvas.placeables.PlaceableObject> {
     side: "left" | "right";
     buttons: ButtonProps<T>[];
 }
 
-export interface ButtonProps<T extends foundry.canvas.placeables.PlaceableObject.Any> {
+export interface ButtonProps<T extends foundry.canvas.placeables.PlaceableObject> {
     title: string;
     icon: string;
     onClick: (object: T) => void | Promise<void>;
     shouldShow?: (object: T) => boolean;
 }
 
-interface HUDObjectRegistry {
-    Token: foundry.canvas.placeables.Token;
-    Tile: foundry.canvas.placeables.Tile;
+export class TokenHUD extends BaseHud("TokenHUD") {}
+export class TileHUD extends BaseHud("TileHUD") {}
+
+interface HudRegistry {
+    TokenHUD: [foundry.applications.hud.TokenHUD.Any];
+    TileHUD: [foundry.applications.hud.TileHUD.Any];
 }
 
-type HUDName = keyof HUDObjectRegistry;
-type Brand<T extends HUDName> = `${T}HUD`;
+type HudName = keyof HudRegistry & {};
+type HudType<T extends HudName> = HudRegistry[T][0];
+type HudObject<T extends HudName> = HudType<T>["object"];
 
-export class HUD<T extends HUDName, P extends HUDObjectRegistry[T] = HUDObjectRegistry[T]> {
-    readonly __brand: Brand<T>;
-    readonly #game: Game;
-    readonly #buttonsGroups: ButtonGroupProps<P>[];
+function BaseHud<T extends HudName>(name: T) {
+    return class {
+        readonly __brand!: T;
+        readonly #game: foundry.Game;
+        readonly #buttonsGroups: ButtonGroupProps<HudObject<T>>[];
 
-    constructor(game: Game, name: Brand<T>) {
-        this.#game = game;
-        this.#buttonsGroups = [];
-        this.__brand = name;
+        constructor(game: foundry.Game) {
+            this.#game = game;
+            this.#buttonsGroups = [];
 
-        foundry.helpers.Hooks.on(`render${name}`, this.#render.bind(this));
-    }
+            foundry.helpers.Hooks.on(`render${name}`, this.#render.bind(this));
+        }
 
-    registerButtonGroup(props: ButtonGroupProps<P>): void {
-        this.#buttonsGroups.push(props);
-    }
+        registerButtonGroup(props: ButtonGroupProps<HudObject<T>>): void {
+            this.#buttonsGroups.push(props);
+        }
 
-    #render(hud: foundry.applications.hud.BasePlaceableHUD, html: HTMLElement): void {
-        for (const groupProps of this.#buttonsGroups) {
-            if (!hud.object) {
-                continue;
+        #render(hud: HudType<T>, html: HTMLElement): void {
+            for (const groupProps of this.#buttonsGroups) {
+                if (!hud.object) {
+                    continue;
+                }
+
+                const hudObject = hud.object;
+                const shouldShow = groupProps.buttons.some((button) => button.shouldShow?.(hudObject) ?? true);
+
+                if (!shouldShow || groupProps.buttons.length === 0) {
+                    continue;
+                }
+
+                if (groupProps.buttons.length === 1 && groupProps.buttons[0]) {
+                    const element = this.#createHudButton(groupProps.buttons[0], hud);
+                    html.querySelector(`div.${groupProps.side}`)?.append(element);
+
+                    continue;
+                }
+
+                const group = document.createElement("div");
+                const buttons = groupProps.buttons.map((props) => this.#createHudButton(props, hud));
+                group.append(...buttons);
+
+                Object.assign(group.style, {
+                    display: "flex",
+                    flexDirection: "horizontal",
+                    gap: "8px",
+                });
+
+                html.querySelector(`div.${groupProps.side}`)?.append(group);
             }
+        }
 
-            const hudObject = hud.object;
-            const shouldShow = groupProps.buttons.some((button) => button.shouldShow?.(hudObject as P) ?? true);
+        #createHudButton(props: ButtonProps<HudObject<T>>, hud: HudType<T>) {
+            const title = this.#game.i18n?.localize(props.title) ?? "";
+            const button = document.createElement("button");
+            button.classList.add("control-icon");
+            button.onclick = () => {
+                if (!hud.object) {
+                    return;
+                }
 
-            if (!shouldShow || groupProps.buttons.length === 0) {
-                continue;
-            }
+                props.onClick(hud.object);
+            };
+            button.title = title;
 
-            if (groupProps.buttons.length === 1 && groupProps.buttons[0]) {
-                const element = this.#createHudButton(
-                    groupProps.buttons[0],
-                    hud as foundry.applications.hud.BasePlaceableHUD<P>,
-                );
-                html.querySelector(`div.${groupProps.side}`)?.append(element);
-
-                continue;
-            }
-
-            const group = document.createElement("div");
-            const buttons = groupProps.buttons.map((props) =>
-                this.#createHudButton(props, hud as foundry.applications.hud.BasePlaceableHUD<P>),
-            );
-            group.append(...buttons);
-
-            Object.assign(group.style, {
-                display: "flex",
-                flexDirection: "horizontal",
-                gap: "8px",
+            const img = Object.assign(document.createElement("img"), {
+                title,
+                alt: title,
+                src: props.icon,
+                width: 36,
+                height: 36,
             });
 
-            html.querySelector(`div.${groupProps.side}`)?.append(group);
+            button.appendChild(img);
+            return button;
         }
-    }
-
-    #createHudButton(props: ButtonProps<P>, hud: foundry.applications.hud.BasePlaceableHUD<P>) {
-        const title = this.#game.i18n?.localize(props.title) ?? "";
-        const button = document.createElement("button");
-        button.classList.add("control-icon");
-        button.onclick = () => {
-            if (!hud.object) {
-                return;
-            }
-
-            props.onClick(hud.object);
-        };
-        button.title = title;
-
-        const img = Object.assign(document.createElement("img"), {
-            title,
-            alt: title,
-            src: props.icon,
-            width: 36,
-            height: 36,
-        });
-
-        button.appendChild(img);
-        return button;
-    }
+    };
 }

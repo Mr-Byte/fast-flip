@@ -1,8 +1,6 @@
-import * as hud from "./hud";
-
 import { LOCALIZATION, MODULE_NAME } from "./constants";
+import { TileHUD, TokenHUD } from "./hud";
 import { TileMirror, TokenMirror } from "./model";
-
 import { Settings } from "./settings";
 import { SpeechManager } from "./managers/speech-manager";
 import { TileManager } from "./managers/tile-manager";
@@ -13,9 +11,9 @@ Hooks.once("init", () => {
     if (game instanceof foundry.Game) {
         const settings = new Settings(game);
 
-        const tokenHUD = new hud.HUD(game, "TokenHUD");
+        const tokenHUD = new TokenHUD(game);
         const tokenManager = new TokenManager(game, settings);
-        const tileHUD = new hud.HUD(game, "TileHUD");
+        const tileHUD = new TileHUD(game);
         const tileManager = new TileManager(game);
         const speechManager = new SpeechManager(game, settings);
 
@@ -94,8 +92,8 @@ function registerKeybindings(
 
 function registerHUDButtons(
     settings: Settings,
-    tokenHUD: hud.HUD<"Token">,
-    tileHUD: hud.HUD<"Tile">,
+    tokenHUD: TokenHUD,
+    tileHUD: TileHUD,
     tokenManager: TokenManager,
     tileManager: TileManager,
 ) {

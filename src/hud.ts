@@ -1,9 +1,11 @@
-export interface ButtonGroupProps<T extends foundry.canvas.placeables.PlaceableObject> {
+type PlaceableObject = foundry.canvas.placeables.PlaceableObject;
+
+export interface ButtonGroupProps<T extends PlaceableObject> {
     side: "left" | "right";
     buttons: ButtonProps<T>[];
 }
 
-export interface ButtonProps<T extends foundry.canvas.placeables.PlaceableObject> {
+export interface ButtonProps<T extends PlaceableObject> {
     title: string;
     icon: string;
     onClick: (object: T) => void | Promise<void>;

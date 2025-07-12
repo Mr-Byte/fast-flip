@@ -1,10 +1,5 @@
 import { Settings } from "../settings";
 
-export enum SpeechBubbleShowType {
-    Keybind,
-    Socket,
-}
-
 type MessageDimensions = {
     width: number;
     height: number;
@@ -62,8 +57,8 @@ export class SpeechBubbles {
         existing.remove();
     }
 
-    async #renderHTML(data: TemplateData): Promise<string> {
-        return renderTemplate(this.#template, data);
+    #renderHTML(data: TemplateData): Promise<string> {
+        return foundry.applications.handlebars.renderTemplate(this.#template, data);
     }
 
     #getMessageDimensions(message: string): MessageDimensions {

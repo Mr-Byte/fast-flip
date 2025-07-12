@@ -1,69 +1,67 @@
-export interface ButtonGroupProps<T extends PlaceableObject> {
+export interface ButtonGroupProps<T extends foundry.canvas.placeables.PlaceableObject.Any> {
     side: "left" | "right";
     buttons: ButtonProps<T>[];
 }
 
-export interface ButtonProps<T extends PlaceableObject> {
+export interface ButtonProps<T extends foundry.canvas.placeables.PlaceableObject.Any> {
     title: string;
     icon: string;
     onClick: (object: T) => void | Promise<void>;
     shouldShow?: (object: T) => boolean;
 }
 
-interface HUDRegistry {
-    Token: Token;
-    Tile: Tile;
+interface HUDObjectRegistry {
+    Token: foundry.canvas.placeables.Token;
+    Tile: foundry.canvas.placeables.Tile;
 }
 
-type HUDType = HUDRegistry[keyof HUDRegistry];
+type HUDName = keyof HUDObjectRegistry;
+type Brand<T extends HUDName> = `${T}HUD`;
 
-type HUDTypeName<T> = T extends HUDType
-    ? {
-          [K in keyof HUDRegistry]: HUDRegistry[K] extends T ? K : never;
-      }[keyof HUDRegistry]
-    : never;
-
-type Brand<T extends HUDType> = `${HUDTypeName<T>}HUD`;
-
-export class HUD<T extends HUDType> {
+export class HUD<T extends HUDName, P extends HUDObjectRegistry[T] = HUDObjectRegistry[T]> {
     readonly __brand: Brand<T>;
     readonly #game: Game;
-    readonly #buttonsGroups: ButtonGroupProps<T>[];
+    readonly #buttonsGroups: ButtonGroupProps<P>[];
 
     constructor(game: Game, name: Brand<T>) {
         this.#game = game;
         this.#buttonsGroups = [];
         this.__brand = name;
 
-        Hooks.on(`render${name}`, this.#render.bind(this));
+        foundry.helpers.Hooks.on(`render${name}`, this.#render.bind(this));
     }
 
-    registerButtonGroup(props: ButtonGroupProps<T>): void {
+    registerButtonGroup(props: ButtonGroupProps<P>): void {
         this.#buttonsGroups.push(props);
     }
 
-    #render(hud: BasePlaceableHUD<T>, html: HTMLElement): void {
+    #render(hud: foundry.applications.hud.BasePlaceableHUD, html: HTMLElement): void {
         for (const groupProps of this.#buttonsGroups) {
             if (!hud.object) {
                 continue;
             }
 
             const hudObject = hud.object;
-            const shouldShow = groupProps.buttons.some((button) => button.shouldShow?.(hudObject) ?? true);
+            const shouldShow = groupProps.buttons.some((button) => button.shouldShow?.(hudObject as P) ?? true);
 
             if (!shouldShow || groupProps.buttons.length === 0) {
                 continue;
             }
 
             if (groupProps.buttons.length === 1 && groupProps.buttons[0]) {
-                const element = this.#createHudButton(groupProps.buttons[0], hud);
+                const element = this.#createHudButton(
+                    groupProps.buttons[0],
+                    hud as foundry.applications.hud.BasePlaceableHUD<P>,
+                );
                 html.querySelector(`div.${groupProps.side}`)?.append(element);
 
                 continue;
             }
 
             const group = document.createElement("div");
-            const buttons = groupProps.buttons.map((props) => this.#createHudButton(props, hud));
+            const buttons = groupProps.buttons.map((props) =>
+                this.#createHudButton(props, hud as foundry.applications.hud.BasePlaceableHUD<P>),
+            );
             group.append(...buttons);
 
             Object.assign(group.style, {
@@ -76,7 +74,7 @@ export class HUD<T extends HUDType> {
         }
     }
 
-    #createHudButton(props: ButtonProps<T>, hud: BasePlaceableHUD<T, Application.Options>) {
+    #createHudButton(props: ButtonProps<P>, hud: foundry.applications.hud.BasePlaceableHUD<P>) {
         const title = this.#game.i18n?.localize(props.title) ?? "";
         const button = document.createElement("button");
         button.classList.add("control-icon");

@@ -1,4 +1,4 @@
-import { AFK_STATE_KEY, type Resource, TileMirror, TokenMirror } from "./model";
+import { AFK_STATE_KEY, TileMirror, TokenMirror } from "./model";
 
 import { MODULE_NAME } from "./constants";
 
@@ -11,11 +11,6 @@ declare module "fvtt-types/configuration" {
                 [TokenMirror.HORIZONTAL]: boolean;
                 [TokenMirror.VERTICAL]: boolean;
                 [AFK_STATE_KEY]: boolean;
-            };
-        };
-        Actor: {
-            [MODULE_NAME]: {
-                resources?: Map<string, Resource>;
             };
         };
         Tile: {
@@ -40,7 +35,11 @@ declare global {
     }
 }
 
-type RegisterOptions = ClientSettings.RegisterOptions<string | number | boolean>;
+type RegisterOptions = foundry.helpers.ClientSettings.RegisterData<
+    string | number | boolean,
+    "fast-flip",
+    foundry.helpers.ClientSettings.KeyFor<"fast-flip">
+>;
 
 type SettingEntryMapping = {
     [K in keyof SettingConfig as K extends `fast-flip.${infer P}` ? P : never]: K extends `fast-flip.${infer P}`

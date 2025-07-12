@@ -7,14 +7,14 @@ import { SpeechBubbles } from "../hud/speech-bubble";
 import { normalizeKeys } from "../helpers";
 
 export class SpeechManager {
-    readonly #game: Game;
+    readonly #game: foundry.Game;
     readonly #settings: Settings;
 
     #keyClearInterval: number | undefined;
 
     #speechBubbles?: SpeechBubbles;
 
-    constructor(game: Game, settings: Settings) {
+    constructor(game: foundry.Game, settings: Settings) {
         this.#game = game;
         this.#settings = settings;
 

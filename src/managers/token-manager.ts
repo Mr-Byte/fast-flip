@@ -6,10 +6,10 @@ import { Settings } from "../settings";
 import { findChild } from "../pixi";
 
 export class TokenManager {
-    readonly #game: Game;
+    readonly #game: foundry.Game;
     readonly #settings: Settings;
 
-    constructor(game: Game, settings: Settings) {
+    constructor(game: foundry.Game, settings: Settings) {
         this.#game = game;
         this.#settings = settings;
 
@@ -62,14 +62,14 @@ export class TokenManager {
             const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
 
             if (isAFK) {
-                this.#unsetAFK(token);
+                await this.#unsetAFK(token);
             } else {
-                this.#setAFK(token);
+                await this.#setAFK(token);
             }
         }
     }
 
-    async #setAFK(token: Token): Promise<void> {
+    async #setAFK(token: foundry.canvas.placeables.Token): Promise<void> {
         await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, true);
 
         if (!this.#settings.showAFKStatusInChat) {
@@ -85,7 +85,7 @@ export class TokenManager {
         });
     }
 
-    async #unsetAFK(token: Token): Promise<void> {
+    async #unsetAFK(token: foundry.canvas.placeables.Token): Promise<void> {
         await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, false);
 
         if (!this.#settings.showAFKStatusInChat) {
@@ -101,11 +101,11 @@ export class TokenManager {
         });
     }
 
-    get #controlledTokens(): Token[] {
+    get #controlledTokens(): foundry.canvas.placeables.Token[] {
         return this.#game.canvas?.tokens?.controlled ?? [];
     }
 
-    async #onDrawToken(token: Token): Promise<void> {
+    async #onDrawToken(token: foundry.canvas.placeables.Token): Promise<void> {
         if (!token) {
             return;
         }
@@ -117,8 +117,8 @@ export class TokenManager {
         await this.#updateTokenAFKOverlay(token);
     }
 
-    async #onUpdateToken(_: unknown, document: foundry.documents.BaseToken): Promise<void> {
-        if (!document._id) {
+    async #onUpdateToken(_: unknown, document: foundry.abstract.Document.UpdateDataForName<"Token">): Promise<void> {
+        if (!document._id || typeof document._id !== "string") {
             return;
         }
 
@@ -131,7 +131,7 @@ export class TokenManager {
         await this.#updateTokenAFKOverlay(token);
     }
 
-    async #updateTokenAFKOverlay(token: Token): Promise<void> {
+    async #updateTokenAFKOverlay(token: foundry.canvas.placeables.Token): Promise<void> {
         const overlay = findChild(token, AFKOverlay) ?? new AFKOverlay(this.#settings, token);
 
         const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);

@@ -15,9 +15,6 @@ export default defineConfig({
             output: {
                 entryFileNames: "module.mjs",
                 chunkFileNames: "[name].mjs",
-                manualChunks: {
-                    zod: ["zod/v4-mini"],
-                },
             },
         },
         target: "es2022",

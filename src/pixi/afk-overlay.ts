@@ -20,7 +20,7 @@ export class AFKOverlay extends PIXI.Container implements TokenContainer {
 
     async show(): Promise<void> {
         const token = this.#token;
-        const texture = await loadTexture(this.#settings.afkOverlayIconPath);
+        const texture = await foundry.canvas.loadTexture(this.#settings.afkOverlayIconPath);
 
         if (!texture) {
             return;

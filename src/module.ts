@@ -1,5 +1,3 @@
-import "./api";
-
 import * as hud from "./hud";
 
 import { LOCALIZATION, MODULE_NAME } from "./constants";
@@ -12,12 +10,12 @@ import { TokenManager } from "./managers/token-manager";
 import { getIcon } from "./helpers";
 
 Hooks.once("init", () => {
-    if (game instanceof Game) {
+    if (game instanceof foundry.Game) {
         const settings = new Settings(game);
 
-        const tokenHUD = new hud.HUD<Token>(game, "TokenHUD");
+        const tokenHUD = new hud.HUD(game, "TokenHUD");
         const tokenManager = new TokenManager(game, settings);
-        const tileHUD = new hud.HUD<Tile>(game, "TileHUD");
+        const tileHUD = new hud.HUD(game, "TileHUD");
         const tileManager = new TileManager(game);
         const speechManager = new SpeechManager(game, settings);
 
@@ -27,7 +25,7 @@ Hooks.once("init", () => {
 });
 
 function registerKeybindings(
-    game: Game,
+    game: foundry.Game,
     tokenManager: TokenManager,
     tileManager: TileManager,
     speechManager: SpeechManager,
@@ -96,8 +94,8 @@ function registerKeybindings(
 
 function registerHUDButtons(
     settings: Settings,
-    tokenHUD: hud.HUD<Token>,
-    tileHUD: hud.HUD<Tile>,
+    tokenHUD: hud.HUD<"Token">,
+    tileHUD: hud.HUD<"Tile">,
     tokenManager: TokenManager,
     tileManager: TileManager,
 ) {

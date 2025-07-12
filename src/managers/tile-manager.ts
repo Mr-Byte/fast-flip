@@ -2,13 +2,13 @@ import { MODULE_NAME } from "../constants";
 import { TileMirror } from "../model";
 
 export class TileManager {
-    readonly #game: Game;
+    readonly #game: foundry.Game;
 
-    constructor(game: Game) {
+    constructor(game: foundry.Game) {
         this.#game = game;
 
-        Hooks.on("updateTile", this.#onUpdateTile.bind(this));
-        Hooks.on("canvasReady", this.#onCanvasReady.bind(this));
+        foundry.helpers.Hooks.on("updateTile", this.#onUpdateTile.bind(this));
+        foundry.helpers.Hooks.on("canvasReady", this.#onCanvasReady.bind(this));
     }
 
     async mirrorSelectedTiles(tileMirrorDirection: TileMirror): Promise<void> {
@@ -24,8 +24,8 @@ export class TileManager {
         }
     }
 
-    #onUpdateTile(_: unknown, update: foundry.documents.BaseTile): void {
-        if (update._id && update.flags?.[MODULE_NAME]) {
+    #onUpdateTile(_: unknown, update: foundry.abstract.Document.UpdateDataForName<"Tile">): void {
+        if (update._id && typeof update._id === "string" && update.flags?.[MODULE_NAME]) {
             const tile = this.#findTile(update._id);
 
             if (tile) {
@@ -34,28 +34,26 @@ export class TileManager {
         }
     }
 
-    #updateTileOrientation(tile: Tile): void {
+    #updateTileOrientation(tile: foundry.canvas.placeables.Tile): void {
         if (tile.texture) {
             const flipHorizontal = tile.document.getFlag(MODULE_NAME, TileMirror.HORIZONTAL);
-            const flipVerical = tile.document.getFlag(MODULE_NAME, TileMirror.VERTICAL);
+            const flipVertical = tile.document.getFlag(MODULE_NAME, TileMirror.VERTICAL);
             const mirrorHorizontal = flipHorizontal ? PIXI.groupD8.MIRROR_HORIZONTAL : 0;
-            const mirrorVertical = flipVerical ? PIXI.groupD8.MIRROR_VERTICAL : 0;
-            const rotate = PIXI.groupD8.add(mirrorHorizontal, mirrorVertical);
-
-            tile.texture.rotate = rotate;
+            const mirrorVertical = flipVertical ? PIXI.groupD8.MIRROR_VERTICAL : 0;
+            tile.texture.rotate = PIXI.groupD8.add(mirrorHorizontal, mirrorVertical);
             tile.refresh();
         }
     }
 
-    get #allTiles(): Tile[] {
+    get #allTiles(): foundry.canvas.placeables.Tile[] {
         return this.#game.canvas?.tiles?.tiles ?? [];
     }
 
-    get #controlledTiles(): Tile[] {
+    get #controlledTiles(): foundry.canvas.placeables.Tile[] {
         return this.#game.canvas?.tiles?.controlled ?? [];
     }
 
-    #findTile(id: string): Tile | undefined {
+    #findTile(id: string): foundry.canvas.placeables.Tile | undefined {
         return this.#game.canvas?.tiles?.get(id);
     }
 }

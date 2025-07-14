@@ -1,59 +1,52 @@
 import { MODULE_NAME } from "../constants";
 import { TileMirror } from "../model";
 
-export class TileManager {
-    readonly #game: foundry.Game;
+export type TileManager = {
+    mirrorSelectedTiles(tileMirrorDirection: TileMirror): Promise<void>;
+};
 
-    constructor(game: foundry.Game) {
-        this.#game = game;
+export function setupTileManager(game: foundry.Game): TileManager {
+    foundry.helpers.Hooks.on("canvasReady", () => {
+        const allTiles = game.canvas?.tiles?.tiles ?? [];
 
-        foundry.helpers.Hooks.on("updateTile", this.#onUpdateTile.bind(this));
-        foundry.helpers.Hooks.on("canvasReady", this.#onCanvasReady.bind(this));
-    }
-
-    async mirrorSelectedTiles(tileMirrorDirection: TileMirror): Promise<void> {
-        for (const tile of this.#controlledTiles) {
-            const previousState = tile.document.getFlag(MODULE_NAME, tileMirrorDirection);
-            await tile.document.setFlag(MODULE_NAME, tileMirrorDirection, !previousState);
+        for (const tile of allTiles) {
+            updateTile(tile);
         }
-    }
+    });
 
-    #onCanvasReady(): void {
-        for (const tile of this.#allTiles) {
-            this.#updateTileOrientation(tile);
+    foundry.helpers.Hooks.on("updateTile", (update) => {
+        if (!(update._id && typeof update._id === "string" && update.flags?.[MODULE_NAME])) {
+            return;
         }
-    }
 
-    #onUpdateTile(_: unknown, update: foundry.abstract.Document.UpdateDataForName<"Tile">): void {
-        if (update._id && typeof update._id === "string" && update.flags?.[MODULE_NAME]) {
-            const tile = this.#findTile(update._id);
+        const tile = game.canvas?.tiles?.get(update._id);
 
-            if (tile) {
-                this.#updateTileOrientation(tile);
+        if (tile) {
+            updateTile(tile);
+        }
+    });
+
+    return {
+        async mirrorSelectedTiles(tileMirrorDirection: TileMirror): Promise<void> {
+            const controlledTiles = game.canvas?.tiles?.controlled ?? [];
+
+            for (const tile of controlledTiles) {
+                const previousState = tile.document.getFlag(MODULE_NAME, tileMirrorDirection);
+                await tile.document.setFlag(MODULE_NAME, tileMirrorDirection, !previousState);
             }
-        }
+        },
+    };
+}
+
+function updateTile(tile: foundry.canvas.placeables.Tile) {
+    if (!tile.texture) {
+        return;
     }
 
-    #updateTileOrientation(tile: foundry.canvas.placeables.Tile): void {
-        if (tile.texture) {
-            const flipHorizontal = tile.document.getFlag(MODULE_NAME, TileMirror.HORIZONTAL);
-            const flipVertical = tile.document.getFlag(MODULE_NAME, TileMirror.VERTICAL);
-            const mirrorHorizontal = flipHorizontal ? PIXI.groupD8.MIRROR_HORIZONTAL : 0;
-            const mirrorVertical = flipVertical ? PIXI.groupD8.MIRROR_VERTICAL : 0;
-            tile.texture.rotate = PIXI.groupD8.add(mirrorHorizontal, mirrorVertical);
-            tile.refresh();
-        }
-    }
-
-    get #allTiles(): foundry.canvas.placeables.Tile[] {
-        return this.#game.canvas?.tiles?.tiles ?? [];
-    }
-
-    get #controlledTiles(): foundry.canvas.placeables.Tile[] {
-        return this.#game.canvas?.tiles?.controlled ?? [];
-    }
-
-    #findTile(id: string): foundry.canvas.placeables.Tile | undefined {
-        return this.#game.canvas?.tiles?.get(id);
-    }
+    const flipHorizontal = tile.document.getFlag(MODULE_NAME, TileMirror.HORIZONTAL);
+    const flipVertical = tile.document.getFlag(MODULE_NAME, TileMirror.VERTICAL);
+    const mirrorHorizontal = flipHorizontal ? PIXI.groupD8.MIRROR_HORIZONTAL : 0;
+    const mirrorVertical = flipVertical ? PIXI.groupD8.MIRROR_VERTICAL : 0;
+    tile.texture.rotate = PIXI.groupD8.add(mirrorHorizontal, mirrorVertical);
+    tile.refresh();
 }

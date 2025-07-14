@@ -1,26 +1,85 @@
 import { LOCALIZATION, MODULE_NAME } from "./constants";
-import { TileHUD, TokenHUD } from "./hud";
+import { type TileManager, setupTileManager } from "./managers/tile-manager";
 import { TileMirror, TokenMirror } from "./model";
 import { Settings } from "./settings";
 import { SpeechManager } from "./managers/speech-manager";
-import { TileManager } from "./managers/tile-manager";
 import { TokenManager } from "./managers/token-manager";
 import { getIcon } from "./helpers";
+import { setupPlaceableHUD } from "./hud/placeable";
 
 Hooks.once("init", () => {
-    if (game instanceof foundry.Game) {
-        const settings = new Settings(game);
-
-        const tokenHUD = new TokenHUD(game);
-        const tokenManager = new TokenManager(game, settings);
-        const tileHUD = new TileHUD(game);
-        const tileManager = new TileManager(game);
-        const speechManager = new SpeechManager(game, settings);
-
-        registerKeybindings(game, tokenManager, tileManager, speechManager);
-        registerHUDButtons(settings, tokenHUD, tileHUD, tokenManager, tileManager);
+    if (!(game instanceof foundry.Game)) {
+        console.error("Game was not initialized, Fast Flip! Token Tools will not be functional.");
+        return;
     }
+
+    const settings = new Settings(game);
+    const tokenManager = new TokenManager(game, settings);
+    const tileManager = setupTileManager(game);
+    const speechManager = new SpeechManager(game, settings);
+
+    setupHUDHooks(game, settings, tokenManager, tileManager);
+    registerKeybindings(game, tokenManager, tileManager, speechManager);
 });
+
+function setupHUDHooks(game: foundry.Game, settings: Settings, tokenManager: TokenManager, tileManager: TileManager) {
+    const mirrorHorizontalIcon = getIcon("mirror-horizontal");
+    const mirrorVerticalIcon = getIcon("mirror-vertical");
+    const toggleAFKIcon = getIcon("toggle-afk");
+
+    setupPlaceableHUD(game, "TokenHUD", [
+        {
+            side: "left",
+            buttons: [
+                {
+                    title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
+                    icon: mirrorHorizontalIcon,
+                    onClick: () => void tokenManager.mirrorSelected(TokenMirror.HORIZONTAL),
+                    shouldShow: (token) => settings.showMirrorButtons && token.isOwner,
+                },
+                {
+                    title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
+                    icon: mirrorVerticalIcon,
+                    onClick: () => void tokenManager.mirrorSelected(TokenMirror.VERTICAL),
+                    shouldShow: (token) => settings.showMirrorButtons && token.isOwner,
+                },
+            ],
+        },
+        {
+            side: "right",
+            buttons: [
+                {
+                    title: LOCALIZATION.TOGGLE_AFK_BUTTON,
+                    icon: toggleAFKIcon,
+                    onClick: () => void tokenManager.toggleAFK(),
+                    shouldShow: (token) =>
+                        settings.allowAFKToggle &&
+                        settings.showToggleAFKButton &&
+                        token.isOwner &&
+                        (token.actor?.hasPlayerOwner ?? false),
+                },
+            ],
+        },
+    ]);
+
+    setupPlaceableHUD(game, "TokenHUD", [
+        {
+            side: "left",
+            buttons: [
+                {
+                    title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
+                    icon: mirrorHorizontalIcon,
+                    onClick: () => void tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL),
+                },
+                {
+                    title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
+                    icon: mirrorVerticalIcon,
+                    onClick: () => void tileManager.mirrorSelectedTiles(TileMirror.VERTICAL),
+                },
+            ],
+        },
+    ]);
+}
 
 function registerKeybindings(
     game: foundry.Game,
@@ -87,67 +146,5 @@ function registerKeybindings(
         restricted: false,
         reservedModifiers: [],
         repeat: false,
-    });
-}
-
-function registerHUDButtons(
-    settings: Settings,
-    tokenHUD: TokenHUD,
-    tileHUD: TileHUD,
-    tokenManager: TokenManager,
-    tileManager: TileManager,
-) {
-    const mirrorHorizontalIcon = getIcon("mirror-horizontal");
-    const mirrorVerticalIcon = getIcon("mirror-vertical");
-    const toggleAFKIcon = getIcon("toggle-afk");
-
-    tokenHUD.registerButtonGroup({
-        side: "left",
-        buttons: [
-            {
-                title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
-                icon: mirrorHorizontalIcon,
-                onClick: () => void tokenManager.mirrorSelected(TokenMirror.HORIZONTAL),
-                shouldShow: (token) => settings.showMirrorButtons && token.isOwner,
-            },
-            {
-                title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
-                icon: mirrorVerticalIcon,
-                onClick: () => void tokenManager.mirrorSelected(TokenMirror.VERTICAL),
-                shouldShow: (token) => settings.showMirrorButtons && token.isOwner,
-            },
-        ],
-    });
-
-    tokenHUD.registerButtonGroup({
-        side: "right",
-        buttons: [
-            {
-                title: LOCALIZATION.TOGGLE_AFK_BUTTON,
-                icon: toggleAFKIcon,
-                onClick: () => void tokenManager.toggleAFK(),
-                shouldShow: (token) =>
-                    settings.allowAFKToggle &&
-                    settings.showToggleAFKButton &&
-                    token.isOwner &&
-                    (token.actor?.hasPlayerOwner ?? false),
-            },
-        ],
-    });
-
-    tileHUD.registerButtonGroup({
-        side: "left",
-        buttons: [
-            {
-                title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
-                icon: mirrorHorizontalIcon,
-                onClick: () => void tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL),
-            },
-            {
-                title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
-                icon: mirrorVerticalIcon,
-                onClick: () => void tileManager.mirrorSelectedTiles(TileMirror.VERTICAL),
-            },
-        ],
     });
 }

@@ -10,6 +10,8 @@
         "noUncheckedSideEffectImports": true,
         "moduleDetection": "force",
         "outDir": "dist/",
+        "jsx": "react-jsx",
+        "jsxImportSource": "jsx-dom",
         "strict": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,

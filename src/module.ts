@@ -1,9 +1,9 @@
 import { LOCALIZATION, MODULE_NAME } from "./constants";
 import { type TileManager, setupTileManager } from "./managers/tile-manager";
 import { TileMirror, TokenMirror } from "./model";
+import { type TokenManager, setupTokenManager } from "./managers/token-manager";
 import { Settings } from "./settings";
 import { SpeechManager } from "./managers/speech-manager";
-import { TokenManager } from "./managers/token-manager";
 import { getIcon } from "./helpers";
 import { setupPlaceableHUD } from "./hud/placeable";
 
@@ -14,7 +14,7 @@ Hooks.once("init", () => {
     }
 
     const settings = new Settings(game);
-    const tokenManager = new TokenManager(game, settings);
+    const tokenManager = setupTokenManager({ game, settings });
     const tileManager = setupTileManager(game);
     const speechManager = new SpeechManager(game, settings);
 

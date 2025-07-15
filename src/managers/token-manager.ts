@@ -1,111 +1,35 @@
 import { AFK_STATE_KEY, TokenMirror } from "../model";
 import { LOCALIZATION, MODULE_NAME } from "../constants";
-
 import { AFKOverlay } from "../pixi/afk-overlay";
 import { Settings } from "../settings";
 import { findChild } from "../pixi";
 
-export class TokenManager {
-    readonly #game: foundry.Game;
-    readonly #settings: Settings;
+export type TokenManager = {
+    mirrorSelected: (tokenMirrorDirection: TokenMirror) => void;
+    toggleAFK: () => Promise<void>;
+};
 
-    constructor(game: foundry.Game, settings: Settings) {
-        this.#game = game;
-        this.#settings = settings;
+type ManagerParams = {
+    game: foundry.Game;
+    settings: Settings;
+};
 
-        Hooks.on("updateToken", this.#onUpdateToken.bind(this));
-        Hooks.on("drawToken", this.#onDrawToken.bind(this));
-    }
-
-    mirrorSelected(tokenMirrorDirection: TokenMirror): void {
-        for (const token of this.#controlledTokens) {
-            if (!token.isOwner) {
-                continue;
-            }
-
-            (async () => {
-                const key = `Token.${token.id}.animate`;
-                const animationContext = token.animationContexts.get(key);
-
-                if (animationContext?.promise) {
-                    await animationContext.promise;
-                }
-
-                const flipMirror = -(token.document?.texture[tokenMirrorDirection] ?? 0);
-                const animationDuration = this.#settings.animationDuration;
-
-                await token.document.update(
-                    {
-                        [`texture.${tokenMirrorDirection}`]: flipMirror,
-                    },
-                    {
-                        animate: animationDuration !== 0,
-                        animation: {
-                            duration: animationDuration,
-                        },
-                    },
-                );
-            })();
-        }
-    }
-
-    async toggleAFK(): Promise<void> {
-        if (!this.#settings.allowAFKToggle) {
+export function setupTokenManager({ game, settings }: ManagerParams): TokenManager {
+    Hooks.on("updateToken", async (_, document) => {
+        if (!document._id || typeof document._id !== "string") {
             return;
         }
 
-        for (const token of this.#controlledTokens) {
-            if (!token.isOwner || !token.actor?.hasPlayerOwner) {
-                continue;
-            }
+        const token = game.canvas?.tokens?.get(document._id);
 
-            const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
-
-            if (isAFK) {
-                await this.#unsetAFK(token);
-            } else {
-                await this.#setAFK(token);
-            }
-        }
-    }
-
-    async #setAFK(token: foundry.canvas.placeables.Token): Promise<void> {
-        await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, true);
-
-        if (!this.#settings.showAFKStatusInChat) {
+        if (!token) {
             return;
         }
 
-        await ChatMessage.create({
-            style: CONST.CHAT_MESSAGE_STYLES.OOC,
-            speaker: { token: token.id },
-            content: this.#game.i18n?.format(LOCALIZATION.CHAT_AFK_MESSAGE, {
-                name: token.name,
-            }),
-        });
-    }
+        await updateTokenAFKOverlay({ token, settings });
+    });
 
-    async #unsetAFK(token: foundry.canvas.placeables.Token): Promise<void> {
-        await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, false);
-
-        if (!this.#settings.showAFKStatusInChat) {
-            return;
-        }
-
-        await ChatMessage.create({
-            style: CONST.CHAT_MESSAGE_STYLES.OOC,
-            speaker: { token: token.id },
-            content: this.#game.i18n?.format(LOCALIZATION.CHAT_RETURNED_MESSAGE, {
-                name: token.name,
-            }),
-        });
-    }
-
-    get #controlledTokens(): foundry.canvas.placeables.Token[] {
-        return this.#game.canvas?.tokens?.controlled ?? [];
-    }
-
-    async #onDrawToken(token: foundry.canvas.placeables.Token): Promise<void> {
+    Hooks.on("drawToken", async (token) => {
         if (!token) {
             return;
         }
@@ -114,33 +38,119 @@ export class TokenManager {
             return;
         }
 
-        await this.#updateTokenAFKOverlay(token);
+        await updateTokenAFKOverlay({ token, settings });
+    });
+
+    return {
+        mirrorSelected(tokenMirrorDirection: TokenMirror) {
+            const controlledTokens = game.canvas?.tokens?.controlled ?? [];
+
+            for (const token of controlledTokens) {
+                if (!token.isOwner) {
+                    continue;
+                }
+
+                (async () => {
+                    const key = `Token.${token.id}.animate`;
+                    const animationContext = token.animationContexts.get(key);
+
+                    if (animationContext?.promise) {
+                        await animationContext.promise;
+                    }
+
+                    const flipMirror = -(token.document?.texture[tokenMirrorDirection] ?? 0);
+                    const animationDuration = settings.animationDuration;
+
+                    await token.document.update(
+                        {
+                            [`texture.${tokenMirrorDirection}`]: flipMirror,
+                        },
+                        {
+                            animate: animationDuration !== 0,
+                            animation: {
+                                duration: animationDuration,
+                            },
+                        },
+                    );
+                })();
+            }
+        },
+
+        async toggleAFK() {
+            if (!settings.allowAFKToggle) {
+                return;
+            }
+
+            const controlledTokens = game.canvas?.tokens?.controlled ?? [];
+            for (const token of controlledTokens) {
+                if (!token.isOwner || !token.actor?.hasPlayerOwner) {
+                    continue;
+                }
+
+                const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
+
+                if (isAFK) {
+                    await unsetAFK({ token, game, settings });
+                } else {
+                    await setAFK({ token, game, settings });
+                }
+            }
+        },
+    };
+}
+
+type UpdateTokenAFKOverlayParams = {
+    token: foundry.canvas.placeables.Token;
+    settings: Settings;
+};
+
+async function updateTokenAFKOverlay({ token, settings }: UpdateTokenAFKOverlayParams): Promise<void> {
+    const overlay = findChild(token, AFKOverlay) ?? new AFKOverlay(settings, token);
+
+    const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
+
+    if (!isAFK) {
+        overlay.hide();
+        return;
     }
 
-    async #onUpdateToken(_: unknown, document: foundry.abstract.Document.UpdateDataForName<"Token">): Promise<void> {
-        if (!document._id || typeof document._id !== "string") {
-            return;
-        }
+    await overlay.show();
+}
 
-        const token = this.#game.canvas?.tokens?.get(document._id);
+type AfkToggleParams = {
+    token: foundry.canvas.placeables.Token;
+    settings: Settings;
+    game: foundry.Game;
+};
 
-        if (!token) {
-            return;
-        }
+async function setAFK({ token, settings, game }: AfkToggleParams): Promise<void> {
+    await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, true);
 
-        await this.#updateTokenAFKOverlay(token);
+    if (!settings.showAFKStatusInChat) {
+        return;
     }
 
-    async #updateTokenAFKOverlay(token: foundry.canvas.placeables.Token): Promise<void> {
-        const overlay = findChild(token, AFKOverlay) ?? new AFKOverlay(this.#settings, token);
+    await ChatMessage.create({
+        style: CONST.CHAT_MESSAGE_STYLES.OOC,
+        speaker: { token: token.id },
+        content: game.i18n?.format(LOCALIZATION.CHAT_AFK_MESSAGE, {
+            name: token.name,
+        }),
+    });
+}
 
-        const isAFK = token.document.getFlag(MODULE_NAME, AFK_STATE_KEY);
+async function unsetAFK({ token, settings, game }: AfkToggleParams): Promise<void> {
+    await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, false);
 
-        if (!isAFK) {
-            overlay.hide();
-            return;
-        }
-
-        await overlay.show();
+    if (settings.showAFKStatusInChat) {
+        return;
     }
+
+    await ChatMessage.create({
+        style: CONST.CHAT_MESSAGE_STYLES.OOC,
+        speaker: { token: token.id },
+        content: game.i18n?.format(LOCALIZATION.CHAT_RETURNED_MESSAGE, {
+            name: token.name,
+        }),
+    });
 }

@@ -3,14 +3,18 @@ export interface TokenContainer extends PIXI.Container {
     hide(): PromiseLike<void> | void;
 }
 
-interface ObjectType {
-    // TypeScript requires the usage of `any[]` here to work.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    new (...args: any[]): PIXI.DisplayObject;
+type NamedDisplayObjectType<C> = C extends {
+    new (...args: infer _): PIXI.DisplayObject;
     readonly NAME: string;
 }
+    ? C
+    : never;
 
-/// Convenience function for finding children of a container with a specific type.
-export function findChild<C extends ObjectType>(parent: PIXI.Container, containerType: C): InstanceType<C> | null {
+type NamedDisplayObject<C> = InstanceType<NamedDisplayObjectType<C>>;
+
+export function findChild<C>(
+    parent: PIXI.Container,
+    containerType: NamedDisplayObjectType<C>,
+): NamedDisplayObject<C> | null {
     return parent.getChildByName(containerType.NAME, true);
 }

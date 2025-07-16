@@ -51,7 +51,7 @@ export class SpeechManager {
                 const keySet = new Set(keys);
                 const downKeys = normalizeKeys(this.#game.keyboard!.downKeys);
 
-                if (!keySet.isSubset(downKeys)) {
+                if (!keySet.isSubsetOf(downKeys)) {
                     this.hideSpeechBubble();
                 }
             }, 250) as unknown as number;

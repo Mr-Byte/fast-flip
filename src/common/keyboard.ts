@@ -1,9 +1,3 @@
-import { MODULE_NAME } from "./constants";
-
-export function getIcon(icon: string): string {
-    return `modules/${MODULE_NAME}/icons/${icon}.svg`;
-}
-
 type AltKeys = (typeof foundry.helpers.interaction.KeyboardManager.MODIFIER_CODES.Alt)[number];
 type CtrlKeys = (typeof foundry.helpers.interaction.KeyboardManager.MODIFIER_CODES.Control)[number];
 type ShiftKeys = (typeof foundry.helpers.interaction.KeyboardManager.MODIFIER_CODES.Shift)[number];

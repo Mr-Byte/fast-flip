@@ -1,150 +1,44 @@
-import { LOCALIZATION, MODULE_NAME } from "./constants";
-import { type TileManager, setupTileManager } from "./managers/tile-manager";
-import { TileMirror, TokenMirror } from "./model";
-import { type TokenManager, setupTokenManager } from "./managers/token-manager";
-import { Settings } from "./settings";
-import { SpeechManager } from "./managers/speech-manager";
-import { getIcon } from "./helpers";
-import { setupPlaceableHUD } from "./hud/placeable";
+import * as tiles from "@tiles";
+import * as tokens from "@tokens";
+import { registerSettings } from "@common/settings";
 
-Hooks.once("init", () => {
+Hooks.once("init", async () => {
     if (!(game instanceof foundry.Game)) {
         console.error("Game was not initialized, Fast Flip! Token Tools will not be functional.");
         return;
     }
 
-    const settings = new Settings(game);
-    const tokenManager = setupTokenManager({ game, settings });
-    const tileManager = setupTileManager(game);
-    const speechManager = new SpeechManager(game, settings);
+    const settings = registerSettings(game);
 
-    setupHUDHooks(game, settings, tokenManager, tileManager);
-    registerKeybindings(game, tokenManager, tileManager, speechManager);
+    tiles.initialize();
+    tokens.initialize(settings);
 });
 
-function setupHUDHooks(game: foundry.Game, settings: Settings, tokenManager: TokenManager, tileManager: TileManager) {
-    const mirrorHorizontalIcon = getIcon("mirror-horizontal");
-    const mirrorVerticalIcon = getIcon("mirror-vertical");
-    const toggleAFKIcon = getIcon("toggle-afk");
+//
+// function registerKeybindings(
+//     game: foundry.Game,
+//     tokenManager: TokenManager,
+//     tileManager: TileManager,
+//     speechManager: SpeechManager,
+// ) {
 
-    setupPlaceableHUD(game, "TokenHUD", [
-        {
-            side: "left",
-            buttons: [
-                {
-                    title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
-                    icon: mirrorHorizontalIcon,
-                    onClick: () => void tokenManager.mirrorSelected(TokenMirror.HORIZONTAL),
-                    shouldShow: (token) => settings.showMirrorButtons && token.isOwner,
-                },
-                {
-                    title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
-                    icon: mirrorVerticalIcon,
-                    onClick: () => void tokenManager.mirrorSelected(TokenMirror.VERTICAL),
-                    shouldShow: (token) => settings.showMirrorButtons && token.isOwner,
-                },
-            ],
-        },
-        {
-            side: "right",
-            buttons: [
-                {
-                    title: LOCALIZATION.TOGGLE_AFK_BUTTON,
-                    icon: toggleAFKIcon,
-                    onClick: () => void tokenManager.toggleAFK(),
-                    shouldShow: (token) =>
-                        settings.allowAFKToggle &&
-                        settings.showToggleAFKButton &&
-                        token.isOwner &&
-                        (token.actor?.hasPlayerOwner ?? false),
-                },
-            ],
-        },
-    ]);
+//
 
-    setupPlaceableHUD(game, "TokenHUD", [
-        {
-            side: "left",
-            buttons: [
-                {
-                    title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
-                    icon: mirrorHorizontalIcon,
-                    onClick: () => void tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL),
-                },
-                {
-                    title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
-                    icon: mirrorVerticalIcon,
-                    onClick: () => void tileManager.mirrorSelectedTiles(TileMirror.VERTICAL),
-                },
-            ],
-        },
-    ]);
-}
-
-function registerKeybindings(
-    game: foundry.Game,
-    tokenManager: TokenManager,
-    tileManager: TileManager,
-    speechManager: SpeechManager,
-) {
-    const horizontalFlip: () => void = async () => {
-        tokenManager.mirrorSelected(TokenMirror.HORIZONTAL);
-        await tileManager.mirrorSelectedTiles(TileMirror.HORIZONTAL);
-    };
-
-    game.keybindings?.register(MODULE_NAME, "horizontalFlip", {
-        name: LOCALIZATION.MIRROR_HORIZONTAL_HOTKEY,
-        hint: game.i18n?.localize(LOCALIZATION.MIRROR_HORIZONTAL_HINT),
-        editable: [{ key: "KeyG" }],
-        onDown: horizontalFlip,
-        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-        restricted: false,
-        reservedModifiers: [],
-        repeat: false,
-    });
-
-    const verticalFlip: () => void = async () => {
-        tokenManager.mirrorSelected(TokenMirror.VERTICAL);
-        await tileManager.mirrorSelectedTiles(TileMirror.VERTICAL);
-    };
-    game.keybindings?.register(MODULE_NAME, "verticalFlip", {
-        name: LOCALIZATION.MIRROR_VERTICAL_HOTKEY,
-        hint: game.i18n?.localize(LOCALIZATION.MIRROR_VERTICAL_HINT),
-        editable: [{ key: "KeyG", modifiers: ["SHIFT"] }],
-        onDown: verticalFlip,
-        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-        restricted: false,
-        reservedModifiers: [],
-        repeat: false,
-    });
-
-    const toggleAFK: () => void = async () => await tokenManager.toggleAFK();
-    game.keybindings?.register(MODULE_NAME, LOCALIZATION.TOGGLE_AFK_HOTKEY, {
-        name: LOCALIZATION.TOGGLE_AFK_HOTKEY,
-        hint: game.i18n?.localize(LOCALIZATION.TOGGLE_AFK_HINT),
-        editable: [{ key: "KeyK", modifiers: ["SHIFT"] }],
-        onDown: toggleAFK,
-        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-        restricted: false,
-        reservedModifiers: [],
-        repeat: false,
-    });
-
-    const onStartSpeaking: () => void = async () => {
-        await speechManager.showSpeechBubble();
-    };
-    const onStopSpeaking = () => {
-        speechManager.hideSpeechBubble();
-    };
-    game.keybindings?.register(MODULE_NAME, LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY, {
-        name: LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY,
-        hint: game.i18n?.localize(LOCALIZATION.SHOW_SPEECH_BUBBLE_HINT),
-        editable: [{ key: "KeyS", modifiers: ["ALT"] }],
-        onDown: onStartSpeaking,
-        onUp: onStopSpeaking,
-        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-        restricted: false,
-        reservedModifiers: [],
-        repeat: false,
-    });
-}
+//     const onStartSpeaking: () => void = async () => {
+//         await speechManager.showSpeechBubble();
+//     };
+//     const onStopSpeaking = () => {
+//         speechManager.hideSpeechBubble();
+//     };
+//     game.keybindings?.register(MODULE_NAME, LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY, {
+//         name: LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY,
+//         hint: game.i18n?.localize(LOCALIZATION.SHOW_SPEECH_BUBBLE_HINT),
+//         editable: [{ key: "KeyS", modifiers: ["ALT"] }],
+//         onDown: onStartSpeaking,
+//         onUp: onStopSpeaking,
+//         precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+//         restricted: false,
+//         reservedModifiers: [],
+//         repeat: false,
+//     });
+// }

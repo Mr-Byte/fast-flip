@@ -26,7 +26,9 @@
         "types": ["fvtt-types"],
         "newLine": "lf",
         "skipLibCheck": true,
-        "baseUrl": "./src"
+        "paths": {
+            "@*": ["./src/*"]
+        }
     },
     "exclude": ["dist/**/*.js", "node_modules/**"],
     "include": ["src/**/*.ts"]

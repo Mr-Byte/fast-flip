@@ -1,6 +1,7 @@
-import { AFK_STATE_KEY, TileMirror, TokenMirror } from "./model";
-
-import { MODULE_NAME } from "./constants";
+import { AFK_STATE_KEY } from "@tokens/capabilities/afkOverlay";
+import { MODULE_NAME } from "@common/constants";
+import { TileMirror } from "@tiles";
+import { TokenMirror } from "@tokens/capabilities/tokenMirroring";
 
 export {};
 

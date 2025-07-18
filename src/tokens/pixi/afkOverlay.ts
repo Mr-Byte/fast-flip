@@ -1,18 +1,21 @@
-import { Settings } from "../settings";
-import { type TokenContainer } from ".";
+import { type Settings } from "@common/settings";
 
-export class AFKOverlay extends PIXI.Container implements TokenContainer {
-    public static readonly NAME: string = "afk-overlay";
+export interface TokenElement {
+    show(): Promise<void>;
+    hide(): void;
+}
 
+export class AfkOverlay extends PIXI.Container implements TokenElement {
     readonly #settings: Settings;
     readonly #token: Token;
+    static readonly NAME = "afk-overlay";
 
     #sprite: PIXI.Sprite | null = null;
 
     constructor(settings: Settings, token: Token) {
         super();
 
-        this.name = AFKOverlay.NAME;
+        this.name = AfkOverlay.NAME;
         this.#settings = settings;
         this.#token = token;
         this.#token.addChild(this);

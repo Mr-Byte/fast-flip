@@ -14,8 +14,12 @@ export default defineConfig({
         rollupOptions: {
             input: "src/module.ts",
             output: {
+                compact: true,
                 entryFileNames: "module.mjs",
                 chunkFileNames: "[name].mjs",
+                manualChunks: {
+                    "jsx-dom": ["jsx-dom"],
+                },
             },
         },
         target: "es2022",

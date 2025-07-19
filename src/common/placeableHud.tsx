@@ -8,12 +8,12 @@ export interface ButtonGroupProps<T extends PlaceableObject> {
 }
 
 interface HudRegistry {
-    TokenHUD: [foundry.applications.hud.TokenHUD.Any];
-    TileHUD: [foundry.applications.hud.TileHUD.Any];
+    TokenHUD: foundry.applications.hud.TokenHUD.Any;
+    TileHUD: foundry.applications.hud.TileHUD.Any;
 }
 
-type HudName = keyof HudRegistry & {};
-type HudObject<T extends HudName> = HudRegistry[T][0]["object"];
+type HudName = keyof HudRegistry;
+type HudObject<T extends HudName> = HudRegistry[T]["object"];
 
 export function setupPlaceableHUD<T extends HudName>(name: T, buttonGroups: ButtonGroupProps<HudObject<T>>[]) {
     foundry.helpers.Hooks.on(

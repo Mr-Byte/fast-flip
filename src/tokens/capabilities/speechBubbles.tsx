@@ -11,7 +11,7 @@ export default function speechBubbles(settings: Settings): Capability {
     let keyClearInterval: number | undefined;
     let chatBubbleContainer;
 
-    game.socket?.on("module.fast-flip", async (data: SocketMessage) => {
+    game.socket?.on(`module.${MODULE_NAME}`, async (data: SocketMessage) => {
         if (!game.canvas) {
             return;
         }
@@ -72,7 +72,7 @@ export default function speechBubbles(settings: Settings): Capability {
         const tokenID = token?.id;
 
         if (tokenID && sceneID) {
-            game.socket?.emit("module.fast-flip", {
+            game.socket?.emit(`module.${MODULE_NAME}`, {
                 type: SocketMessageType.ShowSpeechBubble,
                 tokenID,
                 sceneID,
@@ -107,7 +107,7 @@ export default function speechBubbles(settings: Settings): Capability {
         }
 
         if (sceneID) {
-            game.socket?.emit("module.fast-flip", {
+            game.socket?.emit(`module.${MODULE_NAME}`, {
                 type: SocketMessageType.HideSpeechBubble,
                 sceneID,
                 tokenID: token.id,

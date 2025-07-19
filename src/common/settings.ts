@@ -1,5 +1,5 @@
-import { LOCALIZATION, MODULE_NAME } from "@/common/constants";
-import { SETTING, type SettingEntries } from "@/configuration";
+import { LOCALIZATION, MODULE_NAME, SETTING } from "@/common/constants";
+import { type SettingEntries } from "@/configuration";
 import { getIcon } from "@/common/helpers";
 
 export type Settings = Readonly<{
@@ -74,8 +74,8 @@ export function registerSettings(game: foundry.Game): Settings {
             type: Boolean,
         },
         [SETTING.SHOW_MIRROR_BUTTONS_HUD]: {
-            name: game.i18n?.localize(LOCALIZATION.SHOW_MIRROR_BUTTONS),
-            hint: game.i18n?.localize(LOCALIZATION.SHOW_MIRROR_BUTTONS_HINT),
+            name: game.i18n?.localize(LOCALIZATION.SHOW_FLIP_BUTTONS),
+            hint: game.i18n?.localize(LOCALIZATION.SHOW_FLIP_BUTTONS_HINT),
             scope: "client",
             config: true,
             default: true,

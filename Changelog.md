@@ -1,3 +1,10 @@
+# v5.0.0
+
+- Major rewrite of the module, prepping for future features
+- Changed the speech bubble keybind to `B`
+- Separated the keybinds for flipping tiles and tokens allowing them to be bound separately
+- Combined horizontal and vertical flipping into a single keybind, with `SHIFT` flipping vertically
+
 # v4.0.2
 
 - Fix the way rollup bundles the module and switch to esmodules to prevent global namespace pollution.

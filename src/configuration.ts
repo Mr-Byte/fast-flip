@@ -1,7 +1,8 @@
+import type { Identity, WithModuleName } from "@/common/types";
 import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
+import { FlipDirection } from "@/tokens/capabilities/tokenFlipping";
 import { MODULE_NAME } from "@/common/constants";
 import { TileMirror } from "@/tiles";
-import { FlipDirection } from "@/tokens/capabilities/tokenFlipping";
 
 export {};
 
@@ -23,50 +24,35 @@ declare module "fvtt-types/configuration" {
     }
 }
 
+type SettingsConfigMapping = {
+    "animation-duration": number;
+    "allow-afk-toggle": boolean;
+    "show-afk-status-in-chat": boolean;
+    "show-mirror-buttons-hud": boolean;
+    "show-toggle-afk-hud": boolean;
+    "afk-overlay-icon-path": string;
+    "allow-speech-bubbles": boolean;
+    "speech-bubble-font-size": number;
+};
+
+type SettingsConfigBase = Identity<{
+    [K in keyof SettingsConfigMapping as WithModuleName<K>]: SettingsConfigMapping[K];
+}>;
+
 declare global {
-    interface SettingConfig {
-        "fast-flip.animation-duration": number;
-        "fast-flip.allow-afk-toggle": boolean;
-        "fast-flip.show-afk-status-in-chat": boolean;
-        "fast-flip.show-mirror-buttons-hud": boolean;
-        "fast-flip.show-toggle-afk-hud": boolean;
-        "fast-flip.afk-overlay-icon-path": string;
-        "fast-flip.allow-speech-bubbles": boolean;
-        "fast-flip.speech-bubble-font-size": number;
-    }
+    interface SettingConfig extends SettingsConfigBase {}
 }
 
 type RegisterOptions = foundry.helpers.ClientSettings.RegisterData<
     string | number | boolean,
-    "fast-flip",
-    foundry.helpers.ClientSettings.KeyFor<"fast-flip">
+    typeof MODULE_NAME,
+    foundry.helpers.ClientSettings.KeyFor<typeof MODULE_NAME>
 >;
 
 type SettingEntryMapping = {
-    [K in keyof SettingConfig as K extends `fast-flip.${infer P}` ? P : never]: K extends `fast-flip.${infer P}`
-        ? [P, RegisterOptions]
-        : never;
+    [K in keyof SettingConfig as K extends `${typeof MODULE_NAME}.${infer P}`
+        ? P
+        : never]: K extends `${typeof MODULE_NAME}.${infer P}` ? [P, RegisterOptions] : never;
 };
 
-export type SettingEntries = SettingEntryMapping[keyof SettingEntryMapping][];
-
-type KebabToShoutingSnake<S extends string> = S extends `${infer Head}-${infer Tail}`
-    ? `${Uppercase<Head>}_${KebabToShoutingSnake<Tail>}`
-    : Uppercase<S>;
-
-export type Settings = {
-    [K in keyof SettingConfig as K extends `fast-flip.${infer P}`
-        ? KebabToShoutingSnake<P>
-        : never]: K extends `fast-flip.${infer P}` ? P : never;
-};
-
-export const SETTING: Settings = {
-    ANIMATION_DURATION: "animation-duration",
-    ALLOW_AFK_TOGGLE: "allow-afk-toggle",
-    SHOW_AFK_STATUS_IN_CHAT: "show-afk-status-in-chat",
-    SHOW_MIRROR_BUTTONS_HUD: "show-mirror-buttons-hud",
-    SHOW_TOGGLE_AFK_HUD: "show-toggle-afk-hud",
-    AFK_OVERLAY_ICON_PATH: "afk-overlay-icon-path",
-    ALLOW_SPEECH_BUBBLES: "allow-speech-bubbles",
-    SPEECH_BUBBLE_FONT_SIZE: "speech-bubble-font-size",
-};
+export type SettingEntries = Identity<SettingEntryMapping[keyof SettingEntryMapping][]>;

@@ -11,7 +11,7 @@ GMs can also use the same set of shortcuts to mirror tiles.
 -   Pressing `G` will mirror the selected tokens and tiles horizontally
 -   Pressing `Shift+G` will mirror the selected tokens and tiles vertically
 -   Pressing `Shift+K` will toggle the AFK status of any selected tokens
--   Pressing `Alt+S` will show a speech bubble with the token's name
+-   Pressing `B` will show a speech bubble with the token's name
 
 # License
 

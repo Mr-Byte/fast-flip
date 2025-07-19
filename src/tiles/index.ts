@@ -17,7 +17,7 @@ export function initialize(): void {
     });
 
     foundry.helpers.Hooks.on("updateTile", (update) => {
-        if (!(update._id && typeof update._id === "string" && update.flags?.[MODULE_NAME])) {
+        if (!(update._id && update.flags?.[MODULE_NAME])) {
             return;
         }
 
@@ -28,28 +28,25 @@ export function initialize(): void {
         }
     });
 
-    const mirrorHorizontalIcon = getIcon("mirror-horizontal");
-    const mirrorVerticalIcon = getIcon("mirror-vertical");
-
     setupPlaceableHUD("TileHUD", [
         {
             side: "left",
             buttons: [
                 {
                     title: LOCALIZATION.FLIP_TILE_HORIZONTAL_BUTTON,
-                    icon: mirrorHorizontalIcon,
+                    icon: getIcon("mirror-horizontal"),
                     onClick: () => void mirrorSelectedTiles(TileMirror.HORIZONTAL),
                 },
                 {
                     title: LOCALIZATION.FLIP_TILE_VERTICAL_BUTTON,
-                    icon: mirrorVerticalIcon,
+                    icon: getIcon("mirror-vertical"),
                     onClick: () => void mirrorSelectedTiles(TileMirror.VERTICAL),
                 },
             ],
         },
     ]);
 
-    game?.keybindings?.register("fast-flip", "flipTile", {
+    game?.keybindings?.register(MODULE_NAME, "flipTile", {
         name: LOCALIZATION.FLIP_TILE_HOTKEY,
         hint: game.i18n?.localize(LOCALIZATION.FLIP_TILE_HINT),
         editable: [{ key: "KeyG" }],

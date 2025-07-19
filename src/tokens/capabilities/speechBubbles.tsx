@@ -6,10 +6,10 @@ import type { Capability } from "@/tokens/capabilities/capability";
 import { type SocketMessage, SocketMessageType } from "@/tokens/messages";
 
 export default function speechBubbles(settings: Settings): Capability {
-    const chatBubbleContainer = document.getElementById("chat-bubbles");
     const style = getComputedStyle(<div className="bubble-content" />);
     const fontFamily = style.fontFamily;
     let keyClearInterval: number | undefined;
+    let chatBubbleContainer;
 
     game.socket?.on("module.fast-flip", async (data: SocketMessage) => {
         if (!game.canvas) {
@@ -119,6 +119,8 @@ export default function speechBubbles(settings: Settings): Capability {
     }
 
     async function show(token: Token): Promise<void> {
+        chatBubbleContainer ??= document.getElementById("chat-bubbles");
+
         await chatBubbleContainer
             ?.appendChild(
                 <SpeechBubble

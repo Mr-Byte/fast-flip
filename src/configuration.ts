@@ -1,7 +1,7 @@
-import { AFK_STATE_KEY } from "@tokens/capabilities/afkOverlay";
-import { MODULE_NAME } from "@common/constants";
-import { TileMirror } from "@tiles";
-import { TokenMirror } from "@tokens/capabilities/tokenMirroring";
+import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
+import { MODULE_NAME } from "@/common/constants";
+import { TileMirror } from "@/tiles";
+import { FlipDirection } from "@/tokens/capabilities/tokenFlipping";
 
 export {};
 
@@ -9,8 +9,8 @@ declare module "fvtt-types/configuration" {
     interface FlagConfig {
         Token: {
             [MODULE_NAME]: {
-                [TokenMirror.HORIZONTAL]: boolean;
-                [TokenMirror.VERTICAL]: boolean;
+                [FlipDirection.HORIZONTAL]: boolean;
+                [FlipDirection.VERTICAL]: boolean;
                 [AFK_STATE_KEY]: boolean;
             };
         };

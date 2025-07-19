@@ -1,12 +1,12 @@
-import { LOCALIZATION, MODULE_NAME } from "@common/constants";
-import { AfkOverlay } from "@tokens/pixi/afkOverlay";
-import type { ButtonGroupProps } from "@common/placeableHud";
-import type { Settings } from "@common/settings";
-import { getIcon } from "@common/helpers";
+import { LOCALIZATION, MODULE_NAME } from "@/common/constants";
+import { AfkOverlay } from "@/tokens/capabilities/_components/afkOverlay";
+import type { Capability } from "@/tokens/capabilities/capability";
+import type { Settings } from "@/common/settings";
+import { getIcon } from "@/common/helpers";
 
 export const AFK_STATE_KEY = "afk-state";
 
-export function afkOverlay(settings: Settings): ButtonGroupProps<foundry.canvas.placeables.Token>[] {
+export default function afkOverlay(settings: Settings): Capability {
     Hooks.on("updateToken", async (_, document) => {
         if (!document._id || typeof document._id !== "string") {
             return;
@@ -33,36 +33,40 @@ export function afkOverlay(settings: Settings): ButtonGroupProps<foundry.canvas.
         await updateTokenAFKOverlay(token);
     });
 
-    game.keybindings?.register(MODULE_NAME, LOCALIZATION.TOGGLE_AFK_HOTKEY, {
-        name: LOCALIZATION.TOGGLE_AFK_HOTKEY,
-        hint: game.i18n?.localize(LOCALIZATION.TOGGLE_AFK_HINT),
-        editable: [{ key: "KeyK", modifiers: ["SHIFT"] }],
-        onDown: () => void toggleAFK(),
-        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-        restricted: false,
-        reservedModifiers: [],
-        repeat: false,
-    });
-
-    const toggleAFKIcon = getIcon("toggle-afk");
-
-    return [
-        {
-            side: "right",
-            buttons: [
-                {
-                    title: LOCALIZATION.TOGGLE_AFK_BUTTON,
-                    icon: toggleAFKIcon,
-                    onClick: () => void toggleAFK(),
-                    shouldShow: (token) =>
-                        settings.allowAFKToggle &&
-                        settings.showToggleAFKButton &&
-                        token.isOwner &&
-                        (token.actor?.hasPlayerOwner ?? false),
+    return {
+        hudButtonGroups: [
+            {
+                side: "right",
+                buttons: [
+                    {
+                        title: LOCALIZATION.TOGGLE_AFK_BUTTON,
+                        icon: getIcon("toggle-afk"),
+                        onClick: () => void toggleAFK(),
+                        shouldShow: (token) =>
+                            settings.allowAFKToggle &&
+                            settings.showToggleAFKButton &&
+                            token.isOwner &&
+                            (token.actor?.hasPlayerOwner ?? false),
+                    },
+                ],
+            },
+        ],
+        keybinds: [
+            {
+                name: LOCALIZATION.TOGGLE_AFK_HOTKEY,
+                config: {
+                    name: LOCALIZATION.TOGGLE_AFK_HOTKEY,
+                    hint: game.i18n?.localize(LOCALIZATION.TOGGLE_AFK_HINT),
+                    editable: [{ key: "KeyK", modifiers: ["SHIFT"] }],
+                    onDown: () => void toggleAFK(),
+                    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+                    restricted: false,
+                    reservedModifiers: [],
+                    repeat: false,
                 },
-            ],
-        },
-    ];
+            },
+        ],
+    };
 
     async function toggleAFK() {
         if (!settings.allowAFKToggle) {
@@ -104,7 +108,7 @@ export function afkOverlay(settings: Settings): ButtonGroupProps<foundry.canvas.
     async function unsetAFK(token: foundry.canvas.placeables.Token): Promise<void> {
         await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, false);
 
-        if (settings.showAFKStatusInChat) {
+        if (!settings.showAFKStatusInChat) {
             return;
         }
 

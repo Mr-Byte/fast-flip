@@ -27,7 +27,7 @@
         "newLine": "lf",
         "skipLibCheck": true,
         "paths": {
-            "@*": ["./src/*"]
+            "@/*": ["./src/*"]
         }
     },
     "exclude": ["dist/**/*.js", "node_modules/**"],

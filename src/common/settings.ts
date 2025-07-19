@@ -1,6 +1,6 @@
-import { LOCALIZATION, MODULE_NAME } from "@common/constants";
-import { SETTING, type SettingEntries } from "@configuration";
-import { getIcon } from "@common/helpers";
+import { LOCALIZATION, MODULE_NAME } from "@/common/constants";
+import { SETTING, type SettingEntries } from "@/configuration";
+import { getIcon } from "@/common/helpers";
 
 export type Settings = Readonly<{
     animationDuration: number;

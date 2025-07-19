@@ -1,4 +1,4 @@
-import HudButtonGroup, { type ButtonProps } from "@common/_components/hudButtonGroup";
+import HudButtonGroup, { type ButtonProps } from "@/common/_components/hudButtonGroup";
 
 type PlaceableObject = foundry.canvas.placeables.PlaceableObject;
 

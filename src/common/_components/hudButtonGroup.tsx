@@ -1,4 +1,4 @@
-import HudButton from "@common/_components/hudButton";
+import HudButton from "@/common/_components/hudButton";
 
 export interface ButtonProps<T extends PlaceableObject> {
     title: string;

@@ -1,6 +1,6 @@
-import { LOCALIZATION, MODULE_NAME } from "@common/constants";
-import { getIcon } from "@common/helpers";
-import { setupPlaceableHUD } from "@common/placeableHud";
+import { LOCALIZATION, MODULE_NAME } from "@/common/constants";
+import { getIcon } from "@/common/helpers";
+import { setupPlaceableHUD } from "@/common/placeableHud";
 
 export const enum TileMirror {
     HORIZONTAL = "tileMirrorHorizontal",
@@ -31,23 +31,34 @@ export function initialize(): void {
     const mirrorHorizontalIcon = getIcon("mirror-horizontal");
     const mirrorVerticalIcon = getIcon("mirror-vertical");
 
-    setupPlaceableHUD("TokenHUD", [
+    setupPlaceableHUD("TileHUD", [
         {
             side: "left",
             buttons: [
                 {
-                    title: LOCALIZATION.MIRROR_HORIZONTAL_BUTTON,
+                    title: LOCALIZATION.FLIP_TILE_HORIZONTAL_BUTTON,
                     icon: mirrorHorizontalIcon,
                     onClick: () => void mirrorSelectedTiles(TileMirror.HORIZONTAL),
                 },
                 {
-                    title: LOCALIZATION.MIRROR_VERTICAL_BUTTON,
+                    title: LOCALIZATION.FLIP_TILE_VERTICAL_BUTTON,
                     icon: mirrorVerticalIcon,
                     onClick: () => void mirrorSelectedTiles(TileMirror.VERTICAL),
                 },
             ],
         },
     ]);
+
+    game?.keybindings?.register("fast-flip", "flipTile", {
+        name: LOCALIZATION.FLIP_TILE_HOTKEY,
+        hint: game.i18n?.localize(LOCALIZATION.FLIP_TILE_HINT),
+        editable: [{ key: "KeyG" }],
+        onDown: (event) => void mirrorSelectedTiles(event.isShift ? TileMirror.VERTICAL : TileMirror.HORIZONTAL),
+        precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+        restricted: true,
+        reservedModifiers: ["SHIFT"],
+        repeat: false,
+    });
 
     async function mirrorSelectedTiles(tileMirrorDirection: TileMirror): Promise<void> {
         const controlledTiles = game.canvas?.tiles?.controlled ?? [];

@@ -7,7 +7,7 @@ type SpeechBubbleProps = {
     text: string;
 };
 
-export function SpeechBubble({ id, fontSize, fontFamily, left, top, text }: SpeechBubbleProps) {
+export default function SpeechBubble({ id, fontSize, fontFamily, left, top, text }: SpeechBubbleProps) {
     const context = document.createElement("canvas").getContext("2d")!;
     context.font = `${fontSize} ${fontFamily}`;
 

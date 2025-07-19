@@ -1,4 +1,4 @@
-import { type Settings } from "@common/settings";
+import { type Settings } from "@/common/settings";
 
 export interface TokenElement {
     show(): Promise<void>;

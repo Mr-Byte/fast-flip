@@ -1,6 +1,6 @@
-import * as tiles from "@tiles";
-import * as tokens from "@tokens";
-import { registerSettings } from "@common/settings";
+import * as tiles from "@/tiles";
+import * as tokens from "@/tokens";
+import { registerSettings } from "@/common/settings";
 
 Hooks.once("init", async () => {
     if (!(game instanceof foundry.Game)) {

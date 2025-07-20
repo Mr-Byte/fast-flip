@@ -26,6 +26,6 @@
     "bugs": "https://github.com/Mr-Byte/fast-flip/issues",
     "download": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/fast-flip.zip",
     "manifest": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/module.json",
-    "changelog": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/V13/Changelog.md",
+    "changelog": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/main/Changelog.md",
     "license": "MIT"
 }

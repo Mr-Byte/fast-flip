@@ -1,0 +1,52 @@
+name: Release Workflow
+on:
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Update Manifest
+        run: |
+          SYSTEM_VERSION=$(grep -oP '(?<="version": ")[^"]+' dist/module.json | tr -d '\n')
+          perl -pi -E "s|latest/download/fast-flip\\.zip|download/$SYSTEM_VERSION/fast-flip.zip|" dist/module.json
+          echo "systemVersion=$SYSTEM_VERSION" >> $GITHUB_ENV
+
+      - name: Zip Files
+        working-directory: ./dist
+        run: zip -r ./fast-flip.zip ./*
+
+      - name: Create Version Release
+        id: create_version_release
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ env.systemVersion }}
+          allowUpdates: true
+          draft: false
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "./dist/module.json,./dist/fast-flip.zip"
+          tag: ${{ env.systemVersion }}

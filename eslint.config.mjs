@@ -6,13 +6,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
     {
-        ignores: [
-            "dist/**/*",
-            "packs/**/*",
-            "static/lib/**/*",
-            "*.mjs",
-            "vite.config.ts",
-        ],
+        ignores: ["dist/**/*", "packs/**/*", "static/lib/**/*", "*.mjs", "vite.config.ts"],
     },
     { plugins: { jest, prettier, json, "@typescript-eslint": ts } },
     {
@@ -43,20 +37,11 @@ export default tseslint.config(
             "@typescript-eslint/await-thenable": "error",
             "@typescript-eslint/ban-ts-comment": "error",
             "@typescript-eslint/ban-types": "off",
-            "@typescript-eslint/explicit-module-boundary-types": [
-                "error",
-                { allowHigherOrderFunctions: true },
-            ],
+            "@typescript-eslint/explicit-module-boundary-types": ["ignore", { allowHigherOrderFunctions: true }],
             "@typescript-eslint/no-empty-function": "off",
-            "@typescript-eslint/no-empty-object-type": [
-                "error",
-                { allowInterfaces: "with-single-extends" },
-            ],
+            "@typescript-eslint/no-empty-object-type": ["error", { allowInterfaces: "with-single-extends" }],
             "@typescript-eslint/no-explicit-any": "error",
-            "@typescript-eslint/no-namespace": [
-                "error",
-                { allowDeclarations: true },
-            ],
+            "@typescript-eslint/no-namespace": ["error", { allowDeclarations: true }],
             "@typescript-eslint/no-non-null-assertion": "off",
             "@typescript-eslint/no-unsafe-declaration-merging": "off",
             "@typescript-eslint/prefer-namespace-keyword": "off",

@@ -43,8 +43,8 @@ export default function afkOverlay(settings: Settings): Capability {
                         icon: getIcon("toggle-afk"),
                         onClick: () => void toggleAFK(),
                         shouldShow: (token) =>
-                            settings.allowAFKToggle &&
-                            settings.showToggleAFKButton &&
+                            settings.allowAfkToggle &&
+                            settings.showToggleAfkHud &&
                             token.isOwner &&
                             (token.actor?.hasPlayerOwner ?? false),
                     },
@@ -69,7 +69,7 @@ export default function afkOverlay(settings: Settings): Capability {
     };
 
     async function toggleAFK() {
-        if (!settings.allowAFKToggle) {
+        if (!settings.allowAfkToggle) {
             return;
         }
 
@@ -92,7 +92,7 @@ export default function afkOverlay(settings: Settings): Capability {
     async function setAFK(token: foundry.canvas.placeables.Token): Promise<void> {
         await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, true);
 
-        if (!settings.showAFKStatusInChat) {
+        if (!settings.showAfkStatusInChat) {
             return;
         }
 
@@ -108,7 +108,7 @@ export default function afkOverlay(settings: Settings): Capability {
     async function unsetAFK(token: foundry.canvas.placeables.Token): Promise<void> {
         await token.document.setFlag(MODULE_NAME, AFK_STATE_KEY, false);
 
-        if (!settings.showAFKStatusInChat) {
+        if (!settings.showAfkStatusInChat) {
             return;
         }
 

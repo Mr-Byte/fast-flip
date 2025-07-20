@@ -4,6 +4,10 @@ export type KebabToShoutingSnake<S extends string> = S extends `${infer Head}-${
     ? `${Uppercase<Head>}_${KebabToShoutingSnake<Tail>}`
     : Uppercase<S>;
 
+export type KebabToPascalCase<S extends string> = S extends `${infer Head}-${infer Tail}`
+    ? `${Lowercase<Head>}${Capitalize<KebabToPascalCase<Tail>>}`
+    : Lowercase<S>;
+
 export type WithoutModuleName<T extends string> = T extends `${typeof MODULE_NAME}.${infer K}` ? K : never;
 export type WithModuleName<T extends string> = `${typeof MODULE_NAME}.${string & T}`;
 export type Identity<T> = T extends object ? { [P in keyof T]: T[P] } : T;

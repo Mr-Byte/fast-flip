@@ -1,16 +1,10 @@
+import type { Identity, KebabToPascalCase, WithoutModuleName } from "@/common/types";
 import { LOCALIZATION, MODULE_NAME, SETTING } from "@/common/constants";
 import { type SettingEntries } from "@/configuration";
 import { getIcon } from "@/common/helpers";
 
-export type Settings = Readonly<{
-    animationDuration: number;
-    afkOverlayIconPath: string;
-    showMirrorButtons: boolean;
-    allowAFKToggle: boolean;
-    showAFKStatusInChat: boolean;
-    showToggleAFKButton: boolean;
-    allowSpeechBubbles: boolean;
-    speechBubbleFontSize: number;
+export type Settings = Identity<{
+    [K in keyof SettingConfig as KebabToPascalCase<WithoutModuleName<K>>]: SettingConfig[K];
 }>;
 
 export function registerSettings(game: foundry.Game): Settings {
@@ -103,16 +97,16 @@ export function registerSettings(game: foundry.Game): Settings {
         get afkOverlayIconPath(): string {
             return game.settings.get(MODULE_NAME, SETTING.AFK_OVERLAY_ICON_PATH);
         },
-        get showMirrorButtons(): boolean {
+        get showMirrorButtonsHud(): boolean {
             return game.settings.get(MODULE_NAME, SETTING.SHOW_MIRROR_BUTTONS_HUD);
         },
-        get allowAFKToggle(): boolean {
+        get allowAfkToggle(): boolean {
             return game.settings.get(MODULE_NAME, SETTING.ALLOW_AFK_TOGGLE);
         },
-        get showAFKStatusInChat(): boolean {
+        get showAfkStatusInChat(): boolean {
             return game.settings.get(MODULE_NAME, SETTING.SHOW_AFK_STATUS_IN_CHAT);
         },
-        get showToggleAFKButton(): boolean {
+        get showToggleAfkHud(): boolean {
             return game.settings.get(MODULE_NAME, SETTING.SHOW_TOGGLE_AFK_HUD);
         },
         get allowSpeechBubbles(): boolean {
@@ -121,5 +115,5 @@ export function registerSettings(game: foundry.Game): Settings {
         get speechBubbleFontSize(): number {
             return game.settings.get(MODULE_NAME, SETTING.SPEECH_BUBBLE_FONT_SIZE);
         },
-    };
+    } as const;
 }

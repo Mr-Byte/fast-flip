@@ -17,7 +17,7 @@ export default function tokenFlipping(settings: Settings): Capability {
                     {
                         title: LOCALIZATION.FLIP_TOKEN_HORIZONTAL_BUTTON,
                         icon: getIcon("mirror-horizontal"),
-                        onClick: () => void mirrorSelected(FlipDirection.HORIZONTAL),
+                        onClick: () => mirrorSelected(FlipDirection.HORIZONTAL),
                         shouldShow: (token) => settings.showMirrorButtonsHud && token.isOwner,
                     },
                     {

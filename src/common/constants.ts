@@ -1,4 +1,4 @@
-import type { Identity, KebabToShoutingSnake, WithoutModuleName } from "@/common/types";
+import type { Identity, KebabToShoutingSnakeCase, WithoutModuleName } from "@/common/types";
 import type localization from "@/../static/lang/en.json";
 
 export const MODULE_NAME = "fast-flip";
@@ -8,7 +8,7 @@ function moduleKey<T extends string>(key: T) {
 }
 
 type Settings = Identity<{
-    [K in keyof SettingConfig as KebabToShoutingSnake<WithoutModuleName<K>>]: WithoutModuleName<K>;
+    [K in keyof SettingConfig as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: WithoutModuleName<K>;
 }>;
 
 export const SETTING: Settings = {
@@ -23,7 +23,7 @@ export const SETTING: Settings = {
 };
 
 type LocalizationKeys = Identity<{
-    [K in keyof typeof localization as KebabToShoutingSnake<WithoutModuleName<K>>]: K;
+    [K in keyof typeof localization as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: K;
 }>;
 
 export const LOCALIZATION: LocalizationKeys = {

@@ -1,10 +1,10 @@
-import type { Identity, KebabToPascalCase, WithoutModuleName } from "@/common/types";
+import type { Identity, KebabToCamelCase, WithoutModuleName } from "@/common/types";
 import { LOCALIZATION, MODULE_NAME, SETTING } from "@/common/constants";
 import { type SettingEntries } from "@/configuration";
 import { getIcon } from "@/common/helpers";
 
 export type Settings = Identity<{
-    [K in keyof SettingConfig as KebabToPascalCase<WithoutModuleName<K>>]: SettingConfig[K];
+    [K in keyof SettingConfig as KebabToCamelCase<WithoutModuleName<K>>]: SettingConfig[K];
 }>;
 
 export function registerSettings(game: foundry.Game): Settings {

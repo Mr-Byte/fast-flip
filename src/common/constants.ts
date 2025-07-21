@@ -1,15 +1,9 @@
-import type { Identity, KebabToShoutingSnakeCase, WithoutModuleName } from "@/common/types";
-import type localization from "@/../static/lang/en.json";
-
-export const MODULE_NAME = "fast-flip";
+import { MODULE_NAME, type LocalizationKeys, type Settings } from "@/common/types";
+export { MODULE_NAME } from "@/common/types";
 
 function moduleKey<T extends string>(key: T) {
     return `${MODULE_NAME}.${key}` as const;
 }
-
-type Settings = Identity<{
-    [K in keyof SettingConfig as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: WithoutModuleName<K>;
-}>;
 
 export const SETTING: Settings = {
     ANIMATION_DURATION: "animation-duration",
@@ -21,10 +15,6 @@ export const SETTING: Settings = {
     ALLOW_SPEECH_BUBBLES: "allow-speech-bubbles",
     SPEECH_BUBBLE_FONT_SIZE: "speech-bubble-font-size",
 };
-
-type LocalizationKeys = Identity<{
-    [K in keyof typeof localization as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: K;
-}>;
 
 export const LOCALIZATION: LocalizationKeys = {
     FLIP_TOKEN_HOTKEY: moduleKey("flip-token-hotkey"),

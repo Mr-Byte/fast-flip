@@ -1,6 +1,5 @@
-import type { Identity, KebabToCamelCase, WithoutModuleName } from "@/common/types";
+import type { Identity, KebabToCamelCase, WithoutModuleName, SettingEntries } from "@/common/types";
 import { LOCALIZATION, MODULE_NAME, SETTING } from "@/common/constants";
-import { type SettingEntries } from "@/configuration";
 import { getIcon } from "@/common/helpers";
 
 export type Settings = Identity<{

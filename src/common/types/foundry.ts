@@ -1,25 +1,10 @@
-import type { Identity, WithModuleName, WithoutModuleName } from "@/common/types/helpers";
+import type { Identity, WithModuleName } from "@/common/types/helpers";
 import { MODULE_NAME } from "@/common/types/index";
 import { TileMirror } from "@/tiles";
 import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
 import { FlipDirection } from "@/tokens/capabilities/tokenFlipping";
 
 export {};
-
-type RegisterOptions = foundry.helpers.ClientSettings.RegisterData<
-    string | number | boolean,
-    typeof MODULE_NAME,
-    foundry.helpers.ClientSettings.KeyFor<typeof MODULE_NAME>
->;
-
-type SettingEntryMapping = Identity<{
-    [K in keyof SettingConfig as K extends WithModuleName<infer _> ? K : never]: [
-        WithoutModuleName<K>,
-        RegisterOptions,
-    ];
-}>;
-
-export type SettingEntries = Identity<SettingEntryMapping[keyof SettingEntryMapping][]>;
 
 type SettingNameToTypeMap = {
     "animation-duration": number;

@@ -1,4 +1,4 @@
-import { MODULE_NAME } from "@/common/constants";
+import { type MODULE_NAME } from "@/common/constants";
 
 export type KebabToShoutingSnakeCase<S extends string> = S extends `${infer Head}-${infer Tail}`
     ? `${Uppercase<Head>}_${KebabToShoutingSnakeCase<Tail>}`

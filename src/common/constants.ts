@@ -1,11 +1,11 @@
-import { MODULE_NAME, type LocalizationKeys, type Settings } from "@/common/types";
+import { MODULE_NAME, type LocalizationKeys, type SettingsKeys } from "@/common/types";
 export { MODULE_NAME } from "@/common/types";
 
 function moduleKey<T extends string>(key: T) {
     return `${MODULE_NAME}.${key}` as const;
 }
 
-export const SETTING: Settings = {
+export const SETTING: SettingsKeys = {
     ANIMATION_DURATION: "animation-duration",
     ALLOW_AFK_TOGGLE: "allow-afk-toggle",
     SHOW_AFK_STATUS_IN_CHAT: "show-afk-status-in-chat",

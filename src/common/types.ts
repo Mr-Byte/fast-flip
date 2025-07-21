@@ -7,11 +7,7 @@ export {};
 
 export const MODULE_NAME = "fast-flip";
 
-export type KebabToShoutingSnakeCase<S extends string> = S extends `${infer Head}-${infer Tail}`
-    ? `${Uppercase<Head>}_${KebabToShoutingSnakeCase<Tail>}`
-    : Uppercase<S>;
-
-export type KebabToCamelCase<S extends string> = S extends `${infer Head}-${infer Tail}`
+type KebabToCamelCase<S extends string> = S extends `${infer Head}-${infer Tail}`
     ? `${Lowercase<Head>}${KebabToCamelCaseRest<Tail>}`
     : Lowercase<S>;
 
@@ -19,17 +15,13 @@ type KebabToCamelCaseRest<S extends string> = S extends `${infer Head}-${infer T
     ? `${Capitalize<Head>}${KebabToCamelCaseRest<Tail>}`
     : Capitalize<S>;
 
-export type WithoutModuleName<T extends string> = T extends `${typeof MODULE_NAME}.${infer K}` ? K : never;
-export type WithModuleName<T extends string> = `${typeof MODULE_NAME}.${string & T}`;
-export type Identity<T> = T extends object ? { [P in keyof T]: T[P] } : T;
+type KebabToShoutingSnakeCase<S extends string> = S extends `${infer Head}-${infer Tail}`
+    ? `${Uppercase<Head>}_${KebabToShoutingSnakeCase<Tail>}`
+    : Uppercase<S>;
 
-export type Settings = Identity<{
-    [K in keyof SettingConfig as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: WithoutModuleName<K>;
-}>;
-
-export type LocalizationKeys = Identity<{
-    [K in keyof typeof localization as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: K;
-}>;
+type WithoutModuleName<T extends string> = T extends `${typeof MODULE_NAME}.${infer K}` ? K : never;
+type WithModuleName<T extends string> = `${typeof MODULE_NAME}.${string & T}`;
+type Identity<T> = T extends object ? { [P in keyof T]: T[P] } : T;
 
 declare module "fvtt-types/configuration" {
     interface FlagConfig {
@@ -82,3 +74,15 @@ type SettingEntryMapping = Identity<{
 }>;
 
 export type SettingEntries = Identity<SettingEntryMapping[keyof SettingEntryMapping][]>;
+
+export type ModuleSettings = Identity<{
+    [K in keyof SettingConfig as KebabToCamelCase<WithoutModuleName<K>>]: SettingConfig[K];
+}>;
+
+export type SettingsKeys = Identity<{
+    [K in keyof SettingConfig as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: WithoutModuleName<K>;
+}>;
+
+export type LocalizationKeys = Identity<{
+    [K in keyof typeof localization as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: K;
+}>;

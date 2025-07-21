@@ -1,6 +1,7 @@
-import type { ModuleSettings, SettingEntries } from "@/common/types";
+import type { ModuleSettings } from "@/common/types";
 import { LOCALIZATION, MODULE_NAME, SETTING } from "@/common/constants";
 import { getIcon } from "@/common/helpers";
+import type { SettingEntries } from "@/common/types/foundry";
 
 export type Settings = ModuleSettings;
 

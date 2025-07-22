@@ -4,6 +4,8 @@ import type { Capability } from "@/tokens/capabilities/capability";
 import type { Settings } from "@/common/settings";
 import { getIcon } from "@/common/helpers";
 
+import Hooks = foundry.helpers.Hooks;
+
 export const AFK_STATE_KEY = "afk-state";
 
 export default function afkOverlay(settings: Settings): Capability {

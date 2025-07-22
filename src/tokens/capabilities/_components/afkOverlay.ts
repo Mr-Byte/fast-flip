@@ -1,11 +1,13 @@
 import { type Settings } from "@/common/settings";
 
+import Container = PIXI.Container;
+
 export interface TokenElement {
     show(): Promise<void>;
     hide(): void;
 }
 
-export class AfkOverlay extends PIXI.Container implements TokenElement {
+export class AfkOverlay extends Container implements TokenElement {
     readonly #settings: Settings;
     readonly #token: Token;
     static readonly NAME = "afk-overlay";

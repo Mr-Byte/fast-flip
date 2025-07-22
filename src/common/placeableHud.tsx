@@ -1,6 +1,8 @@
 import HudButtonGroup, { type ButtonProps } from "@/common/_components/hudButtonGroup";
 
-type PlaceableObject = foundry.canvas.placeables.PlaceableObject;
+import PlaceableObject = foundry.canvas.placeables.PlaceableObject;
+import hud = foundry.applications.hud;
+import Hooks = foundry.helpers.Hooks;
 
 export interface ButtonGroupProps<T extends PlaceableObject> {
     side: "left" | "right";
@@ -8,28 +10,25 @@ export interface ButtonGroupProps<T extends PlaceableObject> {
 }
 
 interface HudRegistry {
-    TokenHUD: foundry.applications.hud.TokenHUD.Any;
-    TileHUD: foundry.applications.hud.TileHUD.Any;
+    TokenHUD: hud.TokenHUD.Any;
+    TileHUD: hud.TileHUD.Any;
 }
 
 type HudName = keyof HudRegistry;
 type HudObject<T extends HudName> = HudRegistry[T]["object"];
 
 export function setupPlaceableHUD<T extends HudName>(name: T, buttonGroups: ButtonGroupProps<HudObject<T>>[]) {
-    foundry.helpers.Hooks.on(
-        `render${name}`,
-        (hud: foundry.applications.hud.BasePlaceableHUD<HudObject<T>>, html: HTMLElement) => {
-            for (const groupProps of buttonGroups) {
-                const shouldShow = groupProps.buttons.some((button) => button.shouldShow?.(hud.object) ?? true);
+    Hooks.on(`render${name}`, (hud: hud.BasePlaceableHUD<HudObject<T>>, html: HTMLElement) => {
+        for (const groupProps of buttonGroups) {
+            const shouldShow = groupProps.buttons.some((button) => button.shouldShow?.(hud.object) ?? true);
 
-                if (!shouldShow) {
-                    continue;
-                }
-
-                html.querySelector(`div.${groupProps.side}`)?.append(
-                    <HudButtonGroup buttons={groupProps.buttons} object={hud.object} />,
-                );
+            if (!shouldShow) {
+                continue;
             }
-        },
-    );
+
+            html.querySelector(`div.${groupProps.side}`)?.append(
+                <HudButtonGroup buttons={groupProps.buttons} object={hud.object} />,
+            );
+        }
+    });
 }

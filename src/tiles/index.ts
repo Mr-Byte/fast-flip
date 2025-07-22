@@ -2,13 +2,15 @@ import { LOCALIZATION, MODULE_NAME } from "@/common/constants";
 import { getIcon } from "@/common/helpers";
 import { setupPlaceableHUD } from "@/common/placeableHud";
 
+import Hooks = foundry.helpers.Hooks;
+
 export const enum TileMirror {
     HORIZONTAL = "tileMirrorHorizontal",
     VERTICAL = "tileMirrorVertical",
 }
 
 export function initialize(): void {
-    foundry.helpers.Hooks.on("canvasReady", () => {
+    Hooks.on("canvasReady", () => {
         const allTiles = game.canvas?.tiles?.tiles ?? [];
 
         for (const tile of allTiles) {
@@ -16,7 +18,7 @@ export function initialize(): void {
         }
     });
 
-    foundry.helpers.Hooks.on("updateTile", (update) => {
+    Hooks.on("updateTile", (update) => {
         if (!(update._id && update.flags?.[MODULE_NAME])) {
             return;
         }

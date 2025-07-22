@@ -6,8 +6,8 @@ export type Settings = ModuleSettings;
 
 export function registerSettings(game: foundry.Game): Settings {
     game.settings.register(MODULE_NAME, SETTING.ANIMATION_DURATION, {
-        name: game.i18n?.localize(LOCALIZATION.ANIMATION_DURATION),
-        hint: game.i18n?.localize(LOCALIZATION.ANIMATION_DURATION_HINT),
+        name: LOCALIZATION.ANIMATION_DURATION,
+        hint: LOCALIZATION.ANIMATION_DURATION_HINT,
         scope: "world",
         config: true,
         default: 0.0,
@@ -20,8 +20,8 @@ export function registerSettings(game: foundry.Game): Settings {
     });
 
     game.settings.register(MODULE_NAME, SETTING.ALLOW_SPEECH_BUBBLES, {
-        name: game.i18n?.localize(LOCALIZATION.ALLOW_SPEECH_BUBBLES),
-        hint: game.i18n?.localize(LOCALIZATION.ALLOW_SPEECH_BUBBLES_HINT),
+        name: LOCALIZATION.ALLOW_SPEECH_BUBBLES,
+        hint: LOCALIZATION.ALLOW_SPEECH_BUBBLES_HINT,
         scope: "world",
         config: true,
         default: true,
@@ -29,8 +29,8 @@ export function registerSettings(game: foundry.Game): Settings {
     });
 
     game.settings.register(MODULE_NAME, SETTING.SPEECH_BUBBLE_FONT_SIZE, {
-        name: game.i18n?.localize(LOCALIZATION.SPEECH_BUBBLE_FONT_SIZE),
-        hint: game.i18n?.localize(LOCALIZATION.SPEECH_BUBBLE_FONT_SIZE_HINT),
+        name: LOCALIZATION.SPEECH_BUBBLE_FONT_SIZE,
+        hint: LOCALIZATION.SPEECH_BUBBLE_FONT_SIZE_HINT,
         scope: "client",
         config: true,
         default: 14,
@@ -44,8 +44,8 @@ export function registerSettings(game: foundry.Game): Settings {
 
     // TODO: Look into why this typing breaks?
     game.settings.register(MODULE_NAME, SETTING.AFK_OVERLAY_ICON_PATH, {
-        name: game.i18n?.localize(LOCALIZATION.AFK_OVERLAY_ICON_PATH),
-        hint: game.i18n?.localize(LOCALIZATION.AFK_OVERLAY_ICON_PATH_HINT),
+        name: LOCALIZATION.AFK_OVERLAY_ICON_PATH,
+        hint: LOCALIZATION.AFK_OVERLAY_ICON_PATH_HINT,
         scope: "world",
         config: true,
         type: String,
@@ -58,8 +58,8 @@ export function registerSettings(game: foundry.Game): Settings {
     >);
 
     game.settings.register(MODULE_NAME, SETTING.ALLOW_AFK_TOGGLE, {
-        name: game.i18n?.localize(LOCALIZATION.ALLOW_AFK_TOGGLE),
-        hint: game.i18n?.localize(LOCALIZATION.ALLOW_AFK_TOGGLE_HINT),
+        name: LOCALIZATION.ALLOW_AFK_TOGGLE,
+        hint: LOCALIZATION.ALLOW_AFK_TOGGLE_HINT,
         scope: "world",
         config: true,
         default: true,
@@ -67,8 +67,8 @@ export function registerSettings(game: foundry.Game): Settings {
     });
 
     game.settings.register(MODULE_NAME, SETTING.SHOW_AFK_STATUS_IN_CHAT, {
-        name: game.i18n?.localize(LOCALIZATION.SHOW_AFK_STATUS_IN_CHAT),
-        hint: game.i18n?.localize(LOCALIZATION.SHOW_AFK_STATUS_IN_CHAT_HINT),
+        name: LOCALIZATION.SHOW_AFK_STATUS_IN_CHAT,
+        hint: LOCALIZATION.SHOW_AFK_STATUS_IN_CHAT_HINT,
         scope: "world",
         config: true,
         default: true,
@@ -76,8 +76,8 @@ export function registerSettings(game: foundry.Game): Settings {
     });
 
     game.settings.register(MODULE_NAME, SETTING.SHOW_MIRROR_BUTTONS_HUD, {
-        name: game.i18n?.localize(LOCALIZATION.SHOW_FLIP_BUTTONS),
-        hint: game.i18n?.localize(LOCALIZATION.SHOW_FLIP_BUTTONS_HINT),
+        name: LOCALIZATION.SHOW_FLIP_BUTTONS,
+        hint: LOCALIZATION.SHOW_FLIP_BUTTONS_HINT,
         scope: "client",
         config: true,
         default: true,
@@ -85,8 +85,8 @@ export function registerSettings(game: foundry.Game): Settings {
     });
 
     game.settings.register(MODULE_NAME, SETTING.SHOW_TOGGLE_AFK_HUD, {
-        name: game.i18n?.localize(LOCALIZATION.SHOW_TOGGLE_AFK_BUTTON),
-        hint: game.i18n?.localize(LOCALIZATION.SHOW_TOGGLE_AFK_HINT),
+        name: LOCALIZATION.SHOW_TOGGLE_AFK_BUTTON,
+        hint: LOCALIZATION.SHOW_TOGGLE_AFK_HINT,
         scope: "client",
         config: true,
         default: true,

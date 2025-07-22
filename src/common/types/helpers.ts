@@ -15,3 +15,10 @@ export type KebabToShoutingSnakeCase<S extends string> = S extends `${infer Head
 export type WithoutModuleName<T extends string> = T extends `${typeof MODULE_NAME}.${infer K}` ? K : never;
 export type WithModuleName<T extends string> = `${typeof MODULE_NAME}.${string & T}`;
 export type Identity<T> = T extends object ? { [P in keyof T]: T[P] } : T;
+export type Flatten<T> = {
+    [K in keyof T]: T[K] extends Record<string, unknown>
+        ? {
+              [P in keyof T[K] as `${K & string}.${P & string}`]: T[K][P];
+          }
+        : { [P in K]: T[K] };
+}[keyof T];

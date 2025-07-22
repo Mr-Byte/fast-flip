@@ -1,5 +1,11 @@
 import type localization from "@/../static/lang/en.json";
-import type { Identity, KebabToCamelCase, KebabToShoutingSnakeCase, WithoutModuleName } from "@/common/types/helpers";
+import type {
+    Flatten,
+    Identity,
+    KebabToCamelCase,
+    KebabToShoutingSnakeCase,
+    WithoutModuleName,
+} from "@/common/types/helpers";
 
 export const MODULE_NAME = "fast-flip";
 
@@ -12,5 +18,5 @@ export type SettingsKeys = Identity<{
 }>;
 
 export type LocalizationKeys = Identity<{
-    [K in keyof typeof localization as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: K;
+    [K in keyof Flatten<typeof localization> as KebabToShoutingSnakeCase<WithoutModuleName<K>>]: K;
 }>;

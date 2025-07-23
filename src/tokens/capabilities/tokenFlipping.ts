@@ -15,13 +15,13 @@ export default function tokenFlipping(settings: Settings): Capability {
                 side: "left",
                 buttons: [
                     {
-                        title: LOCALIZATION.FLIP_TOKEN_HORIZONTAL_BUTTON,
+                        title: LOCALIZATION.TEXT_FLIP_TOKEN_HORIZONTAL_BUTTON,
                         icon: getIcon("mirror-horizontal"),
                         onClick: () => mirrorSelected(FlipDirection.HORIZONTAL),
                         shouldShow: (token) => settings.showMirrorButtonsHud && token.isOwner,
                     },
                     {
-                        title: LOCALIZATION.FLIP_TOKEN_VERTICAL_BUTTON,
+                        title: LOCALIZATION.TEXT_FLIP_TOKEN_VERTICAL_BUTTON,
                         icon: getIcon("mirror-vertical"),
                         onClick: () => mirrorSelected(FlipDirection.VERTICAL),
                         shouldShow: (token) => settings.showMirrorButtonsHud && token.isOwner,
@@ -33,8 +33,8 @@ export default function tokenFlipping(settings: Settings): Capability {
             {
                 name: "flipToken",
                 config: {
-                    name: LOCALIZATION.FLIP_TOKEN_HOTKEY,
-                    hint: game.i18n?.localize(LOCALIZATION.FLIP_TOKEN_HINT),
+                    name: LOCALIZATION.KEYBINDS_FLIP_TOKEN_HOTKEY,
+                    hint: LOCALIZATION.KEYBINDS_FLIP_TOKEN_HINT,
                     editable: [{ key: "KeyG" }],
                     onDown: (event) =>
                         mirrorSelected(event.isShift ? FlipDirection.VERTICAL : FlipDirection.HORIZONTAL),

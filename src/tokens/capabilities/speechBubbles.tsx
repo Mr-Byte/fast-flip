@@ -43,8 +43,8 @@ export default function speechBubbles(settings: Settings): Capability {
             {
                 name: "showSpeechBubble",
                 config: {
-                    name: LOCALIZATION.SHOW_SPEECH_BUBBLE_HOTKEY,
-                    hint: game.i18n?.localize(LOCALIZATION.SHOW_SPEECH_BUBBLE_HINT),
+                    name: LOCALIZATION.KEYBINDS_SHOW_SPEECH_BUBBLE_HOTKEY,
+                    hint: LOCALIZATION.KEYBINDS_SHOW_SPEECH_BUBBLE_HINT,
                     editable: [{ key: "KeyB" }],
                     onDown: () => void showSpeechBubble(),
                     onUp: () => void hideSpeechBubble(),

@@ -35,12 +35,12 @@ export function initialize(): void {
             side: "left",
             buttons: [
                 {
-                    title: LOCALIZATION.FLIP_TILE_HORIZONTAL_BUTTON,
+                    title: LOCALIZATION.TEXT_FLIP_TILE_HORIZONTAL_BUTTON,
                     icon: getIcon("mirror-horizontal"),
                     onClick: () => void mirrorSelectedTiles(TileMirror.HORIZONTAL),
                 },
                 {
-                    title: LOCALIZATION.FLIP_TILE_VERTICAL_BUTTON,
+                    title: LOCALIZATION.TEXT_FLIP_TILE_VERTICAL_BUTTON,
                     icon: getIcon("mirror-vertical"),
                     onClick: () => void mirrorSelectedTiles(TileMirror.VERTICAL),
                 },
@@ -49,8 +49,8 @@ export function initialize(): void {
     ]);
 
     game?.keybindings?.register(MODULE_NAME, "flipTile", {
-        name: LOCALIZATION.FLIP_TILE_HOTKEY,
-        hint: game.i18n?.localize(LOCALIZATION.FLIP_TILE_HINT),
+        name: LOCALIZATION.KEYBINDS_FLIP_TILE_HOTKEY,
+        hint: LOCALIZATION.KEYBINDS_FLIP_TILE_HINT,
         editable: [{ key: "KeyG" }],
         onDown: (event) => void mirrorSelectedTiles(event.isShift ? TileMirror.VERTICAL : TileMirror.HORIZONTAL),
         precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,

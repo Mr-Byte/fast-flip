@@ -1,8 +1,9 @@
-import type { Identity, WithModuleName } from "@/common/types/helpers";
+import type { WithModuleName } from "@/common/types/helpers";
 import { MODULE_NAME } from "@/common/types/index";
 import { TileMirror } from "@/tiles";
 import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
 import { FlipDirection } from "@/tokens/capabilities/tokenFlipping";
+import type { Simplify } from "type-fest";
 
 export {};
 
@@ -17,7 +18,7 @@ type SettingNameToTypeMap = {
     "speech-bubble-font-size": number;
 };
 
-type SettingsConfigBase = Identity<{
+type SettingsConfigBase = Simplify<{
     [K in keyof SettingNameToTypeMap as WithModuleName<K>]: SettingNameToTypeMap[K];
 }>;
 

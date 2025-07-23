@@ -41,7 +41,7 @@ export default function afkOverlay(settings: Settings): Capability {
                 side: "right",
                 buttons: [
                     {
-                        title: LOCALIZATION.TOGGLE_AFK_BUTTON,
+                        title: LOCALIZATION.TEXT_AFK_TOGGLE_BUTTON,
                         icon: getIcon("toggle-afk"),
                         onClick: () => void toggleAFK(),
                         shouldShow: (token) =>
@@ -55,10 +55,10 @@ export default function afkOverlay(settings: Settings): Capability {
         ],
         keybinds: [
             {
-                name: LOCALIZATION.TOGGLE_AFK_HOTKEY,
+                name: LOCALIZATION.KEYBINDS_AFK_TOGGLE_HOTKEY,
                 config: {
-                    name: LOCALIZATION.TOGGLE_AFK_HOTKEY,
-                    hint: game.i18n?.localize(LOCALIZATION.TOGGLE_AFK_HINT),
+                    name: LOCALIZATION.KEYBINDS_AFK_TOGGLE_HOTKEY,
+                    hint: LOCALIZATION.KEYBINDS_AFK_TOGGLE_HINT,
                     editable: [{ key: "KeyK", modifiers: ["SHIFT"] }],
                     onDown: () => void toggleAFK(),
                     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
@@ -101,7 +101,7 @@ export default function afkOverlay(settings: Settings): Capability {
         await foundry.documents.ChatMessage.create({
             style: CONST.CHAT_MESSAGE_STYLES.OOC,
             speaker: { token: token.id },
-            content: game.i18n?.format(LOCALIZATION.CHAT_AFK_MESSAGE, {
+            content: game.i18n?.format(LOCALIZATION.TEXT_AFK_CHAT_MESSAGE, {
                 name: token.name,
             }),
         });
@@ -117,7 +117,7 @@ export default function afkOverlay(settings: Settings): Capability {
         await foundry.documents.ChatMessage.create({
             style: CONST.CHAT_MESSAGE_STYLES.OOC,
             speaker: { token: token.id },
-            content: game.i18n?.format(LOCALIZATION.CHAT_RETURNED_MESSAGE, {
+            content: game.i18n?.format(LOCALIZATION.TEXT_AFK_CHAT_RETURNED_MESSAGE, {
                 name: token.name,
             }),
         });

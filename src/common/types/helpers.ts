@@ -17,8 +17,8 @@ export type WithModuleName<T extends string> = `${typeof MODULE_NAME}.${string &
 export type Identity<T> = T extends object ? { [P in keyof T]: T[P] } : T;
 export type Flatten<T> = {
     [K in keyof T]: T[K] extends Record<string | number | symbol, unknown>
-        ? Flatten<{
+        ? {
               [P in keyof T[K] as `${K & (string | number)}.${P & (string | number)}`]: T[K][P];
-          }>
+          }
         : { [P in K]: T[K] };
 }[keyof T];

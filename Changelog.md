@@ -1,3 +1,6 @@
+# v5.0.1
+- Fix a bug where adjusting a token's HP would flip the token
+
 # v5.0.0
 
 - Major rewrite of the module, prepping for future features

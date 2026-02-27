@@ -1,4 +1,4 @@
-import { MODULE_NAME, type LocalizationKeys, type SettingsKeys } from "@/common/types";
+import { type LocalizationKeys, MODULE_NAME, type SettingsKeys } from "@/common/types";
 export { MODULE_NAME } from "@/common/types";
 
 function moduleKey<T extends string>(key: T) {

@@ -1,6 +1,6 @@
-import type localization from "@/../static/lang/en.json";
-import type { Flattened, WithoutModuleName } from "@/common/types/helpers";
 import type { CamelCasedProperties, Replace, ScreamingSnakeCase, Simplify } from "type-fest";
+import type { Flattened, WithoutModuleName } from "@/common/types/helpers";
+import type localization from "@/../static/lang/en.json";
 
 export const MODULE_NAME = "fast-flip";
 

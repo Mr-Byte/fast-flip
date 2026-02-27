@@ -1,9 +1,9 @@
-import type { WithModuleName } from "@/common/types/helpers";
-import { MODULE_NAME } from "@/common/types/index";
-import { TileMirror } from "@/tiles";
 import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
 import { FlipDirection } from "@/tokens/capabilities/tokenFlipping";
+import { MODULE_NAME } from "@/common/types/index";
 import type { Simplify } from "type-fest";
+import { TileMirror } from "@/tiles";
+import type { WithModuleName } from "@/common/types/helpers";
 
 export {};
 

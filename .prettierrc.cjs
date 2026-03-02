@@ -3,6 +3,7 @@ module.exports = {
     trailingComma: "all",
     tabWidth: 4,
     semi: true,
+    endOfLine: "lf",
     pluginSearchDirs: ["."],
     printWidth: 120,
 };

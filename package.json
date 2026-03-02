@@ -14,7 +14,8 @@
     "license": "MIT",
     "scripts": {
         "build": "tsgo && vite build",
-        "lint": "eslint"
+        "lint": "eslint",
+        "lint:fix": "eslint --fix"
     },
     "sideEffects": [
         "./src/module.ts"
@@ -42,5 +43,10 @@
     "dependencies": {
         "jsx-dom": "^8.1.6",
         "type-fest": "^4.41.0"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "@league-of-foundry-developers/foundry-vtt-types"
+        ]
     }
 }

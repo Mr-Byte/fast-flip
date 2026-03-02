@@ -37,7 +37,7 @@ export default tseslint.config(
             "@typescript-eslint/await-thenable": "error",
             "@typescript-eslint/ban-ts-comment": "error",
             "@typescript-eslint/ban-types": "off",
-            "@typescript-eslint/explicit-module-boundary-types": ["ignore", { allowHigherOrderFunctions: true }],
+            "@typescript-eslint/explicit-module-boundary-types": "off",
             "@typescript-eslint/no-empty-function": "off",
             "@typescript-eslint/no-empty-object-type": ["error", { allowInterfaces: "with-single-extends" }],
             "@typescript-eslint/no-explicit-any": "error",

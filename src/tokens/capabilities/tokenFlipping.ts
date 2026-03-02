@@ -56,14 +56,10 @@ export default function tokenFlipping(settings: Settings): Capability {
             }
 
             (async () => {
-                const key = `Token.${token.id}.animate`;
-                const animationContext = token.animationContexts.get(key);
-
-                if (animationContext?.promise) {
-                    await animationContext.promise;
-                }
-
-                const flipMirror = -(token.document?.texture[tokenMirrorDirection] ?? 0);
+                const animationContext = token.animationContexts.get(token.animationName);
+                const contextTargetScale = animationContext?.to?.texture?.[tokenMirrorDirection];
+                const currentScale = contextTargetScale ?? token.document.texture[tokenMirrorDirection];
+                const flipMirror = -currentScale;
                 const animationDuration = settings.animationDuration;
 
                 await token.document.update(

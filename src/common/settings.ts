@@ -1,5 +1,5 @@
-import type { ModuleSettings } from "@/common/types";
 import { LOCALIZATION, MODULE_NAME, SETTING } from "@/common/constants";
+import type { ModuleSettings } from "@/common/types";
 import { getIcon } from "@/common/helpers";
 
 export type Settings = ModuleSettings;

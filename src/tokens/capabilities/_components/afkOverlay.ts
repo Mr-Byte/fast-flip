@@ -1,9 +1,10 @@
-import { type Settings } from "@/common/settings";
+import type {Settings} from "@/common/settings";
 
 import Container = PIXI.Container;
 
 export interface TokenElement {
     show(): Promise<void>;
+
     hide(): void;
 }
 
@@ -25,21 +26,24 @@ export class AfkOverlay extends Container implements TokenElement {
 
     async show(): Promise<void> {
         const token = this.#token;
-        const texture = await foundry.canvas.loadTexture(this.#settings.afkOverlayIconPath);
+        const texture = await foundry.canvas.loadTexture(
+            this.#settings.afkOverlayIconPath,
+        );
 
-        if (!texture) {
+        if (!(texture instanceof PIXI.Texture)) {
+            console.error(`Failed to load texture: ${this.#settings.afkOverlayIconPath}`);
             return;
         }
 
         if (this.#sprite) {
-            this.#sprite.destroy({ children: true });
+            this.#sprite.destroy({children: true});
         }
 
-        this.#sprite = new PIXI.Sprite(texture as PIXI.Texture<PIXI.Resource>);
+        this.#sprite = new PIXI.Sprite(texture);
         this.#sprite.position = new PIXI.Point(0, 0);
         this.#sprite.anchor.set(0.5);
 
-        const { width, height } = token.bounds;
+        const {width, height} = token.bounds;
         this.#sprite.width = width * 0.8;
         this.#sprite.height = height * 0.8;
         this.#sprite.position.set(width / 2, height / 2);
@@ -52,7 +56,7 @@ export class AfkOverlay extends Container implements TokenElement {
     hide(): void {
         this.renderable = false;
         if (this.#sprite) {
-            this.#sprite.destroy({ children: true });
+            this.#sprite.destroy({children: true});
             this.#sprite = null;
         }
     }

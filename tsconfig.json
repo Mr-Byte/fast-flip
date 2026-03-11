@@ -1,35 +1,35 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "esnext",
-        "lib": ["DOM", "ESNext"],
-        "moduleResolution": "bundler",
-        "esModuleInterop": true,
-        "verbatimModuleSyntax": true,
-        "isolatedModules": true,
-        "noUncheckedSideEffectImports": true,
-        "moduleDetection": "force",
-        "outDir": "dist/",
-        "jsx": "react-jsx",
-        "jsxImportSource": "jsx-dom",
-        "strict": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noImplicitOverride": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noUncheckedIndexedAccess": true,
-        "noPropertyAccessFromIndexSignature": true,
-        "exactOptionalPropertyTypes": true,
-        "noEmit": true,
-        "types": ["fvtt-types"],
-        "newLine": "lf",
-        "skipLibCheck": true,
-        "paths": {
-            "@/*": ["./src/*"]
-        }
-    },
-    "exclude": ["dist/**/*.js", "node_modules/**"],
-    "include": ["src/**/*.ts"]
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "esnext",
+		"lib": ["DOM", "ESNext"],
+		"moduleResolution": "bundler",
+		"esModuleInterop": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"noUncheckedSideEffectImports": true,
+		"moduleDetection": "force",
+		"outDir": "dist/",
+		"jsx": "react-jsx",
+		"jsxImportSource": "jsx-dom",
+		"strict": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitOverride": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noUncheckedIndexedAccess": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"exactOptionalPropertyTypes": true,
+		"noEmit": true,
+		"types": ["fvtt-types"],
+		"newLine": "lf",
+		"skipLibCheck": true,
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	},
+	"exclude": ["dist/**/*.js", "node_modules/**"],
+	"include": ["src/**/*.ts"]
 }

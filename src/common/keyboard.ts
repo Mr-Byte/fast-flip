@@ -1,26 +1,30 @@
 import KeyboardManager = foundry.helpers.interaction.KeyboardManager;
 
-export function normalizeKeys(keys: Set<string>): Set<string> {
-    const normalizedKeys = new Set<string>();
+export function normalizeKeys(keys?: Set<string>): Set<string> {
+	const normalizedKeys = new Set<string>();
 
-    for (const key of keys) {
-        if (KeyboardManager.MODIFIER_CODES.Alt.indexOf(key) >= 0) {
-            normalizedKeys.add(KeyboardManager.MODIFIER_KEYS.ALT);
-            continue;
-        }
+	if (!keys) {
+		return normalizedKeys;
+	}
 
-        if (KeyboardManager.MODIFIER_CODES.Control.indexOf(key) >= 0) {
-            normalizedKeys.add(KeyboardManager.MODIFIER_KEYS.CONTROL);
-            continue;
-        }
+	for (const key of keys) {
+		if (KeyboardManager.MODIFIER_CODES.Alt.indexOf(key) >= 0) {
+			normalizedKeys.add(KeyboardManager.MODIFIER_KEYS.ALT);
+			continue;
+		}
 
-        if (KeyboardManager.MODIFIER_CODES.Shift.indexOf(key) >= 0) {
-            normalizedKeys.add(KeyboardManager.MODIFIER_KEYS.SHIFT);
-            continue;
-        }
+		if (KeyboardManager.MODIFIER_CODES.Control.indexOf(key) >= 0) {
+			normalizedKeys.add(KeyboardManager.MODIFIER_KEYS.CONTROL);
+			continue;
+		}
 
-        normalizedKeys.add(key);
-    }
+		if (KeyboardManager.MODIFIER_CODES.Shift.indexOf(key) >= 0) {
+			normalizedKeys.add(KeyboardManager.MODIFIER_KEYS.SHIFT);
+			continue;
+		}
 
-    return normalizedKeys;
+		normalizedKeys.add(key);
+	}
+
+	return normalizedKeys;
 }

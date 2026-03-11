@@ -1,46 +1,37 @@
 {
-    "name": "fast-flip",
-    "version": "5.0.1",
-    "description": "Foundry VTT Module",
-    "directories": {
-        "lib": "lib"
-    },
-    "private": true,
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Mr-Byte/fast-flip.git"
-    },
-    "author": "Mr. Byte",
-    "license": "MIT",
-    "scripts": {
-        "build": "tsgo && vite build",
-        "lint": "eslint"
-    },
-    "sideEffects": [
-        "./src/module.ts"
-    ],
-    "bugs": {
-        "url": "https://github.com/Mr-Byte/fast-flip/issues"
-    },
-    "homepage": "https://github.com/Mr-Byte/fast-flip#readme",
-    "devDependencies": {
-        "@eslint/js": "^9.31.0",
-        "@eslint/json": "^0.12.0",
-        "@typescript-eslint/eslint-plugin": "^8.37.0",
-        "@typescript-eslint/parser": "^8.37.0",
-        "@typescript/native-preview": "7.0.0-dev.20250719.1",
-        "eslint": "^9.31.0",
-        "eslint-config-prettier": "^10.1.8",
-        "eslint-plugin-jest": "^28.14.0",
-        "eslint-plugin-prettier": "^5.5.3",
-        "fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
-        "rollup-plugin-copy": "^3.5.0",
-        "typescript": "^5.8.3",
-        "typescript-eslint": "^8.37.0",
-        "vite": "^6.3.5"
-    },
-    "dependencies": {
-        "jsx-dom": "^8.1.6",
-        "type-fest": "^4.41.0"
-    }
+	"name": "fast-flip",
+	"version": "5.0.1",
+	"description": "Foundry VTT Module",
+	"directories": {
+		"lib": "lib"
+	},
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Mr-Byte/fast-flip.git"
+	},
+	"author": "Mr. Byte",
+	"license": "MIT",
+	"scripts": {
+		"build": "tsc && vite build",
+		"check": "biome check --write ./src && biome check --write ./static"
+	},
+	"sideEffects": [
+		"./src/module.ts"
+	],
+	"bugs": {
+		"url": "https://github.com/Mr-Byte/fast-flip/issues"
+	},
+	"homepage": "https://github.com/Mr-Byte/fast-flip#readme",
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.6",
+		"fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#v13.345.1",
+		"rollup-plugin-copy": "^3.5.0",
+		"typescript": "^5.8.3",
+		"vite": "^6.3.5"
+	},
+	"dependencies": {
+		"jsx-dom": "^8.1.6",
+		"type-fest": "^4.41.0"
+	}
 }

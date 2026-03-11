@@ -1,31 +1,31 @@
 {
-    "id": "fast-flip",
-    "title": "Fast Flip! Token Tools",
-    "description": "Adds several useful token and tile utilities. Flip tokens & tiles, toggle tokens as AFK, show which token is speaking.",
-    "authors": [
-        {
-            "name": "MrByte",
-            "url": "https://github.com/Mr-Byte/fast-flip/"
-        }
-    ],
-    "version": "5.0.1",
-    "socket": true,
-    "compatibility": {
-        "minimum": 13,
-        "verified": 13
-    },
-    "languages": [
-        {
-            "lang": "en",
-            "name": "English",
-            "path": "lang/en.json"
-        }
-    ],
-    "esmodules": ["module.mjs"],
-    "url": "https://github.com/Mr-Byte/fast-flip",
-    "bugs": "https://github.com/Mr-Byte/fast-flip/issues",
-    "download": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/fast-flip.zip",
-    "manifest": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/module.json",
-    "changelog": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/main/Changelog.md",
-    "license": "MIT"
+	"id": "fast-flip",
+	"title": "Fast Flip! Token Tools",
+	"description": "Adds several useful token and tile utilities. Flip tokens & tiles, toggle tokens as AFK, show which token is speaking.",
+	"authors": [
+		{
+			"name": "MrByte",
+			"url": "https://github.com/Mr-Byte/fast-flip/"
+		}
+	],
+	"version": "5.0.1",
+	"socket": true,
+	"compatibility": {
+		"minimum": 13,
+		"verified": 13
+	},
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "lang/en.json"
+		}
+	],
+	"esmodules": ["module.mjs"],
+	"url": "https://github.com/Mr-Byte/fast-flip",
+	"bugs": "https://github.com/Mr-Byte/fast-flip/issues",
+	"download": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/fast-flip.zip",
+	"manifest": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/module.json",
+	"changelog": "https://raw.githubusercontent.com/Mr-Byte/fast-flip/main/Changelog.md",
+	"license": "MIT"
 }

@@ -11,15 +11,19 @@ export default defineConfig({
 			formats: ["es"],
 			fileName: "module",
 		},
-		rollupOptions: {
+		rolldownOptions: {
 			input: "src/module.ts",
 			output: {
-				compact: true,
 				entryFileNames: "module.mjs",
 				chunkFileNames: "[name].mjs",
-				manualChunks: {
-					"jsx-dom": ["jsx-dom"],
-				},
+				codeSplitting: {
+					groups: [
+						{
+							test: /node_modules\/jsx-dom/,
+							name: 'jsx-dom',
+						},
+					],
+				}
 			},
 		},
 		target: "es2022",

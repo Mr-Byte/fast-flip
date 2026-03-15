@@ -20,10 +20,10 @@ export default defineConfig({
 					groups: [
 						{
 							test: /node_modules\/jsx-dom/,
-							name: 'jsx-dom',
+							name: "jsx-dom",
 						},
 					],
-				}
+				},
 			},
 		},
 		target: "es2022",

@@ -7,5 +7,12 @@
 	},
 	"formatter": {
 		"lineEnding": "lf"
+	},
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
 	}
 }

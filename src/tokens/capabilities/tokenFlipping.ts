@@ -62,22 +62,29 @@ export default function tokenFlipping(settings: Settings): Capability {
 			(async () => {
 				const key = token.animationName;
 				const animationContext = token.animationContexts.get(key);
+				const currentScale =
+					animationContext?.to?.texture?.[tokenMirrorDirection] ??
+					token.document.texture?.[tokenMirrorDirection];
 
-				if (animationContext?.promise) {
-					await animationContext.promise;
+				if (currentScale === undefined) {
+					console.warn(
+						"Fast Flip! Token Tools | Unable to retrieve the token's current scale, aborting animation.",
+					);
+
+					return;
 				}
 
-				const flipMirror = -(token.document.texture[tokenMirrorDirection] ?? 0);
-				const animationDuration = settings.animationDuration;
+				const targetScale = -currentScale;
+				const duration = settings.animationDuration;
 
 				await token.document.update(
 					{
-						[`texture.${tokenMirrorDirection}`]: flipMirror,
+						[`texture.${tokenMirrorDirection}`]: targetScale,
 					},
 					{
-						animate: animationDuration !== 0,
+						animate: duration !== 0,
 						animation: {
-							duration: animationDuration,
+							duration,
 						},
 					},
 				);

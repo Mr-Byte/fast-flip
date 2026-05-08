@@ -1,3 +1,7 @@
+# v5.0.2
+- Verified to work with Foundry V14
+- Fix a bug where flipping a token with animations on would sometimes cause the token scale to get messed up
+
 # v5.0.1
 - Fix a bug where adjusting a token's HP would flip the token
 - Fix tooltips on the token and tile HUD to use Foundry's native tooltips

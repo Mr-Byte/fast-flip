@@ -53,8 +53,8 @@
 					"hint": "Show or hide the flip buttons on the token HUD"
 				},
 				"animation-duration": {
-					"value": "⚠️ Animation Duration",
-					"hint": "Duration of the token flip animation in seconds (0 disables animations). Use at your own risk. Only verified to work with Pathfinder 2e."
+					"value": "Animation Duration",
+					"hint": "Duration of the token flip animation in seconds (0 disables animations)."
 				}
 			}
 		},

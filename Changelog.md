@@ -1,3 +1,7 @@
+# v5.0.3
+- Prevent additional flip animations from playing until the existing one is complete
+  - NOTE: This may not fix all possible edge cases, but should fix most
+
 # v5.0.2
 - Verified to work with Foundry V14
 - Fix a bug where flipping a token with animations on would sometimes cause the token scale to get messed up

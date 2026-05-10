@@ -3,7 +3,7 @@ import type { WithModuleName } from "@/common/types/helpers";
 import { MODULE_NAME } from "@/common/types/index";
 import { TileMirror } from "@/tiles";
 import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
-import { FlipDirection } from "@/tokens/capabilities/tokenFlipping";
+import { FLIP_FLAG, FlipDirection } from "@/tokens/capabilities/tokenFlipping";
 
 type SettingNameToTypeMap = {
 	"animation-duration": number;
@@ -28,9 +28,10 @@ declare module "fvtt-types/configuration" {
 	interface FlagConfig {
 		Token: {
 			[MODULE_NAME]: {
-				[FlipDirection.HORIZONTAL]: boolean;
-				[FlipDirection.VERTICAL]: boolean;
+				[FlipDirection.HORIZONTAL]: number;
+				[FlipDirection.VERTICAL]: number;
 				[AFK_STATE_KEY]: boolean;
+				[FLIP_FLAG]: boolean;
 			};
 		};
 		Tile: {

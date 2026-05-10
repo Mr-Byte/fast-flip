@@ -8,6 +8,8 @@ export enum FlipDirection {
 	VERTICAL = "scaleY",
 }
 
+export const FLIP_FLAG = "is-flipping";
+
 export default function tokenFlipping(settings: Settings): Capability {
 	return {
 		hudButtonGroups: [
@@ -60,11 +62,14 @@ export default function tokenFlipping(settings: Settings): Capability {
 			}
 
 			(async () => {
-				const key = token.animationName;
-				const animationContext = token.animationContexts.get(key);
+				if (token.document.getFlag("fast-flip", FLIP_FLAG)) {
+					return;
+				}
+
+				await token.document.setFlag("fast-flip", FLIP_FLAG, true);
+
 				const currentScale =
-					animationContext?.to?.texture?.[tokenMirrorDirection] ??
-					token.document.texture?.[tokenMirrorDirection];
+					token.document._source.texture?.[tokenMirrorDirection];
 
 				if (currentScale === undefined) {
 					console.warn(
@@ -88,6 +93,12 @@ export default function tokenFlipping(settings: Settings): Capability {
 						},
 					},
 				);
+
+				const key = token.animationName;
+				const animationContext = token.animationContexts.get(key);
+
+				await animationContext?.promise;
+				await token.document.unsetFlag("fast-flip", FLIP_FLAG);
 			})();
 		}
 	}

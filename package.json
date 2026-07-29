@@ -1,6 +1,6 @@
 {
 	"name": "fast-flip",
-	"version": "5.0.3",
+	"version": "5.0.4",
 	"description": "Foundry VTT Module",
 	"directories": {
 		"lib": "lib"

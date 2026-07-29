@@ -1,4 +1,4 @@
-import { LOCALIZATION } from "@/common/constants";
+import { LOCALIZATION, MODULE_NAME } from "@/common/constants";
 import { getIcon } from "@/common/helpers";
 import type { Settings } from "@/common/settings";
 import type { Capability } from "@/tokens/capabilities/capability";
@@ -62,44 +62,49 @@ export default function tokenFlipping(settings: Settings): Capability {
 			}
 
 			(async () => {
-				if (token.document.getFlag("fast-flip", FLIP_FLAG)) {
+				if (token.document.getFlag(MODULE_NAME, FLIP_FLAG)) {
 					return;
 				}
 
-				await token.document.setFlag("fast-flip", FLIP_FLAG, true);
+				await token.document.setFlag(MODULE_NAME, FLIP_FLAG, true);
 
-				const currentScale =
-					token.document._source.texture?.[tokenMirrorDirection];
+				try {
+					const currentScale =
+						token.document._source.texture?.[tokenMirrorDirection];
 
-				if (currentScale === undefined) {
-					console.warn(
-						"Fast Flip! Token Tools | Unable to retrieve the token's current scale, aborting animation.",
+					if (currentScale === undefined) {
+						console.warn(
+							"Fast Flip! Token Tools | Unable to retrieve the token's current scale, aborting animation.",
+						);
+
+						return;
+					}
+
+					const targetScale = -currentScale;
+					const duration = settings.animationDuration;
+
+					await token.document.update(
+						{
+							[`texture.${tokenMirrorDirection}`]: targetScale,
+						},
+						{
+							animate: duration !== 0,
+							animation: {
+								duration,
+							},
+						},
 					);
 
-					return;
+					const key = token.animationName;
+					const animationContext = token.animationContexts.get(key);
+
+					await animationContext?.promise;
+				} finally {
+					await token.document.unsetFlag(MODULE_NAME, FLIP_FLAG);
 				}
-
-				const targetScale = -currentScale;
-				const duration = settings.animationDuration;
-
-				await token.document.update(
-					{
-						[`texture.${tokenMirrorDirection}`]: targetScale,
-					},
-					{
-						animate: duration !== 0,
-						animation: {
-							duration,
-						},
-					},
-				);
-
-				const key = token.animationName;
-				const animationContext = token.animationContexts.get(key);
-
-				await animationContext?.promise;
-				await token.document.unsetFlag("fast-flip", FLIP_FLAG);
-			})();
+			})().catch((error) =>
+				console.error("Fast Flip! Token Tools | Failed to flip token.", error),
+			);
 		}
 	}
 }

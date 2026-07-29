@@ -1,3 +1,10 @@
+# v5.0.4
+- Fix an issue where speech bubbles would inadvertently spam the websocket
+- Fix an issue where if a different token was selected when a speech bubble was showing, the original speech bubble
+would never hide
+- Fix an issue where if speech bubbles had non-default font sizes, they would be measured incorrectly
+- Fix an issue where all HUD buttons would display, even if disabled
+
 # v5.0.3
 - Prevent additional flip animations from playing until the existing one is complete
   - NOTE: This may not fix all possible edge cases, but should fix most

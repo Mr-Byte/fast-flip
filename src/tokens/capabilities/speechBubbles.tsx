@@ -6,10 +6,17 @@ import type { Capability } from "@/tokens/capabilities/capability";
 import { type SocketMessage, SocketMessageType } from "@/tokens/messages";
 
 export default function speechBubbles(settings: Settings): Capability {
-	const style = getComputedStyle(<div className="bubble-content" />);
-	const fontFamily = style.fontFamily;
-	let keyClearInterval: number | undefined;
+	let keyClearInterval: NodeJS.Timeout | undefined;
 	let chatBubbleContainer: HTMLElement | null = null;
+	let shownToken: Token | undefined;
+	let shownSceneID: string | undefined;
+
+	const clearKeyInterval = () => {
+		if (keyClearInterval !== undefined) {
+			clearInterval(keyClearInterval);
+			keyClearInterval = undefined;
+		}
+	};
 
 	game.socket?.on(`module.${MODULE_NAME}`, async (data: SocketMessage) => {
 		if (!game.canvas) {
@@ -62,28 +69,23 @@ export default function speechBubbles(settings: Settings): Capability {
 			return;
 		}
 
-		const token = game.canvas?.tokens?.controlled?.[0];
+		shownToken = game.canvas?.tokens?.controlled?.[0];
 
-		if (!token?.isOwner) {
+		if (!shownToken?.isOwner) {
 			return;
 		}
 
-		const sceneID = game.canvas?.scene?.id;
-		const tokenID = token?.id;
+		shownSceneID = game.canvas?.scene?.id;
+		const tokenID = shownToken?.id;
 
-		if (tokenID && sceneID) {
+		if (tokenID && shownSceneID) {
 			game.socket?.emit(`module.${MODULE_NAME}`, {
 				type: SocketMessageType.ShowSpeechBubble,
 				tokenID,
-				sceneID,
+				sceneID: shownSceneID,
 			});
 
-			await show(token);
-
-			if (!keyClearInterval) {
-				clearInterval(keyClearInterval);
-			}
-
+			clearKeyInterval();
 			keyClearInterval = setInterval(() => {
 				const [bindings] =
 					game.keybindings?.bindings?.get(`${MODULE_NAME}.showSpeechBubble`) ??
@@ -95,16 +97,23 @@ export default function speechBubbles(settings: Settings): Capability {
 				const downKeys = normalizeKeys(game.keyboard?.downKeys);
 
 				if (!keySet.isSubsetOf(downKeys)) {
-					hideSpeechBubble();
+					clearKeyInterval();
+					void hideSpeechBubble();
 				}
-			}, 250) as unknown as number;
+			}, 250);
+
+			await show(shownToken);
 		}
 	}
 
 	// NOTE: Allow this no matter what, in the event the setting is changed while speech bubbles are active.
 	async function hideSpeechBubble() {
-		const sceneID = game.canvas?.scene?.id;
-		const token = game.canvas?.tokens?.controlled?.[0];
+		clearKeyInterval();
+
+		const token = shownToken;
+		const sceneID = shownSceneID;
+		shownToken = undefined;
+		shownSceneID = undefined;
 
 		if (!token?.isOwner) {
 			return;
@@ -117,7 +126,6 @@ export default function speechBubbles(settings: Settings): Capability {
 				tokenID: token.id,
 			});
 
-			clearInterval(keyClearInterval);
 			await hide(token);
 		}
 	}
@@ -125,21 +133,29 @@ export default function speechBubbles(settings: Settings): Capability {
 	async function show(token: Token): Promise<void> {
 		chatBubbleContainer ??= document.getElementById("chat-bubbles");
 
-		await chatBubbleContainer
-			?.appendChild(
-				<SpeechBubble
-					id={token.id}
-					fontSize={`${settings.speechBubbleFontSize}px`}
-					fontFamily={fontFamily}
-					top={token.y}
-					left={token.x}
-					text={token.name}
-				/>,
-			)
-			.animate([{ opacity: 0 }, { opacity: 1 }], {
-				duration: 250,
-				fill: "forwards",
-			}).finished;
+		document
+			.querySelector(`.chat-bubble[data-bubble-id="${token.id}"]`)
+			?.remove();
+
+		if (!chatBubbleContainer) {
+			return;
+		}
+
+		const bubble = chatBubbleContainer.appendChild(
+			<SpeechBubble
+				id={token.id}
+				fontSize={`${settings.speechBubbleFontSize}px`}
+				left={token.x}
+				text={token.name}
+			/>,
+		) as HTMLElement;
+
+		bubble.style.top = `${token.y - bubble.offsetHeight - 12}px`;
+
+		await bubble.animate([{ opacity: 0 }, { opacity: 1 }], {
+			duration: 250,
+			fill: "forwards",
+		}).finished;
 	}
 
 	async function hide(token: Token): Promise<void> {

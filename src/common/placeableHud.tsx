@@ -27,18 +27,18 @@ export function setupPlaceableHUD<T extends HudName>(
 		`render${name}`,
 		(hud: hud.BasePlaceableHUD<HudObject<T>>, html: HTMLElement) => {
 			for (const groupProps of buttonGroups) {
-				const shouldShow = groupProps.buttons.some(
+				const visibleButtons = groupProps.buttons.filter(
 					(button) => button.shouldShow?.(hud.object) ?? true,
 				);
 
-				if (!shouldShow) {
+				if (visibleButtons.length === 0) {
 					continue;
 				}
 
 				html
 					.querySelector(`div.${groupProps.side}`)
 					?.append(
-						<HudButtonGroup buttons={groupProps.buttons} object={hud.object} />,
+						<HudButtonGroup buttons={visibleButtons} object={hud.object} />,
 					);
 			}
 		},

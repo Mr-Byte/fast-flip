@@ -4,6 +4,33 @@ import { MODULE_NAME } from "@/common/types/index";
 import { TileMirror } from "@/tiles";
 import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
 import { FLIP_FLAG, FlipDirection } from "@/tokens/capabilities/tokenFlipping";
+import type { SocketMessage } from "@/tokens/messages";
+
+type ModuleSocketEventName = `module.${typeof MODULE_NAME}`;
+
+interface ModuleSocket extends io.Socket {
+	emit<Ev extends string>(
+		event: Ev,
+		...args: Ev extends ModuleSocketEventName
+			? [message: SocketMessage]
+			: unknown[]
+	): this;
+}
+
+declare global {
+	interface InitGame {
+		readonly socket: ModuleSocket;
+	}
+	interface I18nInitGame {
+		readonly socket: ModuleSocket;
+	}
+	interface SetupGame {
+		readonly socket: ModuleSocket;
+	}
+	interface ReadyGame {
+		readonly socket: ModuleSocket;
+	}
+}
 
 type SettingNameToTypeMap = {
 	"animation-duration": number;

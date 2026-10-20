@@ -1,20 +1,18 @@
 import HudButton from "@/common/_components/hudButton";
 
-export interface ButtonProps<T extends PlaceableObject> {
+export interface ButtonProps<T> {
 	title: string;
 	icon: string;
 	onClick: (object: T) => void | Promise<void>;
 	shouldShow?: (object: T) => boolean;
 }
 
-type HudButtonGroupProps<T extends PlaceableObject> = {
+type HudButtonGroupProps<T> = {
 	buttons: ButtonProps<T>[];
 	object: T;
 };
 
-export default function HudButtonGroup<T extends PlaceableObject>(
-	props: HudButtonGroupProps<T>,
-) {
+export default function HudButtonGroup<T>(props: HudButtonGroupProps<T>) {
 	const buttons = props.buttons.map((button) => (
 		<HudButton
 			onClick={() => button.onClick(props.object)}

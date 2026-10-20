@@ -8,10 +8,10 @@
 			"url": "https://github.com/Mr-Byte/fast-flip/"
 		}
 	],
-	"version": "5.0.4",
+	"version": "6.0.0",
 	"socket": true,
 	"compatibility": {
-		"minimum": 13,
+		"minimum": 14,
 		"verified": 14
 	},
 	"languages": [

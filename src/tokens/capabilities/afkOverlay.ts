@@ -1,5 +1,5 @@
 import { LOCALIZATION, MODULE_NAME } from "@/common/constants";
-import { getIcon } from "@/common/helpers";
+import { getIcon, hasModuleFlagChange } from "@/common/helpers";
 import type { Settings } from "@/common/settings";
 import { AfkOverlay } from "@/tokens/capabilities/_components/afkOverlay";
 import type { Capability } from "@/tokens/capabilities/capability";
@@ -9,12 +9,14 @@ import Hooks = foundry.helpers.Hooks;
 export const AFK_STATE_KEY = "afk-state";
 
 export default function afkOverlay(settings: Settings): Capability {
-	Hooks.on("updateToken", async (_, document) => {
-		if (!document._id || typeof document._id !== "string") {
+	Hooks.on("updateToken", async (document, change) => {
+		if (!hasModuleFlagChange(change, AFK_STATE_KEY)) {
 			return;
 		}
 
-		const token = game.canvas?.tokens?.get(document._id);
+		const token = document.id
+			? game.canvas?.tokens?.get(document.id)
+			: undefined;
 
 		if (!token) {
 			return;

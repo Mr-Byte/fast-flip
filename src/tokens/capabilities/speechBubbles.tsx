@@ -75,7 +75,7 @@ export default function speechBubbles(settings: Settings): Capability {
 			return;
 		}
 
-		shownSceneID = game.canvas?.scene?.id;
+		shownSceneID = game.canvas?.scene?.id ?? undefined;
 		const tokenID = shownToken?.id;
 
 		if (tokenID && shownSceneID) {
@@ -119,7 +119,7 @@ export default function speechBubbles(settings: Settings): Capability {
 			return;
 		}
 
-		if (sceneID) {
+		if (sceneID && token.id) {
 			game.socket?.emit(`module.${MODULE_NAME}`, {
 				type: SocketMessageType.HideSpeechBubble,
 				sceneID,
@@ -133,8 +133,14 @@ export default function speechBubbles(settings: Settings): Capability {
 	async function show(token: Token): Promise<void> {
 		chatBubbleContainer ??= document.getElementById("chat-bubbles");
 
+		const tokenID = token.id;
+
+		if (!tokenID) {
+			return;
+		}
+
 		document
-			.querySelector(`.chat-bubble[data-bubble-id="${token.id}"]`)
+			.querySelector(`.chat-bubble[data-bubble-id="${tokenID}"]`)
 			?.remove();
 
 		if (!chatBubbleContainer) {
@@ -143,7 +149,7 @@ export default function speechBubbles(settings: Settings): Capability {
 
 		const bubble = chatBubbleContainer.appendChild(
 			<SpeechBubble
-				id={token.id}
+				id={tokenID}
 				fontSize={`${settings.speechBubbleFontSize}px`}
 				left={token.x}
 				text={token.name}

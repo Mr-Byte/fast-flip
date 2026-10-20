@@ -1,8 +1,13 @@
 import type { Simplify } from "type-fest";
+import { REFRESH_RAISE_HAND_OVERLAYS_HOOK } from "@/common/constants";
 import type { WithModuleName } from "@/common/types/helpers";
 import { MODULE_NAME } from "@/common/types/index";
 import { TileMirror } from "@/tiles";
 import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
+import {
+	RAISED_HAND_AT_KEY,
+	RAISED_HAND_BY_KEY,
+} from "@/tokens/capabilities/raiseHand";
 import { FLIP_FLAG, FlipDirection } from "@/tokens/capabilities/tokenFlipping";
 import type { SocketMessage } from "@/tokens/messages";
 
@@ -41,6 +46,12 @@ type SettingNameToTypeMap = {
 	"afk-overlay-icon-path": string;
 	"allow-speech-bubbles": boolean;
 	"speech-bubble-font-size": number;
+	"allow-raise-hand": boolean;
+	"show-raise-hand-status-in-chat": boolean;
+	"show-toggle-raise-hand-hud": boolean;
+	"raise-hand-overlay-icon-path": string;
+	"raise-hand-number-anchor-x": number;
+	"raise-hand-number-anchor-y": number;
 };
 
 type SettingsConfigBase = Simplify<{
@@ -52,12 +63,20 @@ declare global {
 }
 
 declare module "fvtt-types/configuration" {
+	namespace Hooks {
+		interface HookConfig {
+			[REFRESH_RAISE_HAND_OVERLAYS_HOOK]: () => void;
+		}
+	}
+
 	interface FlagConfig {
 		Token: {
 			[MODULE_NAME]: {
 				[FlipDirection.HORIZONTAL]: number;
 				[FlipDirection.VERTICAL]: number;
 				[AFK_STATE_KEY]: boolean;
+				[RAISED_HAND_AT_KEY]: number;
+				[RAISED_HAND_BY_KEY]: string;
 				[FLIP_FLAG]: boolean;
 			};
 		};

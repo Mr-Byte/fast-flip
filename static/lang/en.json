@@ -16,6 +16,14 @@
 			"show-speech-bubble": {
 				"hotkey": "Show Speech Bubble",
 				"hint": "Displays a speech bubble attached to your selected token to all players."
+			},
+			"raise-hand-toggle": {
+				"hotkey": "Toggle Raised Hand",
+				"hint": "Raises or lowers a hand for the selected tokens"
+			},
+			"lower-all-hands": {
+				"hotkey": "Lower All Hands",
+				"hint": "Lowers every raised hand on the current scene (GM only)"
 			}
 		},
 		"settings": {
@@ -56,6 +64,33 @@
 					"value": "Animation Duration",
 					"hint": "Duration of the token flip animation in seconds (0 disables animations)."
 				}
+			},
+			"raise-hand": {
+				"show-toggle-button": {
+					"value": "Show Raise Hand Toggle",
+					"hint": "Show or hide the raise hand toggle button on the token HUD"
+				},
+				"allow": {
+					"value": "Allow Raise Hand",
+					"hint": "Allow hands to be raised on player owned tokens"
+				},
+				"overlay-icon-path": {
+					"value": "Raised Hand Icon Path",
+					"hint": "Path to the image to use for the raised hand indicator on tokens"
+				},
+				"number-anchor-x": {
+					"value": "Number Position (Horizontal)",
+					"hint": "Horizontal position of the queue number on the raised hand icon, from 0 (left edge) to 1 (right edge)"
+				},
+				"number-anchor-y": {
+					"value": "Number Position (Vertical)",
+					"hint": "Vertical position of the queue number on the raised hand icon, from 0 (top edge) to 1 (bottom edge)"
+				},
+				"number-preview": "Number Position Preview",
+				"show-status-in-chat": {
+					"value": "Show Raised Hands in Chat",
+					"hint": "Send a chat message whenever a player raises or lowers their hand"
+				}
 			}
 		},
 		"text": {
@@ -73,6 +108,13 @@
 			"flip-tile": {
 				"horizontal-button": "Flip Tile (Horizontal)",
 				"vertical-button": "Flip Tile (Vertical)"
+			},
+			"raise-hand": {
+				"toggle-button": "Toggle Raised Hand",
+				"chat": {
+					"message": "{name} raised their hand.",
+					"lowered-message": "{name} lowered their hand."
+				}
 			}
 		}
 	}

@@ -1,6 +1,10 @@
 packages:
   - "."
+# fvtt-types (v14, installed from its GitHub repo) depends on the project's
+# own patched PIXI forks via git, which pnpm's exotic-subdependency guard
+# would otherwise reject. It is a types-only devDependency.
+blockExoticSubdeps: false
 onlyBuiltDependencies:
-  - "@league-of-foundry-developers/foundry-vtt-types@https://codeload.github.com/League-of-Foundry-Developers/foundry-vtt-types/tar.gz/3fdf2bbfc4608b5b497360b033f4732c885fb0c7"
+  - "@league-of-foundry-developers/foundry-vtt-types"
 allowBuilds:
   "@league-of-foundry-developers/foundry-vtt-types": true

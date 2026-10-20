@@ -1,3 +1,13 @@
+# v6.0.0
+- Foundry V14 is now the minimum supported version
+- New raise hand feature
+  - Toggle a raised hand on player owned tokens with `Shift+H` or a token HUD button
+  - Raised hands show a queue number based on the order hands were raised, renumbering as hands lower
+  - The first token in line shows a gold hand
+  - GMs can lower all hands on the scene with `Shift+Alt+H`
+  - New world and client settings mirroring the AFK toggle options
+- AFK overlays now only redraw when the AFK flag changes instead of on every token update
+
 # v5.0.4
 - Fix an issue where speech bubbles would inadvertently spam the websocket
 - Fix an issue where if a different token was selected when a speech bubble was showing, the original speech bubble

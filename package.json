@@ -1,6 +1,6 @@
 {
 	"name": "fast-flip",
-	"version": "5.0.4",
+	"version": "6.0.0",
 	"description": "Foundry VTT Module",
 	"directories": {
 		"lib": "lib"
@@ -25,7 +25,7 @@
 	"homepage": "https://github.com/Mr-Byte/fast-flip#readme",
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.6",
-		"fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#v13.345.1",
+		"fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#27bf7b9bac68a74a5346c7ca44432917d9f41bdb",
 		"rollup-plugin-copy": "^3.5.0",
 		"typescript": "^5.8.3",
 		"vite": "^8.0.0"

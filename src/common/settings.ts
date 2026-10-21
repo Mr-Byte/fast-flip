@@ -178,6 +178,40 @@ export function registerSettings(game: foundry.Game): Settings {
 		type: Boolean,
 	});
 
+	game.settings.register(MODULE_NAME, SETTING.ALLOW_TOKEN_IMAGE_WHEEL, {
+		name: LOCALIZATION.SETTINGS_TOKEN_IMAGE_WHEEL_ALLOW_VALUE,
+		hint: LOCALIZATION.SETTINGS_TOKEN_IMAGE_WHEEL_ALLOW_HINT,
+		scope: "world",
+		config: true,
+		default: true,
+		type: Boolean,
+	});
+
+	game.settings.register(MODULE_NAME, SETTING.TOKEN_IMAGE_WHEEL_TRANSITION, {
+		name: LOCALIZATION.SETTINGS_TOKEN_IMAGE_WHEEL_TRANSITION_VALUE,
+		hint: LOCALIZATION.SETTINGS_TOKEN_IMAGE_WHEEL_TRANSITION_HINT,
+		scope: "client",
+		config: true,
+		default: "fade",
+		type: String,
+		choices: {
+			none: "None",
+			fade: "Fade",
+			crosshatch: "Crosshatch",
+			dots: "Dots",
+			glitch: "Glitch",
+			hole: "Hole",
+			holeSwirl: "Hole Swirl",
+			hologram: "Hologram",
+			morph: "Morph",
+			swirl: "Swirl",
+			waterDrop: "Water Drop",
+			waves: "Waves",
+			wind: "Wind",
+			whiteNoise: "White Noise",
+		},
+	});
+
 	return {
 		get animationDuration(): number {
 			return game.settings.get(MODULE_NAME, SETTING.ANIMATION_DURATION) * 1000;
@@ -226,6 +260,15 @@ export function registerSettings(game: foundry.Game): Settings {
 		},
 		get raiseHandNumberAnchorY(): number {
 			return game.settings.get(MODULE_NAME, SETTING.RAISE_HAND_NUMBER_ANCHOR_Y);
+		},
+		get allowTokenImageWheel(): boolean {
+			return game.settings.get(MODULE_NAME, SETTING.ALLOW_TOKEN_IMAGE_WHEEL);
+		},
+		get tokenImageWheelTransition(): string {
+			return game.settings.get(
+				MODULE_NAME,
+				SETTING.TOKEN_IMAGE_WHEEL_TRANSITION,
+			);
 		},
 	} as const;
 }

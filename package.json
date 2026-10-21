@@ -27,7 +27,7 @@
 		"@biomejs/biome": "^2.4.6",
 		"fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#27bf7b9bac68a74a5346c7ca44432917d9f41bdb",
 		"rollup-plugin-copy": "^3.5.0",
-		"typescript": "^5.8.3",
+		"typescript": "^7.0.2",
 		"vite": "^8.0.0"
 	},
 	"dependencies": {

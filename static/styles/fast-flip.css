@@ -1,0 +1,34 @@
+.fast-flip-image-wheel {
+	position: absolute;
+	left: 0;
+	top: 0;
+	pointer-events: none;
+	z-index: 100;
+}
+
+.fast-flip-image-wheel__item {
+	position: absolute;
+	pointer-events: all;
+	cursor: pointer;
+	object-fit: cover;
+	/* Core and system stylesheets commonly reset img to max-width: 100%,
+	   which collapses thumbnails inside the zero-width wheel root. */
+	max-width: none;
+	max-height: none;
+	border-radius: 50%;
+	border: 3px solid var(--color-border-dark, #000);
+	background: var(--color-cool-5, #11141d);
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+	transition:
+		transform 0.1s ease-out,
+		border-color 0.1s ease-out;
+}
+
+.fast-flip-image-wheel__item--current {
+	border-color: var(--color-border-highlight, #ff6400);
+}
+
+.fast-flip-image-wheel__item--hovered {
+	transform: scale(1.15);
+	border-color: var(--color-warm-1, #ffd700);
+}

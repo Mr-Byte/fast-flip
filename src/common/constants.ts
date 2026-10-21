@@ -30,6 +30,8 @@ export const SETTING: SettingsKeys = {
 	RAISE_HAND_OVERLAY_ICON_PATH: "raise-hand-overlay-icon-path",
 	RAISE_HAND_NUMBER_ANCHOR_X: "raise-hand-number-anchor-x",
 	RAISE_HAND_NUMBER_ANCHOR_Y: "raise-hand-number-anchor-y",
+	ALLOW_TOKEN_IMAGE_WHEEL: "allow-token-image-wheel",
+	TOKEN_IMAGE_WHEEL_TRANSITION: "token-image-wheel-transition",
 };
 
 export const LOCALIZATION: LocalizationKeys = {
@@ -51,6 +53,10 @@ export const LOCALIZATION: LocalizationKeys = {
 	KEYBINDS_RAISE_HAND_TOGGLE_HINT: moduleKey("keybinds.raise-hand-toggle.hint"),
 	KEYBINDS_LOWER_ALL_HANDS_HOTKEY: moduleKey("keybinds.lower-all-hands.hotkey"),
 	KEYBINDS_LOWER_ALL_HANDS_HINT: moduleKey("keybinds.lower-all-hands.hint"),
+	KEYBINDS_PICK_TOKEN_IMAGE_HOTKEY: moduleKey(
+		"keybinds.pick-token-image.hotkey",
+	),
+	KEYBINDS_PICK_TOKEN_IMAGE_HINT: moduleKey("keybinds.pick-token-image.hint"),
 	SETTINGS_AFK_SHOW_TOGGLE_BUTTON_VALUE: moduleKey(
 		"settings.afk.show-toggle-button.value",
 	),
@@ -125,6 +131,18 @@ export const LOCALIZATION: LocalizationKeys = {
 	),
 	SETTINGS_RAISE_HAND_SHOW_STATUS_IN_CHAT_HINT: moduleKey(
 		"settings.raise-hand.show-status-in-chat.hint",
+	),
+	SETTINGS_TOKEN_IMAGE_WHEEL_ALLOW_VALUE: moduleKey(
+		"settings.token-image-wheel.allow.value",
+	),
+	SETTINGS_TOKEN_IMAGE_WHEEL_ALLOW_HINT: moduleKey(
+		"settings.token-image-wheel.allow.hint",
+	),
+	SETTINGS_TOKEN_IMAGE_WHEEL_TRANSITION_VALUE: moduleKey(
+		"settings.token-image-wheel.transition.value",
+	),
+	SETTINGS_TOKEN_IMAGE_WHEEL_TRANSITION_HINT: moduleKey(
+		"settings.token-image-wheel.transition.hint",
 	),
 	TEXT_AFK_TOGGLE_BUTTON: moduleKey("text.afk.toggle-button"),
 	TEXT_FLIP_TOKEN_HORIZONTAL_BUTTON: moduleKey(

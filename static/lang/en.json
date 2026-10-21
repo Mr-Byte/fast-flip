@@ -24,6 +24,10 @@
 			"lower-all-hands": {
 				"hotkey": "Lower All Hands",
 				"hint": "Lowers every raised hand on the current scene (GM only)"
+			},
+			"pick-token-image": {
+				"hotkey": "Pick Token Image",
+				"hint": "Hold to show a wheel of the selected wildcard token's images; release over an image to apply it"
 			}
 		},
 		"settings": {
@@ -90,6 +94,16 @@
 				"show-status-in-chat": {
 					"value": "Show Raised Hands in Chat",
 					"hint": "Send a chat message whenever a player raises or lowers their hand"
+				}
+			},
+			"token-image-wheel": {
+				"allow": {
+					"value": "Allow Token Image Wheel",
+					"hint": "Allow players to pick a wildcard token image from a radial wheel"
+				},
+				"transition": {
+					"value": "Token Image Transition",
+					"hint": "The transition effect used when you change a token's image from the wheel"
 				}
 			}
 		},

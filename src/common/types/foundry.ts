@@ -52,6 +52,8 @@ type SettingNameToTypeMap = {
 	"raise-hand-overlay-icon-path": string;
 	"raise-hand-number-anchor-x": number;
 	"raise-hand-number-anchor-y": number;
+	"allow-token-image-wheel": boolean;
+	"token-image-wheel-transition": string;
 };
 
 type SettingsConfigBase = Simplify<{

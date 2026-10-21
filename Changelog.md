@@ -3,10 +3,14 @@
 - New raise hand feature
   - Toggle a raised hand on player owned tokens with `Shift+H` or a token HUD button
   - Raised hands show a queue number based on the order hands were raised, renumbering as hands lower
-  - The first token in line shows a gold hand
+  - Hands are tinted with the raising player's color; the first in line glows and the rest are muted
   - GMs can lower all hands on the scene with `Shift+Alt+H`
   - New world and client settings mirroring the AFK toggle options
 - AFK overlays now only redraw when the AFK flag changes instead of on every token update
+- New token image wheel for wildcard tokens
+  - Hold `I` with a wildcard token selected to show a radial wheel of its images; hover one and release to apply it for everyone
+  - The transition effect used when the image changes is a per-player setting
+  - A world setting can disable the feature
 
 # v5.0.4
 - Fix an issue where speech bubbles would inadvertently spam the websocket

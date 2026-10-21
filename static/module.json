@@ -22,6 +22,7 @@
 		}
 	],
 	"esmodules": ["module.mjs"],
+	"styles": ["styles/fast-flip.css"],
 	"url": "https://github.com/Mr-Byte/fast-flip",
 	"bugs": "https://github.com/Mr-Byte/fast-flip/issues",
 	"download": "https://github.com/Mr-Byte/fast-flip/releases/latest/download/fast-flip.zip",

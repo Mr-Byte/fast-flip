@@ -4,7 +4,10 @@ packages:
 # own patched PIXI forks via git, which pnpm's exotic-subdependency guard
 # would otherwise reject. It is a types-only devDependency.
 blockExoticSubdeps: false
+# The URL-pinned entry must match the commit referenced by package.json's
+# fvtt-types dependency; CI's pnpm requires the exact resolved URL.
 onlyBuiltDependencies:
   - "@league-of-foundry-developers/foundry-vtt-types"
+  - "@league-of-foundry-developers/foundry-vtt-types@https://codeload.github.com/League-of-Foundry-Developers/foundry-vtt-types/tar.gz/27bf7b9bac68a74a5346c7ca44432917d9f41bdb"
 allowBuilds:
   "@league-of-foundry-developers/foundry-vtt-types": true

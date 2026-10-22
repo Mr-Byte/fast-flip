@@ -14,7 +14,7 @@ export default function SpeechBubble({
 	const style = {
 		display: "block",
 		opacity: 0,
-		left: `${left}px`,
+		left,
 		fontSize,
 	};
 

@@ -1,6 +1,8 @@
-const THUMBNAIL_SIZE = 64;
-const THUMBNAIL_GAP = 12;
-const TOKEN_CLEARANCE = 16;
+import VideoHelper = foundry.helpers.media.VideoHelper;
+
+const BASE_THUMBNAIL_SIZE = 64;
+const BASE_TOKEN_RADIUS = 70;
+const TOKEN_CLEARANCE = 8;
 export const MAX_WHEEL_IMAGES = 24;
 
 type ImageWheelProps = {
@@ -12,12 +14,52 @@ type ImageWheelProps = {
 	onHover: (image: string | undefined) => void;
 };
 
-function isSameImage(a: string, b: string): boolean {
-	return decodeURIComponent(a) === decodeURIComponent(b);
+const isSameImage = (first: string, second: string): boolean =>
+	decodeURIComponent(first) === decodeURIComponent(second);
+
+const polarPoint = (radius: number, angle: number): string =>
+	`${(radius * Math.cos(angle)).toFixed(2)},${(radius * Math.sin(angle)).toFixed(2)}`;
+
+function slicePath(
+	innerRadius: number,
+	outerRadius: number,
+	startAngle: number,
+	endAngle: number,
+): string {
+	return `
+		M ${polarPoint(innerRadius, startAngle)} A ${innerRadius} ${innerRadius} 0 0 1 ${polarPoint(innerRadius, endAngle)}
+		L ${polarPoint(outerRadius, endAngle)}
+		A ${outerRadius} ${outerRadius} 0 0 0 ${polarPoint(outerRadius, startAngle)}
+		Z
+	`;
+}
+
+function thumbnail(image: string): HTMLElement {
+	if (VideoHelper.hasVideoExtension(image)) {
+		return (
+			<video
+				className="fast-flip-image-wheel__thumb"
+				src={image}
+				autoPlay
+				muted
+				loop
+				playsInline
+			/>
+		) as HTMLElement;
+	}
+
+	return (
+		<div
+			className="fast-flip-image-wheel__thumb"
+			style={{ backgroundImage: `url("${image}")` }}
+		/>
+	) as HTMLElement;
 }
 
 export function createImageWheel(): HTMLElement {
-	return (<div className="fast-flip-image-wheel" />) as HTMLElement;
+	return (
+		<div className="fast-flip-image-wheel" role="listbox" />
+	) as HTMLElement;
 }
 
 export function populateImageWheel(
@@ -32,41 +74,66 @@ export function populateImageWheel(
 		);
 	}
 
-	// Keep thumbnails clear of the token and of each other.
-	const radius = Math.max(
-		tokenRadius + THUMBNAIL_SIZE / 2 + TOKEN_CLEARANCE,
-		(THUMBNAIL_SIZE + THUMBNAIL_GAP) / (2 * Math.sin(Math.PI / shown.length)),
+	const step = (2 * Math.PI) / shown.length;
+	const thumbnailSize =
+		BASE_THUMBNAIL_SIZE * Math.max(1, tokenRadius / BASE_TOKEN_RADIUS);
+	const thumbnailGap = thumbnailSize * 0.2;
+	const ringThickness = thumbnailSize * 1.6;
+	const midRadius = Math.max(
+		tokenRadius + TOKEN_CLEARANCE + ringThickness / 2,
+		(thumbnailSize + thumbnailGap) / (2 * Math.sin(Math.PI / shown.length)),
 	);
+	const innerRadius = midRadius - ringThickness / 2;
+	const outerRadius = midRadius + ringThickness / 2;
 
-	for (const [index, image] of shown.entries()) {
-		const angle = -Math.PI / 2 + (index * 2 * Math.PI) / shown.length;
-		const left = cx + radius * Math.cos(angle) - THUMBNAIL_SIZE / 2;
-		const top = cy + radius * Math.sin(angle) - THUMBNAIL_SIZE / 2;
+	const slices = shown.map((image, index) => {
+		const centerAngle = -Math.PI / 2 + index * step;
 		const isCurrent = isSameImage(image, currentSrc);
+		const thumbX = midRadius * Math.cos(centerAngle);
+		const thumbY = midRadius * Math.sin(centerAngle);
 
-		const thumbnail = (
-			<img
-				className={`fast-flip-image-wheel__item${isCurrent ? " fast-flip-image-wheel__item--current" : ""}`}
-				src={image}
-				alt=""
-				style={{
-					left: `${left}px`,
-					top: `${top}px`,
-					width: `${THUMBNAIL_SIZE}px`,
-					height: `${THUMBNAIL_SIZE}px`,
-				}}
-			/>
-		) as HTMLImageElement;
+		return (
+			<g
+				className={[
+					"fast-flip-image-wheel__slice",
+					{ "fast-flip-image-wheel__slice--current": isCurrent },
+				]}
+				role="option"
+				aria-selected={isCurrent}
+				onMouseEnter={() => onHover(image)}
+				onMouseLeave={() => onHover(undefined)}
+			>
+				<path
+					className="fast-flip-image-wheel__slice-bg"
+					d={slicePath(
+						innerRadius,
+						outerRadius,
+						centerAngle - step / 2,
+						centerAngle + step / 2,
+					)}
+				/>
+				<foreignObject
+					x={thumbX - thumbnailSize / 2}
+					y={thumbY - thumbnailSize / 2}
+					width={thumbnailSize}
+					height={thumbnailSize}
+				>
+					{thumbnail(image)}
+				</foreignObject>
+			</g>
+		);
+	});
 
-		thumbnail.addEventListener("mouseenter", () => {
-			thumbnail.classList.add("fast-flip-image-wheel__item--hovered");
-			onHover(image);
-		});
-		thumbnail.addEventListener("mouseleave", () => {
-			thumbnail.classList.remove("fast-flip-image-wheel__item--hovered");
-			onHover(undefined);
-		});
-
-		wheel.appendChild(thumbnail);
-	}
+	wheel.appendChild(
+		// biome-ignore lint/a11y/noSvgWithoutTitle: not needed
+		<svg
+			className="fast-flip-image-wheel__ring"
+			width={outerRadius * 2}
+			height={outerRadius * 2}
+			viewBox={`${-outerRadius} ${-outerRadius} ${outerRadius * 2} ${outerRadius * 2}`}
+			style={{ left: cx - outerRadius, top: cy - outerRadius }}
+		>
+			{slices}
+		</svg>,
+	);
 }

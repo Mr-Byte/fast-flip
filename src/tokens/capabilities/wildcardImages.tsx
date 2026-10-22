@@ -17,6 +17,8 @@ export default function wildcardImages(settings: Settings): Capability {
 	let openToken: foundry.canvas.placeables.Token | undefined;
 	let hoveredImage: string | undefined;
 	let keyClearInterval: NodeJS.Timeout | undefined;
+	let repeatWatchdogArmed = false;
+	let lastRepeatAt = 0;
 
 	const clearKeyInterval = () => {
 		if (keyClearInterval !== undefined) {
@@ -35,6 +37,33 @@ export default function wildcardImages(settings: Settings): Capability {
 		closeImageWheel(false);
 	};
 
+	// Losing window focus (alt-tab) swallows the keyup and leaves the key in
+	// Foundry's downKeys set, so the interval guard never fires. Treat focus
+	// loss as a cancel.
+	const onWindowBlur = () => {
+		closeImageWheel(false);
+	};
+
+	// System overlays like the macOS screenshot tool grab the keyboard
+	// WITHOUT blurring the window, so neither the keyup nor a blur event ever
+	// arrives. While a key is held the OS delivers auto-repeat keydowns;
+	// once those have been seen, their disappearance means the key no longer
+	// reaches this window. The watchdog only arms after the first repeat, so
+	// users with key repeat disabled are unaffected.
+	const onRepeatProbe = (event: KeyboardEvent) => {
+		if (!event.repeat) {
+			return;
+		}
+
+		const [bindings] =
+			game.keybindings?.bindings?.get(`${MODULE_NAME}.${KEYBIND_NAME}`) ?? [];
+
+		if (bindings && event.code === bindings.key) {
+			repeatWatchdogArmed = true;
+			lastRepeatAt = Date.now();
+		}
+	};
+
 	return {
 		hudButtonGroups: [],
 		keybinds: [
@@ -45,7 +74,9 @@ export default function wildcardImages(settings: Settings): Capability {
 					hint: LOCALIZATION.KEYBINDS_PICK_TOKEN_IMAGE_HINT,
 					editable: [{ key: "KeyI" }],
 					onDown: () => void openImageWheel(),
-					onUp: () => closeImageWheel(true),
+					// Foundry emulates keyups (isTrusted: false) when the window
+					// blurs; only a genuine release selects.
+					onUp: (context) => closeImageWheel(context?.event?.isTrusted ?? true),
 					precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
 					restricted: false,
 					reservedModifiers: [],
@@ -81,11 +112,19 @@ export default function wildcardImages(settings: Settings): Capability {
 		openToken = token;
 		hoveredImage = undefined;
 
+		repeatWatchdogArmed = false;
 		document.addEventListener("keydown", onEscape);
+		window.addEventListener("keydown", onRepeatProbe, true);
+		window.addEventListener("blur", onWindowBlur);
 		Hooks.once("canvasTearDown", onCanvasTearDown);
 
 		clearKeyInterval();
 		keyClearInterval = setInterval(() => {
+			if (repeatWatchdogArmed && Date.now() - lastRepeatAt > 1500) {
+				closeImageWheel(false);
+				return;
+			}
+
 			const [bindings] =
 				game.keybindings?.bindings?.get(`${MODULE_NAME}.${KEYBIND_NAME}`) ?? [];
 			const keys = bindings
@@ -116,7 +155,8 @@ export default function wildcardImages(settings: Settings): Capability {
 			currentSrc: token.document.texture.src ?? "",
 			cx: token.center.x,
 			cy: token.center.y,
-			tokenRadius: Math.max(token.w, token.h) / 2,
+			// The half-diagonal, so the ring clears the square token's corners.
+			tokenRadius: Math.hypot(token.w, token.h) / 2,
 			onHover: (image) => {
 				hoveredImage = image;
 			},
@@ -126,6 +166,8 @@ export default function wildcardImages(settings: Settings): Capability {
 	function closeImageWheel(select: boolean): void {
 		clearKeyInterval();
 		document.removeEventListener("keydown", onEscape);
+		window.removeEventListener("keydown", onRepeatProbe, true);
+		window.removeEventListener("blur", onWindowBlur);
 		Hooks.off("canvasTearDown", onCanvasTearDown);
 
 		const token = openToken;

@@ -21,9 +21,5 @@ export default function HudButtonGroup<T>(props: HudButtonGroupProps<T>) {
 		/>
 	));
 
-	return (
-		<div style="display: flex; flexDirection: horizontal; gap: 8px">
-			{buttons}
-		</div>
-	);
+	return <div style={{ display: "flex", gap: 8 }}>{buttons}</div>;
 }

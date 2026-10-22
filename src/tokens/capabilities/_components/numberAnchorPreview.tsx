@@ -19,9 +19,6 @@ function readValue(root: HTMLElement, setting: string): string {
 		: "";
 }
 
-// Injects a live preview of the queue number's position below the anchor
-// sliders in the module's settings form. The preview tracks unsaved slider
-// and icon path values, so it always shows what will be saved.
 export function injectNumberAnchorPreview(root: HTMLElement): void {
 	const anchorYInput = findInput(root, SETTING.RAISE_HAND_NUMBER_ANCHOR_Y);
 	const formGroup = anchorYInput?.closest(".form-group");
@@ -35,7 +32,7 @@ export function injectNumberAnchorPreview(root: HTMLElement): void {
 			alt=""
 			style={{
 				position: "absolute",
-				inset: "0",
+				inset: 0,
 				width: "100%",
 				height: "100%",
 				objectFit: "contain",
@@ -50,7 +47,7 @@ export function injectNumberAnchorPreview(root: HTMLElement): void {
 				position: "absolute",
 				transform: "translate(-50%, -50%)",
 				fontFamily: "Signika, sans-serif",
-				fontSize: "28px",
+				fontSize: 28,
 				fontWeight: "bold",
 				color: "#fff",
 				textShadow: "0 0 2px #000, 0 0 2px #000, 0 0 4px #000",
@@ -70,10 +67,10 @@ export function injectNumberAnchorPreview(root: HTMLElement): void {
 				<div
 					style={{
 						position: "relative",
-						width: "128px",
-						height: "128px",
+						width: 128,
+						height: 128,
 						background: "#555",
-						borderRadius: "4px",
+						borderRadius: 4,
 						flex: "0 0 auto",
 					}}
 				>

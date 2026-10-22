@@ -6,29 +6,56 @@
 	z-index: 100;
 }
 
-.fast-flip-image-wheel__item {
+.fast-flip-image-wheel__ring {
 	position: absolute;
-	pointer-events: all;
+	pointer-events: none;
+	overflow: visible;
+}
+
+.fast-flip-image-wheel__slice {
+	pointer-events: visiblePainted;
 	cursor: pointer;
-	object-fit: cover;
-	/* Core and system stylesheets commonly reset img to max-width: 100%,
-	   which collapses thumbnails inside the zero-width wheel root. */
-	max-width: none;
-	max-height: none;
+}
+
+.fast-flip-image-wheel__slice foreignObject {
+	overflow: visible;
+	pointer-events: none;
+}
+
+.fast-flip-image-wheel__slice-bg {
+	fill: rgba(0, 0, 0, 0.55);
+	stroke: rgba(255, 255, 255, 0.3);
+	stroke-width: 2;
+	transition: fill 0.1s ease-out;
+}
+
+.fast-flip-image-wheel__slice:hover .fast-flip-image-wheel__slice-bg {
+	fill: rgba(70, 70, 70, 0.8);
+}
+
+.fast-flip-image-wheel__thumb {
+	display: block;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
 	border-radius: 50%;
 	border: 3px solid var(--color-border-dark, #000);
-	background: var(--color-cool-5, #11141d);
+	background-color: var(--color-cool-5, #11141d);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	object-fit: cover;
 	box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
 	transition:
 		transform 0.1s ease-out,
 		border-color 0.1s ease-out;
 }
 
-.fast-flip-image-wheel__item--current {
-	border-color: var(--color-border-highlight, #ff6400);
+.fast-flip-image-wheel__slice:hover .fast-flip-image-wheel__thumb {
+	transform: scale(1.12);
+	border-color: var(--color-warm-1, #ffd700);
 }
 
-.fast-flip-image-wheel__item--hovered {
-	transform: scale(1.15);
-	border-color: var(--color-warm-1, #ffd700);
+.fast-flip-image-wheel__slice--current .fast-flip-image-wheel__thumb {
+	border-color: var(--color-border-highlight, #ff6400);
 }

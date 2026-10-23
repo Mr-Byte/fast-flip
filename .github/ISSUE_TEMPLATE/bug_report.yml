@@ -1,0 +1,76 @@
+name: Bug Report
+description: Report a problem with Fast Flip! Token Tools
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the fields below so the problem can be reproduced.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+      placeholder: Holding the image wheel key shows nothing when...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The exact steps needed to make the bug happen.
+      placeholder: |
+        1. Select a token owned by a player
+        2. Press Shift+H
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+  - type: input
+    id: module-version
+    attributes:
+      label: Module version
+      placeholder: "6.0.0"
+    validations:
+      required: true
+  - type: input
+    id: foundry-version
+    attributes:
+      label: Foundry VTT version
+      placeholder: "14.366"
+    validations:
+      required: true
+  - type: input
+    id: game-system
+    attributes:
+      label: Game system and version
+      placeholder: "PF2e 8.6.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: isolated
+    attributes:
+      label: Does it still happen with only Fast Flip! enabled?
+      description: Please try disabling all other modules before reporting.
+      options:
+        - "Yes"
+        - "No"
+        - Not tested
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors
+      description: Open the console with F12 and paste any errors shown there. This is formatted automatically, no need for backticks.
+      render: shell
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots or recordings showing the problem.

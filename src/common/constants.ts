@@ -32,6 +32,8 @@ export const SETTING: SettingsKeys = {
 	RAISE_HAND_NUMBER_ANCHOR_Y: "raise-hand-number-anchor-y",
 	ALLOW_TOKEN_IMAGE_WHEEL: "allow-token-image-wheel",
 	TOKEN_IMAGE_WHEEL_TRANSITION: "token-image-wheel-transition",
+	ALLOW_VISAGE_WHEEL: "allow-visage-wheel",
+	VISAGE_WHEEL_TAG: "visage-wheel-tag",
 };
 
 export const LOCALIZATION: LocalizationKeys = {
@@ -57,6 +59,8 @@ export const LOCALIZATION: LocalizationKeys = {
 		"keybinds.pick-token-image.hotkey",
 	),
 	KEYBINDS_PICK_TOKEN_IMAGE_HINT: moduleKey("keybinds.pick-token-image.hint"),
+	KEYBINDS_PICK_VISAGE_HOTKEY: moduleKey("keybinds.pick-visage.hotkey"),
+	KEYBINDS_PICK_VISAGE_HINT: moduleKey("keybinds.pick-visage.hint"),
 	SETTINGS_AFK_SHOW_TOGGLE_BUTTON_VALUE: moduleKey(
 		"settings.afk.show-toggle-button.value",
 	),
@@ -144,6 +148,14 @@ export const LOCALIZATION: LocalizationKeys = {
 	SETTINGS_TOKEN_IMAGE_WHEEL_TRANSITION_HINT: moduleKey(
 		"settings.token-image-wheel.transition.hint",
 	),
+	SETTINGS_VISAGE_WHEEL_ALLOW_VALUE: moduleKey(
+		"settings.visage-wheel.allow.value",
+	),
+	SETTINGS_VISAGE_WHEEL_ALLOW_HINT: moduleKey(
+		"settings.visage-wheel.allow.hint",
+	),
+	SETTINGS_VISAGE_WHEEL_TAG_VALUE: moduleKey("settings.visage-wheel.tag.value"),
+	SETTINGS_VISAGE_WHEEL_TAG_HINT: moduleKey("settings.visage-wheel.tag.hint"),
 	TEXT_AFK_TOGGLE_BUTTON: moduleKey("text.afk.toggle-button"),
 	TEXT_FLIP_TOKEN_HORIZONTAL_BUTTON: moduleKey(
 		"text.flip-token.horizontal-button",
@@ -160,4 +172,5 @@ export const LOCALIZATION: LocalizationKeys = {
 	TEXT_RAISE_HAND_CHAT_LOWERED_MESSAGE: moduleKey(
 		"text.raise-hand.chat.lowered-message",
 	),
+	TEXT_VISAGE_WHEEL_REVERT: moduleKey("text.visage-wheel.revert"),
 };

@@ -2,6 +2,7 @@ import type { Simplify } from "type-fest";
 import { REFRESH_RAISE_HAND_OVERLAYS_HOOK } from "@/common/constants";
 import type { WithModuleName } from "@/common/types/helpers";
 import { MODULE_NAME } from "@/common/types/index";
+import type { VisageApi } from "@/common/types/visage";
 import { TileMirror } from "@/tiles";
 import { AFK_STATE_KEY } from "@/tokens/capabilities/afkOverlay";
 import {
@@ -54,6 +55,8 @@ type SettingNameToTypeMap = {
 	"raise-hand-number-anchor-y": number;
 	"allow-token-image-wheel": boolean;
 	"token-image-wheel-transition": string;
+	"allow-visage-wheel": boolean;
+	"visage-wheel-tag": string;
 };
 
 type SettingsConfigBase = Simplify<{
@@ -61,10 +64,20 @@ type SettingsConfigBase = Simplify<{
 }>;
 
 declare global {
-	interface SettingConfig extends SettingsConfigBase {}
+	interface SettingConfig extends SettingsConfigBase {
+		// Registered by the Visage module; only read while Visage is active.
+		"visage.gmOnlyMode": boolean;
+	}
 }
 
 declare module "fvtt-types/configuration" {
+	interface ModuleConfig {
+		// Partial because another module's API can change or fail to load.
+		visage: {
+			api?: Partial<VisageApi>;
+		};
+	}
+
 	namespace Hooks {
 		interface HookConfig {
 			[REFRESH_RAISE_HAND_OVERLAYS_HOOK]: () => void;

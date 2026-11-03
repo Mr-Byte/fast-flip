@@ -1,3 +1,13 @@
+# Unreleased
+- New visage wheel for the [Visage](https://github.com/Filroden/visage) module
+  - Hold `V` with a token selected to show a radial wheel of its visages; hover one and release to apply it, or to remove an active overlay
+  - Overlays have a dashed border, active visages are highlighted, and the hovered visage's name shows under the wheel
+  - A "Revert to Default" slice appears when a visage is active. Players can only remove the visages they can see
+  - Respects Visage's permissions and its "GM only" mode
+  - A world setting can disable the feature, and another can limit global visages to those with a tag
+  - The hotkey and settings only appear when Visage is active
+- The token image wheel and the visage wheel share their code, and only one can be open at a time
+
 # v6.0.0
 - Foundry V14 is now the minimum supported version
 - New raise hand feature

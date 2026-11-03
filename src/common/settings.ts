@@ -6,6 +6,7 @@ import {
 } from "@/common/constants";
 import { getIcon } from "@/common/helpers";
 import type { ModuleSettings } from "@/common/types";
+import { isVisageActive } from "@/common/visage";
 
 export type Settings = ModuleSettings;
 
@@ -212,6 +213,26 @@ export function registerSettings(game: foundry.Game): Settings {
 		},
 	});
 
+	const showVisageSettings = isVisageActive();
+
+	game.settings.register(MODULE_NAME, SETTING.ALLOW_VISAGE_WHEEL, {
+		name: LOCALIZATION.SETTINGS_VISAGE_WHEEL_ALLOW_VALUE,
+		hint: LOCALIZATION.SETTINGS_VISAGE_WHEEL_ALLOW_HINT,
+		scope: "world",
+		config: showVisageSettings,
+		default: true,
+		type: Boolean,
+	});
+
+	game.settings.register(MODULE_NAME, SETTING.VISAGE_WHEEL_TAG, {
+		name: LOCALIZATION.SETTINGS_VISAGE_WHEEL_TAG_VALUE,
+		hint: LOCALIZATION.SETTINGS_VISAGE_WHEEL_TAG_HINT,
+		scope: "world",
+		config: showVisageSettings,
+		default: "",
+		type: String,
+	});
+
 	return {
 		get animationDuration(): number {
 			return game.settings.get(MODULE_NAME, SETTING.ANIMATION_DURATION) * 1000;
@@ -269,6 +290,12 @@ export function registerSettings(game: foundry.Game): Settings {
 				MODULE_NAME,
 				SETTING.TOKEN_IMAGE_WHEEL_TRANSITION,
 			);
+		},
+		get allowVisageWheel(): boolean {
+			return game.settings.get(MODULE_NAME, SETTING.ALLOW_VISAGE_WHEEL);
+		},
+		get visageWheelTag(): string {
+			return game.settings.get(MODULE_NAME, SETTING.VISAGE_WHEEL_TAG);
 		},
 	} as const;
 }

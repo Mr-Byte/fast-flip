@@ -28,6 +28,10 @@
 			"pick-token-image": {
 				"hotkey": "Pick Token Image",
 				"hint": "Hold to show a wheel of the selected wildcard token's images; release over an image to apply it"
+			},
+			"pick-visage": {
+				"hotkey": "Pick Visage",
+				"hint": "Hold to show a wheel of the selected token's visages; release over one to apply it, or to remove an active overlay"
 			}
 		},
 		"settings": {
@@ -105,6 +109,16 @@
 					"value": "Token Image Transition",
 					"hint": "The transition effect used when you change a token's image from the wheel"
 				}
+			},
+			"visage-wheel": {
+				"allow": {
+					"value": "Allow Visage Wheel",
+					"hint": "Allow players to pick a Visage from a radial wheel"
+				},
+				"tag": {
+					"value": "Visage Wheel Tag",
+					"hint": "If set, the wheel only shows global visages with this tag. The token's own visages always show. Leave empty to show every global visage."
+				}
 			}
 		},
 		"text": {
@@ -129,6 +143,9 @@
 					"message": "{name} raised their hand.",
 					"lowered-message": "{name} lowered their hand."
 				}
+			},
+			"visage-wheel": {
+				"revert": "Revert to Default"
 			}
 		}
 	}

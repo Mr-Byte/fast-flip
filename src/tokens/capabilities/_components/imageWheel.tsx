@@ -3,22 +3,43 @@ import VideoHelper = foundry.helpers.media.VideoHelper;
 const BASE_THUMBNAIL_SIZE = 64;
 const BASE_TOKEN_RADIUS = 70;
 const TOKEN_CLEARANCE = 8;
-export const MAX_WHEEL_IMAGES = 24;
+const CAPTION_GAP = 8;
+export const MAX_WHEEL_ENTRIES = 24;
 
-type ImageWheelProps = {
-	images: string[];
-	currentSrc: string;
+// A slice shows its image when set, otherwise its Font Awesome icon.
+export type WheelEntry = {
+	image?: string;
+	icon?: string;
+	label?: string;
+	active: boolean;
+	className?: string;
+};
+
+type ImageWheelProps<T extends WheelEntry> = {
+	entries: T[];
 	cx: number;
 	cy: number;
 	tokenRadius: number;
-	onHover: (image: string | undefined) => void;
+	onHover: (entry: T | undefined) => void;
 };
 
-const isSameImage = (first: string, second: string): boolean =>
+export const isSameImage = (first: string, second: string): boolean =>
 	decodeURIComponent(first) === decodeURIComponent(second);
 
 const polarPoint = (radius: number, angle: number): string =>
 	`${(radius * Math.cos(angle)).toFixed(2)},${(radius * Math.sin(angle)).toFixed(2)}`;
+
+// A full ring, for a wheel with one entry. An arc whose ends meet draws
+// nothing, so each circle is two half arcs. The inner circle runs the other
+// way, which leaves a hole under the default nonzero fill rule.
+function ringPath(innerRadius: number, outerRadius: number): string {
+	return `
+		M ${outerRadius},0 A ${outerRadius} ${outerRadius} 0 1 1 ${-outerRadius},0
+		A ${outerRadius} ${outerRadius} 0 1 1 ${outerRadius},0 Z
+		M ${innerRadius},0 A ${innerRadius} ${innerRadius} 0 1 0 ${-innerRadius},0
+		A ${innerRadius} ${innerRadius} 0 1 0 ${innerRadius},0 Z
+	`;
+}
 
 function slicePath(
 	innerRadius: number,
@@ -26,6 +47,10 @@ function slicePath(
 	startAngle: number,
 	endAngle: number,
 ): string {
+	if (endAngle - startAngle >= 2 * Math.PI) {
+		return ringPath(innerRadius, outerRadius);
+	}
+
 	return `
 		M ${polarPoint(innerRadius, startAngle)} A ${innerRadius} ${innerRadius} 0 0 1 ${polarPoint(innerRadius, endAngle)}
 		L ${polarPoint(outerRadius, endAngle)}
@@ -34,7 +59,17 @@ function slicePath(
 	`;
 }
 
-function thumbnail(image: string): HTMLElement {
+function thumbnail(entry: WheelEntry): HTMLElement {
+	const { image, icon } = entry;
+
+	if (!image) {
+		return (
+			<div className="fast-flip-image-wheel__thumb fast-flip-image-wheel__thumb--icon">
+				<i className={icon ?? "fa-solid fa-question"} />
+			</div>
+		) as HTMLElement;
+	}
+
 	if (VideoHelper.hasVideoExtension(image)) {
 		return (
 			<video
@@ -62,15 +97,15 @@ export function createImageWheel(): HTMLElement {
 	) as HTMLElement;
 }
 
-export function populateImageWheel(
+export function populateImageWheel<T extends WheelEntry>(
 	wheel: HTMLElement,
-	{ images, currentSrc, cx, cy, tokenRadius, onHover }: ImageWheelProps,
+	{ entries, cx, cy, tokenRadius, onHover }: ImageWheelProps<T>,
 ): void {
-	const shown = images.slice(0, MAX_WHEEL_IMAGES);
+	const shown = entries.slice(0, MAX_WHEEL_ENTRIES);
 
-	if (images.length > MAX_WHEEL_IMAGES) {
+	if (entries.length > MAX_WHEEL_ENTRIES) {
 		console.warn(
-			`Fast Flip! Token Tools | Token has ${images.length} wildcard images; only the first ${MAX_WHEEL_IMAGES} are shown.`,
+			`Fast Flip! Token Tools | The wheel has ${entries.length} entries; only the first ${MAX_WHEEL_ENTRIES} are shown.`,
 		);
 	}
 
@@ -79,16 +114,39 @@ export function populateImageWheel(
 		BASE_THUMBNAIL_SIZE * Math.max(1, tokenRadius / BASE_TOKEN_RADIUS);
 	const thumbnailGap = thumbnailSize * 0.2;
 	const ringThickness = thumbnailSize * 1.6;
+	// With one entry there are no neighbors to keep apart, and sin(π) is
+	// about zero, which would push the ring off screen.
+	const spacingRadius =
+		shown.length > 1
+			? (thumbnailSize + thumbnailGap) / (2 * Math.sin(Math.PI / shown.length))
+			: 0;
 	const midRadius = Math.max(
 		tokenRadius + TOKEN_CLEARANCE + ringThickness / 2,
-		(thumbnailSize + thumbnailGap) / (2 * Math.sin(Math.PI / shown.length)),
+		spacingRadius,
 	);
 	const innerRadius = midRadius - ringThickness / 2;
 	const outerRadius = midRadius + ringThickness / 2;
 
-	const slices = shown.map((image, index) => {
+	// Entries with names get a caption under the ring that follows the hover.
+	const caption = shown.some((entry) => entry.label)
+		? ((
+				<div
+					className="fast-flip-image-wheel__caption"
+					style={{ left: cx, top: cy + outerRadius + CAPTION_GAP }}
+				/>
+			) as HTMLElement)
+		: undefined;
+
+	const hover = (entry: T | undefined) => {
+		if (caption) {
+			caption.textContent = entry?.label ?? "";
+		}
+
+		onHover(entry);
+	};
+
+	const slices = shown.map((entry, index) => {
 		const centerAngle = -Math.PI / 2 + index * step;
-		const isCurrent = isSameImage(image, currentSrc);
 		const thumbX = midRadius * Math.cos(centerAngle);
 		const thumbY = midRadius * Math.sin(centerAngle);
 
@@ -96,12 +154,14 @@ export function populateImageWheel(
 			<g
 				className={[
 					"fast-flip-image-wheel__slice",
-					{ "fast-flip-image-wheel__slice--current": isCurrent },
+					{ "fast-flip-image-wheel__slice--current": entry.active },
+					entry.className,
 				]}
 				role="option"
-				aria-selected={isCurrent}
-				onMouseEnter={() => onHover(image)}
-				onMouseLeave={() => onHover(undefined)}
+				aria-selected={entry.active}
+				aria-label={entry.label}
+				onMouseEnter={() => hover(entry)}
+				onMouseLeave={() => hover(undefined)}
 			>
 				<path
 					className="fast-flip-image-wheel__slice-bg"
@@ -118,7 +178,7 @@ export function populateImageWheel(
 					width={thumbnailSize}
 					height={thumbnailSize}
 				>
-					{thumbnail(image)}
+					{thumbnail(entry)}
 				</foreignObject>
 			</g>
 		);
@@ -136,4 +196,8 @@ export function populateImageWheel(
 			{slices}
 		</svg>,
 	);
+
+	if (caption) {
+		wheel.appendChild(caption);
+	}
 }

@@ -6,6 +6,7 @@ import type { Capability } from "@/tokens/capabilities/capability";
 import raiseHand from "@/tokens/capabilities/raiseHand";
 import speechBubbles from "@/tokens/capabilities/speechBubbles";
 import tokenFlipping from "@/tokens/capabilities/tokenFlipping";
+import visageWheel from "@/tokens/capabilities/visageWheel";
 import wildcardImages from "@/tokens/capabilities/wildcardImages";
 
 export function initialize(settings: Settings): void {
@@ -14,6 +15,7 @@ export function initialize(settings: Settings): void {
 	const speechBubbleCapability = speechBubbles(settings);
 	const raiseHandCapability = raiseHand(settings);
 	const wildcardImagesCapability = wildcardImages(settings);
+	const visageWheelCapability = visageWheel(settings);
 
 	registerCapabilities(
 		tokenMirroringCapability,
@@ -21,6 +23,7 @@ export function initialize(settings: Settings): void {
 		speechBubbleCapability,
 		raiseHandCapability,
 		wildcardImagesCapability,
+		visageWheelCapability,
 	);
 }
 

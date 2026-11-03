@@ -21,6 +21,15 @@
 			"path": "lang/en.json"
 		}
 	],
+	"relationships": {
+		"recommends": [
+			{
+				"id": "visage",
+				"type": "module",
+				"reason": "Adds a radial wheel for picking visages"
+			}
+		]
+	},
 	"esmodules": ["module.mjs"],
 	"styles": ["styles/fast-flip.css"],
 	"url": "https://github.com/Mr-Byte/fast-flip",

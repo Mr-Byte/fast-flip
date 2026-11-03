@@ -59,3 +59,35 @@
 .fast-flip-image-wheel__slice--current .fast-flip-image-wheel__thumb {
 	border-color: var(--color-border-highlight, #ff6400);
 }
+
+.fast-flip-image-wheel__thumb--icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.75em;
+	color: var(--color-text-light-highlight, #f0f0e0);
+}
+
+.fast-flip-image-wheel__slice--overlay .fast-flip-image-wheel__thumb {
+	border-style: dashed;
+}
+
+.fast-flip-image-wheel__slice--action .fast-flip-image-wheel__slice-bg {
+	fill: rgba(40, 20, 20, 0.7);
+}
+
+.fast-flip-image-wheel__caption {
+	position: absolute;
+	transform: translateX(-50%);
+	padding: 2px 8px;
+	border-radius: 4px;
+	background: rgba(0, 0, 0, 0.75);
+	color: var(--color-text-light-highlight, #f0f0e0);
+	font-size: var(--font-size-14, 14px);
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.fast-flip-image-wheel__caption:empty {
+	display: none;
+}

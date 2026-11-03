@@ -15,6 +15,7 @@ GMs can also use the same set of shortcuts to mirror tiles.
 -   Pressing `Shift+H` will raise or lower a hand on the selected tokens, with a number showing each token's place in line
 -   Pressing `Shift+Alt+H` will lower every raised hand on the scene (GM only)
 -   Holding `I` will show a wheel of the selected wildcard token's images; hover one and release to apply it
+-   Holding `V` will show a wheel of the selected token's [Visage](https://github.com/Filroden/visage) visages; hover one and release to apply it, or to remove an active overlay (requires the Visage module)
 
 # License
 

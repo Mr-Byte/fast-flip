@@ -1,7 +1,7 @@
 {
 	"id": "fast-flip",
 	"title": "Fast Flip! Token Tools",
-	"description": "Adds several useful token and tile utilities. Flip tokens & tiles, toggle tokens as AFK, show which token is speaking.",
+	"description": "Quick, hotkey-driven token and tile tools. Flip tokens and tiles, mark players as AFK, show who is speaking with a speech bubble, and raise a hand to queue up a question. Hold a key to pick a token's wildcard image, or its Visage looks if the Visage module is installed, from a radial wheel.",
 	"authors": [
 		{
 			"name": "MrByte",
